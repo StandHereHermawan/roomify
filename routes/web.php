@@ -16,3 +16,28 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/registration', function () {
+    return view('registration');
+});
+
+Route::get('/login', function () {
+    return view('login');
+});
+
+Route::prefix('/dashboard')->group(function () {
+    
+    Route::get('', function () {
+        return view('dashboard');
+    });
+
+    Route::prefix('/account')->group(function () {
+        Route::get('', function () {
+            return view('account');
+        });
+        Route::get('/add-phone-number', function () {
+            return view('add-phone-number');
+        });
+    });
+    
+});
