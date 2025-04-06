@@ -5,13 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Nomor Telepon</title>
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-        crossorigin="anonymous" />
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 </head>
@@ -22,7 +18,11 @@
     <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary px-xl-2">
         <div class="container">
             <div class="col-2">
-                <button type="button" class="btn btn-outline-primary"><a href="" class="list-group-item list-group-item-action">Home</a></button>
+                <button type="button" class="btn btn-outline-primary">
+                    <a href="" class="list-group-item list-group-item-action">
+                        Home
+                    </a>
+                </button>
             </div>
 
             <div class="col-auto">
@@ -52,8 +52,8 @@
 
                         <!-- masukkan nomor telepon input  -->
                         <div class="form-floating mb-3">
-                            <input class="form-control" name="nomor-telpon-baru" id="nomor-telpon-baru-input" type="text" value=""
-                                placeholder="nomor-telpon-baru" required />
+                            <input class="form-control" name="nomor-telpon-baru" id="nomor-telpon-baru-input"
+                                type="text" value="" placeholder="nomor-telpon-baru" required />
                             <label for="nomor-telpon-baru-input">nomor telepon yang baru</label>
 
                             <div class="d-flex w-100 justify-content-between">
@@ -63,8 +63,9 @@
                         </div>
                         <!-- end of masukkan nomor telepon input  -->
 
-                        <div style="height: 2rem;"></div>
-
+                        <div style="height: 2rem;">
+                            @csrf
+                        </div>
                         <!-- button submit input -->
                         <div class="form-floating mb-3">
                             <button type="submit" class="btn btn-primary w-100">Tambah nomor Telepon</button>
@@ -76,6 +77,7 @@
                                 Sistem Informasi Peminjaman Ruangan
                             </p>
                         </div>
+                    </div>
                 </form>
 
             </div>

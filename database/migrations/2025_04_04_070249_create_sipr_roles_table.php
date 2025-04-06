@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sipr_role');
+        Schema::dropIfExists('sipr_roles');
     }
 };

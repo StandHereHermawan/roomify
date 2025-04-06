@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db-project-iseng-laravel:
@@ -8,8 +8,8 @@ services:
       - protocol: tcp
         published: 3306
         target: 3306
-#   ports:
-#     - "3306:3306"
+    #   ports:
+    #     - "3306:3306"
     environment:
       MYSQL_USER: bukan_admin
       MYSQL_PASSWORD: rahasia
@@ -20,6 +20,14 @@ services:
       - db-project-iseng-laravel:/var/lib/mysql
     networks:
       - network-db-project-iseng-laravel
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - "-p${DB_PASSWORD}"
+      retries: 3
+      timeout: 5s
     deploy:
       resources:
         reservations:
