@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Domains\User\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,9 +14,12 @@ class SiprPhoneNumberContact extends Model
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'phone_number',
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 }
