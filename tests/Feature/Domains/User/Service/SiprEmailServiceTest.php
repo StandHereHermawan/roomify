@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Service;
 
-use App\Domains\User\Model\SiprEmail;
 use App\Domains\User\Service\Contracts\SiprEmailService;
-use App\Domains\User\Service\Contracts\SiprUserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class SiprEmailServiceTest extends TestCase
@@ -34,11 +31,17 @@ class SiprEmailServiceTest extends TestCase
      * @return void
      * 
      * Command to run this only unit test function
-     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testCreateEmailSuccessScenario" tests/Feature/
+     * vendor/bin/phpunit --filter "SiprEmailServiceTest::testCreateEmailSuccessScenario" tests/Feature/
      */
     public function testCreateEmailSuccessScenario(): void
     {
-        $idUser = $this->siprUserService->createEmail("terry@localhost.com");
+        $email = "terry@localhost.com";
+        $this->siprUserService->createEmail($email);
+
+        $idUser = $this->siprUserService->findIdEmailByEmail($email);
+
+        // var_dump($idUser);
+
         self::assertNotNull($idUser);
         self::assertIsInt($idUser);
     }

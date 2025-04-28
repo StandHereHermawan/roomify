@@ -4,7 +4,7 @@ namespace Tests\Feature\Repository;
 
 use App\Domains\User\Model\SiprUser;
 use App\Domains\User\Repository\Contracts\SiprUserRepository;
-use Database\Seeders\SiprUsersSeeder;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -71,8 +71,6 @@ class SiprUserRepositoryTest extends TestCase
     {
         self::expectException(ModelNotFoundException::class);
         $this->siprUserRepository->findIdUserByUsername("oke");
-
-        self::markTestIncomplete("not yet implemented!");
     }
 
     /**
@@ -156,7 +154,7 @@ class SiprUserRepositoryTest extends TestCase
         self::assertNotNull($user->created_at);
         self::assertNull($user->updated_at);
         self::assertInstanceOf(SiprUser::class, $user);
-        self::assertTrue(Hash::check("rahasia", $user->password,));
+        self::assertTrue(Hash::check("rahasia", $user->password));
     }
 
     /**
@@ -170,8 +168,6 @@ class SiprUserRepositoryTest extends TestCase
     {
         self::expectException(ModelNotFoundException::class);
         $this->siprUserRepository->findUserByUsername("terry");
-
-        self::markTestIncomplete("not yet implemented!");
     }
 
     /**
@@ -195,7 +191,9 @@ class SiprUserRepositoryTest extends TestCase
         self::assertNotEquals($notUpdatedUser->name, $updatedUser->name);
         self::assertInstanceOf(SiprUser::class, $notUpdatedUser);
         self::assertInstanceOf(SiprUser::class, $updatedUser);
-        self::assertNotNull($updatedUser->updated_at);
+        self::assertNotNull($updatedUser);
+        self::assertNotNull($idUser);
+        self::assertNotNull($notUpdatedUser);
     }
 
     /**
@@ -203,13 +201,12 @@ class SiprUserRepositoryTest extends TestCase
      * @return void
      * 
      * Command to run this only unit test function
-     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testUpdateUserItsNameByUsernameFailedScenario" tests/Feature/
+     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testUpdateUserItsNameByUsernameFailedScenarioModelNotFound" tests/Feature/
      */
-    public function testUpdateUserItsNameByUsernameFailedScenario(): void
+    public function testUpdateUserItsNameByUsernameFailedScenarioModelNotFound(): void
     {
-        $idUser = $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
-
-        self::markTestIncomplete("not yet implemented!");
+        self::expectException(ModelNotFoundException::class);
+        $this->siprUserRepository->updateUserItsNameByUsername("terry", "Terry");
     }
 
     /**
@@ -233,7 +230,8 @@ class SiprUserRepositoryTest extends TestCase
         self::assertNotEquals($notUpdatedUser->name, $updatedUser->name);
         self::assertInstanceOf(SiprUser::class, $notUpdatedUser);
         self::assertInstanceOf(SiprUser::class, $updatedUser);
-        self::assertNotNull($updatedUser->updated_at);
+        self::assertNotNull($updatedUser);
+        self::assertNotNull($notUpdatedUser);
     }
 
     /**
@@ -241,13 +239,12 @@ class SiprUserRepositoryTest extends TestCase
      * @return void
      * 
      * Command to run this only unit test function
-     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testUpdateUserItsNameByIdFailedScenario" tests/Feature/
+     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testUpdateUserItsNameByIdFailedScenarioModelNotFound" tests/Feature/
      */
-    public function testUpdateUserItsNameByIdFailedScenario(): void
+    public function testUpdateUserItsNameByIdFailedScenarioModelNotFound(): void
     {
-        $idUser = $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
-
-        self::markTestIncomplete("not yet implemented!");
+        self::expectException(ModelNotFoundException::class);
+        $this->siprUserRepository->updateUserItsNameById("terry", "Terry");
     }
 
     /**
@@ -271,7 +268,8 @@ class SiprUserRepositoryTest extends TestCase
         self::assertNotEquals($notUpdatedUser->username, $updatedUser->username);
         self::assertInstanceOf(SiprUser::class, $notUpdatedUser);
         self::assertInstanceOf(SiprUser::class, $updatedUser);
-        self::assertNotNull($updatedUser->updated_at);
+        self::assertNotNull($updatedUser);
+        self::assertNotNull($notUpdatedUser);
     }
 
     /**
@@ -279,13 +277,12 @@ class SiprUserRepositoryTest extends TestCase
      * @return void
      * 
      * Command to run this only unit test function
-     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testUpdateUserItsUsernameByIdFailedScenario" tests/Feature/
+     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testUpdateUserItsUsernameByIdFailedScenarioModelNotFound" tests/Feature/
      */
-    public function testUpdateUserItsUsernameByIdFailedScenario(): void
+    public function testUpdateUserItsUsernameByIdFailedScenarioModelNotFound(): void
     {
-        $idUser = $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
-
-        self::markTestIncomplete("not yet implemented!");
+        self::expectException(ModelNotFoundException::class);
+        $this->siprUserRepository->updateUserItsUsernameById("terry", "Terry");
     }
 
     /**

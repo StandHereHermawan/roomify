@@ -2,7 +2,7 @@
 
 namespace App\Domains\User\Repository\Contracts;
 
-interface SiprPhoneNumberContactRepository
+interface SiprPhoneNumberRepository
 {
 
     public function createPhoneNumber($phoneNumber);

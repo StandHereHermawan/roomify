@@ -12,27 +12,31 @@ class SiprEmailServiceImp implements SiprEmailService
 {
     private SiprEmailRepository $repository;
 
-    public function __construct(SiprEmailRepository $variable) 
+    public function __construct(SiprEmailRepository $variable)
     {
         $this->repository = $variable;
     }
-    
 
-    public function createEmail($email): int
+
+    public function createEmail($email)
     {
         $repository = $this->repository;
 
-        Log::debug(json_encode(["newRegisteredEmail" => $email]), ["SiprEmailService.createEmail"]);
-
-        SiprEmail::create([
+        $idEmail = SiprEmail::create([
             "email" => $email,
             "created_at" => Carbon::now()
-        ]);
-
-        $idEmail = $repository->findIdEmailByEmail($email);
+        ])->getId();
 
         return $idEmail;
     }
 
+    public function findIdEmailByEmail($email)
+    {
+        return SiprEmail::select()->where("email", "=", $email)->firstOrFail()->id;
+    }
 
+    public function findModelEmailByEmail($email)
+    {
+        return SiprEmail::select()->where("email", "=", $email)->first();
+    }
 }

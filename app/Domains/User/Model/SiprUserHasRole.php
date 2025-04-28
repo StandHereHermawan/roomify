@@ -7,33 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SiprEmail extends Model
+class SiprUserHasRole extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "sipr_emails";
+    protected $table = "sipr_user_has_roles";
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = false;
 
+    public function getSession() {
+        return $this->session;
+    }
+
     protected $fillable = [
-        'email',
-        'email_verified_at',
+        'user_id',
+        'role_id',
         "created_at",
         "updated_at",
         "deleted_at",
     ];
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getEmail() {
-        return $this->email;
-    }
-
-    public function ownedByUsers(): BelongsToMany {
-        return $this->belongsToMany(SiprUser::class, "sipr_users_has_emails", "email_id", "user_id");
-    }
 }

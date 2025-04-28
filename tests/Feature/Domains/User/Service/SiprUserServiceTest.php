@@ -33,12 +33,65 @@ class SiprUserServiceTest extends TestCase
      * @return void
      * 
      * Command to run this only unit test function
-     * vendor/bin/phpunit --filter "SiprUserRepositoryTest::testCreateUserSuccessScenario" tests/Feature/
+     * vendor/bin/phpunit --filter "SiprUserServiceTest::testCreateUserSuccessScenario" tests/Feature/
      */
     public function testCreateUserSuccessScenario(): void
     {
         $idUser = $this->siprUserService->createUser("terry", "Terry", "rahasia");
         self::assertNotNull($idUser);
         self::assertIsInt($idUser);
+    }
+
+    
+
+    /**
+     * @test
+     * @return void
+     * 
+     * Command to run this only unit test function
+     * vendor/bin/phpunit --filter "SiprUserServiceTest::testSearchByPasswordCantBecauseBcyrptGenerateDifferentHash" tests/Feature/
+     */
+    public function testSearchByPasswordCantBecauseBcyrptGenerateDifferentHash(): void
+    {
+        $password = "Rahasia123";
+        $username = "terry";
+
+        $idUser = $this->siprUserService->createUser($username, "Terry", $password);
+        
+        $userModelSearchWithId = SiprUser::select()->where("id", "=", $idUser)->first();
+        // var_dump($userModelSearchWithId->toArray());
+
+        $userModelSearchWithUsername = SiprUser::select()->where("username" ,"=", $username)->first();
+        // var_dump($userModelSearchWithUsername->toArray());
+
+
+
+        $hashedInputPassword = Hash::make($password);
+        // var_dump($hashedInputPassword);
+
+        $userModelSearchWithHashedPassword = SiprUser::select()->where("password", "=", $hashedInputPassword)->first();
+
+        self::assertNotNull($userModelSearchWithId);
+        self::assertEquals($userModelSearchWithId, $userModelSearchWithUsername);
+        self::assertNotSame($userModelSearchWithId->getPassword(), $hashedInputPassword);
+        self::assertNotNull($userModelSearchWithId);
+        self::assertNull($userModelSearchWithHashedPassword);
+    }
+
+    /**
+     * @test
+     * @return void
+     * 
+     * Command to run this only unit test function
+     * vendor/bin/phpunit --filter "SiprUserServiceTest::testMixed" tests/Feature/
+     */
+    public function testMixed(): void
+    {
+        $password = "Rahasia123";
+        $username = "terry";
+
+        $idUser = $this->siprUserService->createUser($username, "Terry", $password);
+        
+        
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SiprPhoneNumberContact extends Model
+class SiprPhoneNumber extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -22,4 +22,13 @@ class SiprPhoneNumberContact extends Model
         "updated_at",
         "deleted_at",
     ];
+
+    public function getphoneNumber()
+    {
+        if ($this->phone_number != null) {
+            return $this->phone_number;
+        } else {
+            return null;
+        }
+    }
 }

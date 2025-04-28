@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sipr_user_has_sipr_roles', function (Blueprint $table) {
+        Schema::create('sipr_user_has_emails', function (Blueprint $table) {
             $table->id();
             $table->bigInteger("user_id")->unsigned();
-            $table->bigInteger("role_id")->unsigned();
+            $table->bigInteger("email_id")->unsigned();
             $table->foreign("user_id")->references("id")->on("sipr_users")->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreign("role_id")->references("id")->on("sipr_roles")->cascadeOnUpdate()->cascadeOnDelete();
-            $table->timestamps();
+            $table->foreign("email_id")->references("id")->on("sipr_emails")->cascadeOnUpdate()->cascadeOnDelete();
+            $table->unique(["user_id", "email_id"], "unique_combine_column_user_id_and_email_id");
+            $table->softDeletesDatetime();
+            $table->datetimes();
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sipr_user_has_sipr_roles');
+        Schema::dropIfExists('sipr_user_has_emails');
     }
 };

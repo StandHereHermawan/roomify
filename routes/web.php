@@ -1,5 +1,7 @@
 <?php
 
+use App\Domains\User\Middleware\CheckIfAlreadyLoginMiddleware;
+use App\Domains\User\Middleware\SessionMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +28,7 @@ Route::get('/login', function () {
 });
 
 Route::prefix('/dashboard')->group(function () {
-    
+
     Route::get('', function () {
         return view('dashboard');
     });
@@ -39,5 +41,39 @@ Route::prefix('/dashboard')->group(function () {
             return view('add-phone-number');
         });
     });
-    
+});
+
+Route::prefix('/account-management')->group(function () {
+
+    Route::middleware(CheckIfAlreadyLoginMiddleware::class)->group(function () {
+
+        Route::prefix("/registration")->group(function () {
+            
+            Route::post("", [App\Domains\User\Controller\AccountManagementController::class, "submitFormRegister"]);
+            Route::get("", [App\Domains\User\Controller\AccountManagementController::class, "formRegister"]);
+
+        });
+
+        Route::prefix("/login")->group(function () {
+            Route::post("", [App\Domains\User\Controller\AccountManagementController::class, "submitFormLogin"]);
+            Route::get("", [App\Domains\User\Controller\AccountManagementController::class, "formLogin"]);
+        });
+    });
+
+
+    // Route::get('/login', function () {
+        // return view('management-account.login');
+    // });
+
+    Route::middleware(SessionMiddleware::class)->prefix('/dashboard')->group(function () {
+
+        Route::get('', [App\Domains\User\Controller\AccountManagementController::class, "dashboard"]);
+
+        Route::prefix('/account')->group(function () {
+            Route::get('', [App\Domains\User\Controller\AccountManagementController::class, "account"]);
+        });
+
+        Route::get('/logout', [App\Domains\User\Controller\AccountManagementController::class, "logout"]);
+
+    });
 });

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sipr_usr_has_sipr_pho_num_cont', function (Blueprint $table) {
-            $table->id();
+        Schema::create('sipr_user_has_sessions', function (Blueprint $table) {
+            $table->id()->autoIncrement()->unsigned()->nullable(false);
             $table->bigInteger("user_id")->unsigned();
-            $table->bigInteger("phone_number_contacts_id")->unsigned();
+            $table->string('username')->unique();
+            $table->string('session')->unique();
+            $table->dateTime("expired_at");
+            $table->datetime("created_at");
             $table->foreign("user_id")->references("id")->on("sipr_users")->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreign("phone_number_contacts_id")->references("id")->on("sipr_phone_number_contacts")->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreign("username")->references("username")->on("sipr_users")->cascadeOnUpdate()->cascadeOnDelete();
             $table->softDeletesDatetime();
-            $table->datetimes();
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sipr_usr_has_sipr_pho_num_cont');
+        Schema::dropIfExists('sipr_user_has_sessions');
     }
 };

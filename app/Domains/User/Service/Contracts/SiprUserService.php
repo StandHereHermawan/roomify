@@ -6,5 +6,7 @@ interface SiprUserService
 {
 
     public function createUser($username, $name, $password);
+
+    public function findUserById($id);
     
 }

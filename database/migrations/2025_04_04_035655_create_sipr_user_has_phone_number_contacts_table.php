@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('sipr_user_has_phone_numbers', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger("user_id")->unsigned();
+            $table->bigInteger("phone_number_id")->unsigned();
+            $table->foreign("user_id")->references("id")->on("sipr_users")->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreign("phone_number_id")->references("id")->on("sipr_phone_number_contacts")->cascadeOnUpdate()->cascadeOnDelete();
+            $table->unique(["user_id", "phone_number_id"]);
+            $table->softDeletesDatetime();
+            $table->datetimes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('sipr_user_has_phone_numbers');
+    }
+};

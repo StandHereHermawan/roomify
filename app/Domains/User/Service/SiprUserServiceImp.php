@@ -10,21 +10,22 @@ class SiprUserServiceImp implements SiprUserService
 {
     private SiprUserRepository $repository;
 
-    public function __construct(SiprUserRepository $variable) 
-    {
-        $this->repository = $variable;
+
+    public function __construct(
+        SiprUserRepository $userRepo,
+    ) {
+        $this->repository = $userRepo;
     }
 
     public function createUser($username, $name, $password): int
     {
-        $service = $this->repository;
-
-        Log::debug(json_encode(["username" => $username, "name" => $name]), ["SiprUserServiceImp.createUser"]);
-
-        $idUser = $service->createUser($username, $name, $password);
-
-        Log::debug(json_encode(["userId" => $idUser]), ["SiprUserServiceImp.createUser"]);
-
+        $repository = $this->repository;
+        $idUser = $repository->createUser($username, $name, $password);
         return $idUser;
+    }
+
+    public function findUserById($id){
+        $repository = $this->repository;
+        return $repository->findUserById($id);
     }
 }
