@@ -110,3 +110,10 @@ Start the Laravel development server:
 ```bash
 php artisan serve
 ```
+
+
+### 8. Access phpMyAdmin (Optional)
+
+If you're using Docker and want to access phpMyAdmin for database management, open your browser and navigate to `http://localhost:8080`. It will automatically log in using the credentials specified in the Docker configuration.
+
+No login will be required if you set `PMA_AUTH_TYPE` to `config` in the `compose.yml`.
