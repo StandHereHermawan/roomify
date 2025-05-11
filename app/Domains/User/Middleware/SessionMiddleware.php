@@ -27,7 +27,7 @@ class SessionMiddleware
             $userHasSessionModel = SiprUserHasSession::select()
                 ->where("session", "=", $siprToken)
                 ->first();
-                
+
             if ($userHasSessionModel != null) {
                 $sessionExpiredAt = $userHasSessionModel->getExpiredAtMillis();
             }
@@ -36,13 +36,14 @@ class SessionMiddleware
         $currentLongMillis = Carbon::now()->valueOf();
 
         if ($userHasSessionModel != null && $sessionExpiredAt < $currentLongMillis) {
-            $userHasSessionModel->delete();
+            $userHasSessionModel->forceDelete();
+            return redirect()->action([AccountManagementController::class, "formLogin"])->cookie("X-SIPR-TOKEN", "", -3600);
         }
 
         if ($userHasSessionModel != null && $sessionExpiredAt > $currentLongMillis) {
             return $next($request);
         } else {
-            return redirect()->action([AccountManagementController::class, "formLogin"]);
+            return redirect()->action([AccountManagementController::class, "formLogin"])->cookie("X-SIPR-TOKEN", "", -3600);
         }
     }
 }

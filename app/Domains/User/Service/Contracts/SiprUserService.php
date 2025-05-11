@@ -7,6 +7,6 @@ interface SiprUserService
 
     public function createUser($username, $name, $password);
 
-    public function findUserById($id);
+    public function findUserModelById($id);
     
 }

@@ -59,7 +59,7 @@
 
                         <!-- Name input -->
                         <div class="form-floating mb-3">
-                            <input class="form-control" name="name" id="Name-input" type="text" value="{{ old("name") }}"
+                            <input class="form-control" name="name" id="name-input" type="text" value="{{ old("name") }}"
                                 placeholder="Name" autocomplete="true" required />
                             <label for="Name-input">Name</label>
 

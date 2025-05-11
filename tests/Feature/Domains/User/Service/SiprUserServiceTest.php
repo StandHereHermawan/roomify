@@ -92,6 +92,6 @@ class SiprUserServiceTest extends TestCase
 
         $idUser = $this->siprUserService->createUser($username, "Terry", $password);
         
-        
+        self::assertNotNull($idUser);
     }
 }

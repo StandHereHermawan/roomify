@@ -12,5 +12,11 @@ interface SiprUserHasSessionService
 
     public function findUserHasSessionModelByIdUser($idUser);
 
-    // public function createLoginToken($idUser, $username);
+    public function findUserHasSessionModelBySession($session);
+
+    public function hash256($data);
+    
+    public function createHashedIdUserAndUsername($idUser, $username);
+
+    public function createOrFindAndReturnBackUserHasSessionModel($idUser, $username);
 }

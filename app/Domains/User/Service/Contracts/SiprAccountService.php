@@ -13,4 +13,5 @@ interface SiprAccountService
     public function getUserHasRoleService();
     public function getUserHasEmailService();
     public function getUserHasPhoneNumberService();
+    public function getUserHasSessionService();
 }

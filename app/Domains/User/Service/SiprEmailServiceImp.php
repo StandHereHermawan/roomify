@@ -18,7 +18,7 @@ class SiprEmailServiceImp implements SiprEmailService
     }
 
 
-    public function createEmail($email)
+    public function createEmailAndReturnItsId($email)
     {
         $repository = $this->repository;
 
@@ -30,13 +30,24 @@ class SiprEmailServiceImp implements SiprEmailService
         return $idEmail;
     }
 
+    public function createEmailAndReturnItsEmailModel($email)
+    {
+        Log::debug(json_encode("SiprEmailServiceImp@createEmailAndReturnItsEmailModel called"), ["email" => $email]);
+        $emailModel = $this->repository->createEmailAndReturnItsEmailModel($email);
+        Log::debug(json_encode("SiprEmailServiceImp@createEmailAndReturnItsEmailModel returned"), ["emailModel" => $emailModel]);
+        return $emailModel;
+    }
+
     public function findIdEmailByEmail($email)
     {
         return SiprEmail::select()->where("email", "=", $email)->firstOrFail()->id;
     }
 
-    public function findModelEmailByEmail($email)
+    public function findEmailModelByEmail($email)
     {
-        return SiprEmail::select()->where("email", "=", $email)->first();
+        Log::debug(json_encode("SiprEmailServiceImp@findEmailModelByEmail called"), ["email" => $email]);
+        $emailModel = $this->repository->findEmailModelByEmail($email);
+        Log::debug(json_encode("SiprEmailServiceImp@findEmailModelByEmail returned"), ["emailModel" => $emailModel]);
+        return $emailModel;
     }
 }

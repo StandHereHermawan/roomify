@@ -4,9 +4,11 @@ namespace App\Domains\User\Service\Contracts;
 
 interface SiprEmailService {
 
-    public function createEmail($email);
+    public function createEmailAndReturnItsId($email);
+
+    public function createEmailAndReturnItsEmailModel($email);
     
     public function findIdEmailByEmail($email);
 
-    public function findModelEmailByEmail($email);
+    public function findEmailModelByEmail($email);
 }

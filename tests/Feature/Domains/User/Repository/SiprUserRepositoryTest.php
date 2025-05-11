@@ -114,7 +114,7 @@ class SiprUserRepositoryTest extends TestCase
     public function testGetUserByIdSuccessScenario(): void
     {
         $idUser = $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
-        $user = $this->siprUserRepository->findUserById($idUser);
+        $user = $this->siprUserRepository->findUserModelById($idUser);
 
         self::assertNotNull($user);
         self::assertNotNull($idUser);
@@ -130,7 +130,7 @@ class SiprUserRepositoryTest extends TestCase
     public function testGetUserByIdFailedScenario(): void
     {
         self::expectException(ModelNotFoundException::class);
-        $this->siprUserRepository->findUserById(1);
+        $this->siprUserRepository->findUserModelById(1);
     }
 
     /**
@@ -144,7 +144,7 @@ class SiprUserRepositoryTest extends TestCase
     {
         $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
 
-        $user = $this->siprUserRepository->findUserByUsername("terry");
+        $user = $this->siprUserRepository->findUserModelByUsername("terry");
 
         self::assertNotNull($user);
         self::assertNotNull($user->id);
@@ -167,7 +167,7 @@ class SiprUserRepositoryTest extends TestCase
     public function testGetUserByUsernameFailedScenario(): void
     {
         self::expectException(ModelNotFoundException::class);
-        $this->siprUserRepository->findUserByUsername("terry");
+        $this->siprUserRepository->findUserModelByUsername("terry");
     }
 
     /**
@@ -180,10 +180,10 @@ class SiprUserRepositoryTest extends TestCase
     public function testUpdateUserItsNameByUsernameSuccessScenario(): void
     {
         $idUser = $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
-        $notUpdatedUser = $this->siprUserRepository->findUserByUsername("terry");
+        $notUpdatedUser = $this->siprUserRepository->findUserModelByUsername("terry");
 
         $this->siprUserRepository->updateUserItsNameByUsername("terry", "Terry Davis");
-        $updatedUser = $this->siprUserRepository->findUserByUsername("terry");
+        $updatedUser = $this->siprUserRepository->findUserModelByUsername("terry");
 
         self::assertEquals($notUpdatedUser->id, $updatedUser->id);
         self::assertEquals($notUpdatedUser->id, $idUser);
@@ -219,10 +219,10 @@ class SiprUserRepositoryTest extends TestCase
     public function testUpdateUserItsNameByIdSuccessScenario(): void
     {
         $idUser = $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
-        $notUpdatedUser = $this->siprUserRepository->findUserById($idUser);
+        $notUpdatedUser = $this->siprUserRepository->findUserModelById($idUser);
 
         $this->siprUserRepository->updateUserItsNameById($idUser, "Terry Davis");
-        $updatedUser = $this->siprUserRepository->findUserById($idUser);
+        $updatedUser = $this->siprUserRepository->findUserModelById($idUser);
 
         self::assertEquals($notUpdatedUser->id, $updatedUser->id);
         self::assertEquals($notUpdatedUser->id, $idUser);
@@ -257,10 +257,10 @@ class SiprUserRepositoryTest extends TestCase
     public function testUpdateUserItsUsernameByIdSuccessScenario(): void
     {
         $idUser = $this->siprUserRepository->createUser("terry", "Terry", "rahasia");
-        $notUpdatedUser = $this->siprUserRepository->findUserById($idUser);
+        $notUpdatedUser = $this->siprUserRepository->findUserModelById($idUser);
 
         $this->siprUserRepository->updateUserItsUsernameById($idUser, "terry_here");
-        $updatedUser = $this->siprUserRepository->findUserById($idUser);
+        $updatedUser = $this->siprUserRepository->findUserModelById($idUser);
 
         self::assertEquals($notUpdatedUser->id, $updatedUser->id);
         self::assertEquals($notUpdatedUser->id, $idUser);
@@ -298,7 +298,7 @@ class SiprUserRepositoryTest extends TestCase
         $this->siprUserRepository->deleteUserById($idUser);
 
         self::expectException(ModelNotFoundException::class);
-        $notFound = $this->siprUserRepository->findUserById($idUser);
+        $notFound = $this->siprUserRepository->findUserModelById($idUser);
 
         self::assertEquals(null, $notFound);
         self::assertNull($notFound);
@@ -334,7 +334,7 @@ class SiprUserRepositoryTest extends TestCase
         $this->siprUserRepository->deleteUserByUsername($username);
 
         self::expectException(ModelNotFoundException::class);
-        $notFound = $this->siprUserRepository->findUserById($idUser);
+        $notFound = $this->siprUserRepository->findUserModelById($idUser);
 
         self::assertEquals(null, $notFound);
         self::assertNull($notFound);

@@ -40,7 +40,7 @@ class SiprEmailRepositorySecondTest extends TestCase
     {
         $idEmail = $this
             ->repository
-            ->createEmail("test@localhost.com");
+            ->createEmailAndReturnItsId("test@localhost.com");
 
         self::assertNotNull($idEmail);
         self::assertIsInt($idEmail);
@@ -58,9 +58,9 @@ class SiprEmailRepositorySecondTest extends TestCase
         $service = $this->repository;
 
         $idEmail = $service
-            ->createEmail("test@localhost.com");
+            ->createEmailAndReturnItsId("test@localhost.com");
 
-        $email = $service->findEmailById($idEmail);
+        $email = $service->findEmailModelById($idEmail);
 
         self::assertNotNull($email);
         self::assertInstanceOf(SiprEmail::class, $email);
@@ -79,9 +79,9 @@ class SiprEmailRepositorySecondTest extends TestCase
         $service = $this->repository;
 
         $idEmail = $service
-            ->createEmail("test@localhost.com");
+            ->createEmailAndReturnItsId("test@localhost.com");
 
-        $email = $service->findEmailById($idEmail);
+        $email = $service->findEmailModelById($idEmail);
 
         self::assertNotNull($email);
         self::assertInstanceOf(SiprEmail::class, $email);
@@ -100,16 +100,16 @@ class SiprEmailRepositorySecondTest extends TestCase
         $service = $this->repository;
 
         $idEmail = $service
-            ->createEmail("test@localhost.com");
+            ->createEmailAndReturnItsId("test@localhost.com");
 
         $email = $service
-            ->findEmailById($idEmail);
+            ->findEmailModelById($idEmail);
 
         $service
             ->updateEmailById($idEmail, "testUpdate@localhost.com");
 
         $updatedEmail = $service
-            ->findEmailById($idEmail);
+            ->findEmailModelById($idEmail);
 
         self::assertNotNull($email);
         self::assertNotNull($updatedEmail);
@@ -131,14 +131,14 @@ class SiprEmailRepositorySecondTest extends TestCase
     {
         $service = $this->repository;
 
-        $idEmail = $service->createEmail("test@localhost.com");
-        $email = $service->findEmailById($idEmail);
+        $idEmail = $service->createEmailAndReturnItsId("test@localhost.com");
+        $email = $service->findEmailModelById($idEmail);
         $service->deleteEmailById($idEmail);
         
         self::assertNotNull($email);
         
         // Statement ini harus diatas kode yang akan throw exception.
         self::expectException(ModelNotFoundException::class);
-        $service->findEmailById($idEmail);
+        $service->findEmailModelById($idEmail);
     }
 }

@@ -53,7 +53,7 @@ class SiprUserHasSessionServiceTest extends TestCase
         $userHasSessionService = $this->siprUserHasSessionService;
 
         $idUser = $userService->createUser("terry123", "Terry Davis", "Rahasia");
-        $user = $userService->findUserById($idUser);
+        $user = $userService->findUserModelById($idUser);
 
         $idUser = $user->getId();
         $username = $user->getUsername();

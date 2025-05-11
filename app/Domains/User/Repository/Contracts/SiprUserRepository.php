@@ -10,9 +10,9 @@ interface SiprUserRepository {
 
     public function findUsernameByIdUser($id);
 
-    public function findUserById($id);
+    public function findUserModelById($id);
 
-    public function findUserByUsername($username);
+    public function findUserModelByUsername($username);
 
     public function updateUserItsNameByUsername($username, $newName);
 

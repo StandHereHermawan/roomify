@@ -104,8 +104,8 @@ class ManyToManyTest extends TestCase
         $userHasEmailService = $this->siprUserHasEmailService;
 
         $idUser = $userService->createUser("test123", "Test Name", "Rahasia");
-        $idEmail1 = $emailService->createEmail("Test@localhost.com");
-        $idEmail2 = $emailService->createEmail("Test1@localhost.com");
+        $idEmail1 = $emailService->createEmailAndReturnItsId("Test@localhost.com");
+        $idEmail2 = $emailService->createEmailAndReturnItsId("Test1@localhost.com");
         $idRelation1 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail1);
         $idRelation2 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail2);
 
@@ -142,10 +142,10 @@ class ManyToManyTest extends TestCase
 
         $idUser = $userService->createUser("test123", "Test Name", "Rahasia");
 
-        $idEmail1 = $emailService->createEmail("Test1@localhost.com");
-        $idEmail2 = $emailService->createEmail("Test2@localhost.com");
-        $idEmail3 = $emailService->createEmail("Test3@localhost.com");
-        $idEmail4 = $emailService->createEmail("Test4@localhost.com");
+        $idEmail1 = $emailService->createEmailAndReturnItsId("Test1@localhost.com");
+        $idEmail2 = $emailService->createEmailAndReturnItsId("Test2@localhost.com");
+        $idEmail3 = $emailService->createEmailAndReturnItsId("Test3@localhost.com");
+        $idEmail4 = $emailService->createEmailAndReturnItsId("Test4@localhost.com");
 
         $idRelationEmail1 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail1);
         $idRelationEmail2 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail2);
@@ -168,7 +168,7 @@ class ManyToManyTest extends TestCase
         $idRelationRole2 = $userHasRoleService->createUserHasRoleRelationship($idUser, $idRole2);
         $idRelationRole3 = $userHasRoleService->createUserHasRoleRelationship($idUser, $idRole3);
 
-        $user = $userService->findUserById($idUser);
+        $user = $userService->findUserModelById($idUser);
 
         // Many To Many
         $user->getEmails();
@@ -205,17 +205,24 @@ class ManyToManyTest extends TestCase
 
         $idUser = $userService->createUser($username, "Test Name", $password);
 
-        $idEmail1 = $emailService->createEmail($emailInput1);
-        $idEmail2 = $emailService->createEmail("Test2@localhost.com");
-        $idEmail3 = $emailService->createEmail("Test3@localhost.com");
-        $idEmail4 = $emailService->createEmail("Test4@localhost.com");
+        $idEmail1 = $emailService->createEmailAndReturnItsId($emailInput1);
+        $idEmail2 = $emailService->createEmailAndReturnItsId("Test2@localhost.com");
+        $idEmail3 = $emailService->createEmailAndReturnItsId("Test3@localhost.com");
+        $idEmail4 = $emailService->createEmailAndReturnItsId("Test4@localhost.com");
 
         $idRelationEmail1 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail1);
         $idRelationEmail2 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail2);
         $idRelationEmail3 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail3);
         $idRelationEmail4 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail4);
 
-        $user = $userService->findUserById($idUser);
+        $user = $userService->findUserModelById($idUser);
+        $userModel = SiprUser::select()->where("id", "=", $idUser)->first();
+        $userModel->getRoles();
+        $userModel->getPhoneNumbers();
+        $userModel->getEmails(2,3);
+        // var_dump($userModel->hasEmails);
+        // var_dump($userModel->hasEmails);
+        // echo PHP_EOL . json_encode($userModel, JSON_PRETTY_PRINT);
 
         self::assertNotNull($user);
     }
@@ -238,7 +245,7 @@ class ManyToManyTest extends TestCase
         $emailInput1 = "Test1@localhost.com";
 
         $idUser = $userService->createUser($username, "Test Name", $password);
-        $idEmail1 = $emailService->createEmail($emailInput1);
+        $idEmail1 = $emailService->createEmailAndReturnItsId($emailInput1);
         $idRelationEmail1 = $userHasEmailService->createUserHasEmailRelationship($idUser, $idEmail1);
 
         $emailModel = SiprEmail::select()->where("email", "=", $emailInput1)->first();
