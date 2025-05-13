@@ -36,7 +36,7 @@ class SiprEmailServiceTest extends TestCase
     public function testCreateEmailSuccessScenario(): void
     {
         $email = "terry@localhost.com";
-        $this->siprUserService->createEmail($email);
+        $this->siprUserService->createEmailAndReturnItsId($email);
 
         $idUser = $this->siprUserService->findIdEmailByEmail($email);
 

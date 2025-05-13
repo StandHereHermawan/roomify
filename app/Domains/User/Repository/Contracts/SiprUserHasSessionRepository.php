@@ -9,4 +9,5 @@ interface SiprUserHasSessionRepository
     public function findSessionByIdUser($idUser);
     public function findIdUserHasSessionByUsername($username);
     public function findUserHasSessionModelByIdUser($idUser);
+    public function findUserHasSessionModelBySession($session);
 }

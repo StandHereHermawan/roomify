@@ -24,8 +24,8 @@ class SiprUserServiceImp implements SiprUserService
         return $idUser;
     }
 
-    public function findUserById($id){
+    public function findUserModelById($id){
         $repository = $this->repository;
-        return $repository->findUserById($id);
+        return $repository->findUserModelById($id);
     }
 }

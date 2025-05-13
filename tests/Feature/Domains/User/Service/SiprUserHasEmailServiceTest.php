@@ -59,8 +59,8 @@ class SiprUserHasEmailServiceTest extends TestCase
 
         $idUser = $userService->createUser("terry123", "Terry Davis", "Rahasia");
 
-        $idEmail1 = $emailService->createEmail("terryExample1@localhost.com");
-        $idEmail2 = $emailService->createEmail("terryExample2@localhost.com");
+        $idEmail1 = $emailService->createEmailAndReturnItsId("terryExample1@localhost.com");
+        $idEmail2 = $emailService->createEmailAndReturnItsId("terryExample2@localhost.com");
 
         // var_dump($idEmail1);
         // var_dump($idEmail2);
@@ -89,8 +89,8 @@ class SiprUserHasEmailServiceTest extends TestCase
 
         $idUser = $userService->createUser("terry123", "Terry Davis", "Rahasia");
 
-        $idEmail1 = $emailService->createEmail("terryExample1@localhost.com");
-        $idEmail2 = $emailService->createEmail("terryExample2@localhost.com");
+        $idEmail1 = $emailService->createEmailAndReturnItsId("terryExample1@localhost.com");
+        $idEmail2 = $emailService->createEmailAndReturnItsId("terryExample2@localhost.com");
 
         // var_dump($idEmail1);
         // var_dump($idEmail2);

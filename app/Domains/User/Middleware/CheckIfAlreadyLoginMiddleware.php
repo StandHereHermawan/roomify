@@ -31,7 +31,7 @@ class CheckIfAlreadyLoginMiddleware
             return $next($request);
         } else {
             if ($userHasSessionModel == null) {
-                return redirect()->action([AccountManagementController::class, "formLogin"]);
+                return redirect()->action([AccountManagementController::class, "formLogin"])->cookie("X-SIPR-TOKEN", "", -3600);
             } else {
                 return response()->redirectToAction([AccountManagementController::class, "dashboard"]);
             }

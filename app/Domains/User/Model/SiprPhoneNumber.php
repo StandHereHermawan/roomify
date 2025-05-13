@@ -23,6 +23,15 @@ class SiprPhoneNumber extends Model
         "deleted_at",
     ];
 
+    public function getId()
+    {
+        if ($this->id != null) {
+            return $this->id;
+        } else {
+            return null;
+        }
+    }
+
     public function getphoneNumber()
     {
         if ($this->phone_number != null) {

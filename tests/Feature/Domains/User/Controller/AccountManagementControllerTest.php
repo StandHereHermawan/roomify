@@ -15,9 +15,9 @@ class AccountManagementControllerTest extends TestCase
      * @return void
      * 
      * Command to run this only unit test function
-     * vendor/bin/phpunit --filter "AccountManagementControllerTest::test_example" tests/Feature/
+     * vendor/bin/phpunit --filter "AccountManagementControllerTest::testRules" tests/Feature/
      */
-    public function test_example(): void
+    public function testRules(): void
     {
         $data = [
             "username" => "akuoke"
@@ -48,8 +48,10 @@ class AccountManagementControllerTest extends TestCase
         // echo "\$rules3 : ". PHP_EOL;
         // var_dump(json_encode($rules3,JSON_PRETTY_PRINT));
 
-        $validator = Validator::make($data, $rules);
-        self::assertNotNull($validator);
+        $validator = Validator::make($data, $rules3);
+        $validatorAgain = Validator::make($data, $rules);
+        self::assertNotNull($validator->fails());
+        self::assertNotNull($validatorAgain->fails());
     }
 
     /**

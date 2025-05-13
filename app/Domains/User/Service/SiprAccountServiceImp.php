@@ -9,6 +9,7 @@ use App\Domains\User\Service\Contracts\SiprRoleService;
 use App\Domains\User\Service\Contracts\SiprUserHasEmailService;
 use App\Domains\User\Service\Contracts\SiprUserHasPhoneNumberService;
 use App\Domains\User\Service\Contracts\SiprUserHasRoleService;
+use App\Domains\User\Service\Contracts\SiprUserHasSessionService;
 use App\Domains\User\Service\Contracts\SiprUserService;
 use DB;
 
@@ -22,6 +23,7 @@ class SiprAccountServiceImp implements SiprAccountService
     private SiprUserHasRoleService $siprUserHasRoleService;
     private SiprUserHasEmailService $siprUserHasEmailService;
     private SiprUserHasPhoneNumberService $siprUserHasPhoneNumberService;
+    private SiprUserHasSessionService $siprUserHasSessionService;
 
     public function __construct(
         SiprUserService $siprUserService,
@@ -31,6 +33,7 @@ class SiprAccountServiceImp implements SiprAccountService
         SiprUserHasRoleService $siprUserHasRoleService,
         SiprUserHasEmailService $siprUserHasEmailService,
         SiprUserHasPhoneNumberService $siprUserHasPhoneNumberService,
+        SiprUserHasSessionService $siprUserHasSessionService,
     ) {
         $this->siprUserService = $siprUserService;
         $this->siprEmailService = $siprEmailService;
@@ -39,6 +42,7 @@ class SiprAccountServiceImp implements SiprAccountService
         $this->siprUserHasRoleService = $siprUserHasRoleService;
         $this->siprUserHasEmailService = $siprUserHasEmailService;
         $this->siprUserHasPhoneNumberService = $siprUserHasPhoneNumberService;
+        $this->siprUserHasSessionService = $siprUserHasSessionService;
     }
 
     public function getUserService()
@@ -76,6 +80,11 @@ class SiprAccountServiceImp implements SiprAccountService
         return $this->siprUserHasPhoneNumberService;
     }
 
+    public function getUserHasSessionService()
+    {
+        return $this->siprUserHasSessionService;
+    }
+
     public function createCompleteAccountWithFields($username, $name, $email, $password, $phoneNumber)
     {
         $userService = $this->siprUserService;
@@ -94,7 +103,7 @@ class SiprAccountServiceImp implements SiprAccountService
                 $password
             );
 
-            $idEmail = $emailService->createEmail(
+            $idEmail = $emailService->createEmailAndReturnItsId(
                 $email
             );
 

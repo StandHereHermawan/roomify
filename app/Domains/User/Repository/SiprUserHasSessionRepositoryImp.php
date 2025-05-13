@@ -15,14 +15,16 @@ class SiprUserHasSessionRepositoryImp implements SiprUserHasSessionRepository
 
     public function createUserHasSession($idUser, $username, $session)
     {
-        $id = SiprUserHasSession::create([
+        Log::debug(json_encode("SiprUserHasSessionRepositoryImp@createUserHasSession called"), ["idUser" => $idUser, "username" => $username, "session" => $session,]);
+        $userHasSessionModel = SiprUserHasSession::create([
             "user_id" => $idUser,
             "username" => $username,
             "session" => $session,
             "created_at" => Carbon::now(),
             "expired_at" => Carbon::now()->addDays(7),
-        ])->id;
-        return $id;
+        ]);
+        Log::debug(json_encode("SiprUserHasSessionRepositoryImp@createUserHasSession returned"), ["userHasSessionModel" => $userHasSessionModel]);
+        return $userHasSessionModel;
     }
 
     public function findIdUserHasSessionByUsername($username)
@@ -45,12 +47,22 @@ class SiprUserHasSessionRepositoryImp implements SiprUserHasSessionRepository
         return $session;
     }
 
-    public function findUserHasSessionModelByIdUser($idUser): SiprUserHasSession
+    public function findUserHasSessionModelByIdUser($idUser)
     {
         return SiprUserHasSession::query()
             ->select()
             ->where('user_id', "=", $idUser)
-            ->firstOrFail()
+            ->first()
         ;
+    }
+
+    public function findUserHasSessionModelBySession($session)
+    {
+        Log::debug(json_encode("SiprUserHasSessionRepositoryImp@findUserHasSessionModelBySession called"), ["session" => $session]);
+        $userHasSessionModel = SiprUserHasSession::select()
+            ->where("session", "=", $session)
+            ->first();
+        Log::debug(json_encode("SiprUserHasSessionRepositoryImp@findUserHasSessionModelBySession returned"), ["userHasSessionModel" => $userHasSessionModel]);
+        return $userHasSessionModel;
     }
 }

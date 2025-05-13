@@ -34,10 +34,15 @@ class SiprUserHasPhoneNumber extends Model
         }
     }
 
+    public function getUserId()
+    {
+        return $this->getIdUser();
+    }
+
     public function getIdPhoneNumber()
     {
-        if ($this->IdPhoneNumber != null) {
-            return $this->IdPhoneNumber;
+        if ($this->phone_number_id != null) {
+            return $this->phone_number_id;
         } else {
             return null;
         }

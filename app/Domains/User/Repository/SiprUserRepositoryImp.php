@@ -56,7 +56,7 @@ class SiprUserRepositoryImp implements SiprUserRepository
         return $username;
     }
 
-    public function findUserById($id): SiprUser
+    public function findUserModelById($id): SiprUser
     {
         Log::debug(json_encode("SiprUserRepositoryImp@findUserById called"), ["user" => ["id" => $id]]);
         $user = SiprUser::query()
@@ -67,7 +67,7 @@ class SiprUserRepositoryImp implements SiprUserRepository
         return $user;
     }
 
-    public function findUserByUsername($username): SiprUser
+    public function findUserModelByUsername($username): SiprUser
     {
         Log::debug(json_encode("SiprUserRepositoryImp@findUserByUsername called"), ["user" => ["username" => $username]]);
         $user = SiprUser::query()
@@ -113,7 +113,7 @@ class SiprUserRepositoryImp implements SiprUserRepository
     public function deleteUserByUsername($username): int
     {
         Log::debug(json_encode("SiprUserRepositoryImp@deleteUserByUsername called"), ["user" => ["username" => $username]]);
-        $user = $this->findUserByUsername($username);
+        $user = $this->findUserModelByUsername($username);
         $deletedUserId = $user["id"];
         SiprUser::query()->where("username", "=", $username)->delete();
         Log::debug(json_encode("SiprUserRepositoryImp@deleteUserByUsername return"), ["user" => ["id" => $deletedUserId]]);
@@ -123,7 +123,7 @@ class SiprUserRepositoryImp implements SiprUserRepository
     public function deleteUserById($id): int
     {
         Log::debug(json_encode("SiprUserRepositoryImp@deleteUserById called"), ["user" => ["id" => $id]]);
-        $user = $this->findUserById($id);
+        $user = $this->findUserModelById($id);
         $deletedUserId = $user["id"];
         Log::debug(json_encode("SiprUserRepositoryImp@deleteUserById return"), ["user" => ["id" => $deletedUserId]]);
         SiprUser::find($deletedUserId)->delete();

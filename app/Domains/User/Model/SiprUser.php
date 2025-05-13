@@ -17,8 +17,8 @@ class SiprUser extends Model
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = false;
-
     private $limitQuery = 2;
+    private $offset = 0;
 
     protected $fillable = [
         'username',
@@ -31,7 +31,7 @@ class SiprUser extends Model
 
     public function getId()
     {
-        if ($this != null) {
+        if ($this->id != null) {
             # code...
             return $this->id;
         } else {
@@ -41,7 +41,7 @@ class SiprUser extends Model
 
     public function getUsername()
     {
-        if ($this != null) {
+        if ($this->username != null) {
             # code...
             return $this->username;
         } else {
@@ -51,7 +51,7 @@ class SiprUser extends Model
 
     public function getName()
     {
-        if ($this != null) {
+        if ($this->name != null) {
             # code...
             return $this->name;
         } else {
@@ -61,7 +61,7 @@ class SiprUser extends Model
 
     public function getPassword()
     {
-        if ($this != null) {
+        if ($this->password != null) {
             # code...
             return $this->password;
         } else {
@@ -80,9 +80,10 @@ class SiprUser extends Model
         }
     }
 
-    public function getEmails(int $limit = 2)
+    public function getEmails(int $limit = 2, int $offset = 0)
     {
         $this->limitQuery = $limit;
+        $this->offset = $offset;
         if ($this->hasEmails != null) {
             # code...
             return $this->hasEmails;
@@ -91,10 +92,10 @@ class SiprUser extends Model
         }
     }
 
-    public function getPhoneNumbers(int $limit = 2)
+    public function getPhoneNumbers(int $limit = 2,int $offset = 0)
     {
         $this->limitQuery = $limit;
-
+        $this->offset = $offset;
         if ($this->hasPhoneNumbers != null) {
             # code...
             return $this->hasPhoneNumbers;
@@ -124,17 +125,22 @@ class SiprUser extends Model
     public function hasPhoneNumbers(): BelongsToMany
     {
         $limit = $this->limitQuery;
+        $offset = $this->offset;
         return $this
             ->belongsToMany(SiprPhoneNumber::class, "sipr_user_has_phone_numbers", "user_id", "phone_number_id")
-            ->limit($limit);
+            ->limit($limit)
+            ->offset($offset);
+
     }
 
     public function hasEmails(): BelongsToMany
     {
         $limit = $this->limitQuery;
+        $offset = $this->offset;
         return $this
             ->belongsToMany(SiprEmail::class, "sipr_user_has_emails", "user_id", "email_id")
-            ->limit($limit);
+            ->limit($limit)
+            ->offset($offset);
     }
 
     public function hasSession(): HasOne
