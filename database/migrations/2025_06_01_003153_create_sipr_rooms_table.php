@@ -1,6 +1,6 @@
 <?php
 
-use App\Domains\User\Model\SiprRole;
+use App\Domains\Room\Model\SiprRoom;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,20 +11,28 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create(SiprRole::TABLE_NAME, function (Blueprint $table) {
+        Schema::create(SiprRoom::TABLE_NAME, function (Blueprint $table) {
             $table
                 ->id()
                 ->autoIncrement()
                 ->unsigned()
                 ->nullable(false);
-                
+
             $table
-                ->string("role", 30)
-                ->unique();
-                
+                ->string('name', 255)
+                ->nullable(false);
+
+            $table
+                ->float('meter_room_height')
+                ->nullable(true);
+
+            $table
+                ->float('meter_squared_room_volume')
+                ->nullable(true);
+
             $table
                 ->softDeletesDatetime();
-                
+
             $table
                 ->datetimes();
         });
@@ -35,6 +43,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists(SiprRole::TABLE_NAME);
+        Schema::dropIfExists(SiprRoom::TABLE_NAME);
     }
 };

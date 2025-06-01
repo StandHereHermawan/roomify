@@ -12,7 +12,9 @@ class SiprUser extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "sipr_users";
+    public const TABLE_NAME = "sipr_users";
+
+    protected $table = SiprUser::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
@@ -138,7 +140,7 @@ class SiprUser extends Model
         $limit = $this->limitQuery;
         $offset = $this->offset;
         return $this
-            ->belongsToMany(SiprEmail::class, "sipr_user_has_emails", "user_id", "email_id")
+            ->belongsToMany(SiprSecondaryEmail::class, "sipr_user_has_emails", "user_id", "email_id")
             ->limit($limit)
             ->offset($offset);
     }

@@ -1,6 +1,6 @@
 services:
   mysql-db:
-    image: mysql:lts
+    image: mysql:8.2.0-1.el8
     container_name: mysql-db-container
     ports:
       - "3306:3306"
@@ -20,7 +20,7 @@ services:
       timeout: 5s
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:5.2.2
     container_name: phpmyadmin-container
     ports:
       - "8080:80"

@@ -10,7 +10,9 @@ class SiprPhoneNumber extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "sipr_phone_number_contacts";
+    public const TABLE_NAME = "sipr_phone_numbers";
+
+    protected $table = SiprPhoneNumber::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;

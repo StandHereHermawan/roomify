@@ -27,6 +27,8 @@ Route::get('/login', function () {
     return view('login');
 });
 
+Route::get('/room', [App\Domains\Room\Controller\RoomController::class, "roomPaginate"]);
+
 Route::prefix('/dashboard')->group(function () {
 
     Route::get('', function () {
