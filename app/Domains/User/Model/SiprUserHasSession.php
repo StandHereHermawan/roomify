@@ -12,7 +12,9 @@ class SiprUserHasSession extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "sipr_user_has_sessions";
+    public const TABLE_NAME = "sipr_user_has_sessions";
+
+    protected $table = SiprUserHasSession::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;

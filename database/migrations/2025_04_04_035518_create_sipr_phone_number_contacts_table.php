@@ -1,21 +1,32 @@
 <?php
 
+use App\Domains\User\Model\SiprPhoneNumber;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('sipr_phone_number_contacts', function (Blueprint $table) {
-            $table->id();
-            $table->string("phone_number", 20)->unique();
-            $table->softDeletesDatetime();
-            $table->datetimes();
+        Schema::create(SiprPhoneNumber::TABLE_NAME, function (Blueprint $table) {
+            $table
+                ->id()
+                ->autoIncrement()
+                ->unsigned()
+                ->nullable(false);
+
+            $table
+                ->string("phone_number", 20)
+                ->unique();
+
+            $table
+                ->softDeletesDatetime();
+
+            $table
+                ->datetimes();
         });
     }
 
@@ -24,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sipr_phone_number_contacts');
+        Schema::dropIfExists(SiprPhoneNumber::TABLE_NAME);
     }
 };

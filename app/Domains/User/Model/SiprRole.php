@@ -11,7 +11,9 @@ class SiprRole extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "sipr_roles";
+    public const TABLE_NAME = "sipr_roles";
+
+    protected $table = SiprRole::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
