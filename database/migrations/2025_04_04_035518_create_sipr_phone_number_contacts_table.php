@@ -22,12 +22,25 @@ return new class extends Migration {
                 ->string("phone_number", 20)
                 ->unique();
 
+            $table->softDeletesDatetime();
+            
             $table
-                ->softDeletesDatetime();
+                ->dateTime('created_at')
+                ->nullable(true)
+                ->useCurrent();
 
             $table
-                ->datetimes();
+                ->dateTime('updated_at')
+                ->nullable(true)
+                ->useCurrent()
+                ->useCurrentOnUpdate();
         });
+
+        DB::table(SiprPhoneNumber::TABLE_NAME)->insert([
+            "phone_number" => "+62-812-3456-7890",
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

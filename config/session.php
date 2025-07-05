@@ -1,5 +1,7 @@
 <?php
 
+use App\Domains\User\Model\SiprSession;
+use App\Domains\User\Model\SiprUserHasSession;
 use Illuminate\Support\Str;
 
 return [
@@ -18,8 +20,7 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'file'),
-
+    'driver' => env('SESSION_DRIVER', 'database'), // 'driver' => env('SESSION_DRIVER', 'file'),
     /*
     |--------------------------------------------------------------------------
     | Session Lifetime
@@ -31,9 +32,9 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => env('SESSION_LIFETIME', 1),
 
-    'expire_on_close' => false,
+    'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', true), // 'expire_on_close' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +47,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => env('SESSION_ENCRYPT', false), // 'encrypt' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +86,7 @@ return [
     |
     */
 
-    'table' => 'sessions',
+    'table' => SiprSession::TABLE_NAME, // 'table' => 'sessions',
 
     /*
     |--------------------------------------------------------------------------
@@ -113,7 +114,7 @@ return [
     |
     */
 
-    'lottery' => [2, 100],
+    'lottery' => [100, 100],
 
     /*
     |--------------------------------------------------------------------------

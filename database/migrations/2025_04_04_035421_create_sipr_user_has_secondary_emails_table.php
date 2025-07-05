@@ -42,15 +42,17 @@ return new class extends Migration {
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table
-                ->unique(["user_id", "email_id"], "unique_combine_user_id_and_email_id");
-
-            $table
-                ->softDeletesDatetime();
-
-            $table
-                ->datetimes();
+            $table->unique(["user_id", "email_id"], "unique_combine_user_id_and_email_id");
+            $table->softDeletesDatetime();
+            $table->datetimes();
         });
+
+        DB::table(SiprUserHasSecondaryEmail::TABLE_NAME)->insert([
+            "user_id" => '2',
+            "email_id" => '1',
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

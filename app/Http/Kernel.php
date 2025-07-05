@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\Custom\RequestUniqueIdentifier::class,
     ];
 
     /**
@@ -30,17 +31,42 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
+            // \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            /**
+             * 
+             * =========================================================================================
+             * */
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
+            /**
+             * ==========================================================================================
+             * 3 middleware above are need to disabled 
+             * if there is need for disabling default laravel's CSRF Token and laravel's default session.
+             * ==========================================================================================
+             * 
+             * ==========================================================================================
+             * Jika Anda menonaktifkan 
+             * 
+             * \Illuminate\Session\Middleware\StartSession::class, 
+             * 
+             * maka 
+             * 
+             * \Illuminate\View\Middleware\ShareErrorsFromSession::class, 
+             * 
+             * juga harus dinonaktifkan untuk menghindari error. 
+             * Konsekuensinya adalah Anda kehilangan kemudahan penanganan error validasi otomatis di view dan fungsi old(). 
+             * Anda perlu mengimplementasikan penanganan error validasi secara manual, 
+             * terutama jika Anda membangun API atau aplikasi yang tidak bergantung pada session untuk menampilkan error.
+             * ==========================================================================================
+             */
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -64,5 +90,11 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'ensure.login' => \App\Http\Middleware\Custom\Authentication\EnsureUserIsLogin::class,
+        'ensure.not.login' => \App\Http\Middleware\Custom\Authentication\EnsureUserIsNotYetLogin::class,
+    ];
+
+    protected $routeMiddleware = [
+
     ];
 }

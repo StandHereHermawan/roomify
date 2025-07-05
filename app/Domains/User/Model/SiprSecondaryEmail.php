@@ -13,7 +13,7 @@ class SiprSecondaryEmail extends Model
 
     public const TABLE_NAME = "sipr_secondary_emails";
 
-    protected $table = SiprEmail::TABLE_NAME;
+    protected $table = SiprSecondaryEmail::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
