@@ -17,17 +17,37 @@ return new class extends Migration {
                 ->autoIncrement()
                 ->unsigned()
                 ->nullable(false);
-                
+
             $table
                 ->string("role", 30)
                 ->unique();
-                
+
             $table
                 ->softDeletesDatetime();
-                
+
             $table
-                ->datetimes();
+                ->dateTime('created_at')
+                ->nullable(true)
+                ->useCurrent();
+
+            $table
+                ->dateTime('updated_at')
+                ->nullable(true)
+                ->useCurrent()
+                ->useCurrentOnUpdate();
         });
+
+        DB::table(SiprRole::TABLE_NAME)->insert([
+            "role" => "SUPER_ADMIN",
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
+
+        DB::table(SiprRole::TABLE_NAME)->insert([
+            "role" => "GUEST",
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

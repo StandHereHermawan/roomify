@@ -18,6 +18,14 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-ppassword"]
       retries: 3
       timeout: 5s
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: 600m
+        limits:
+          cpus: "1"
+          memory: 1g
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.2.2
@@ -33,6 +41,16 @@ services:
       PMA_PASSWORD: 'password'
     networks:
       - backend-network
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.1"
+          memory: 50m
+        limits:
+          cpus: "1"
+          memory: 100m
+
+
 
 networks:
   backend-network:

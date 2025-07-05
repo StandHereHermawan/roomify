@@ -19,8 +19,13 @@ class SiprPhoneNumbersSeeder extends Seeder
         DB::transaction(function () {
             for ($i = 0; $i < 5; $i++) {
                 DB::table($this->tableName)->insert([
-                    "phone_number" => "+62-8" . random_int(10,99) . "-" . random_int(1000,9999) . "-" . random_int(1000,9999),
-                    "created_at" => Carbon::now()->addHours(7)
+                    "phone_number" =>
+                        "+62-8" .
+                        random_int(10, 99) . "-" .
+                        random_int(1000, 9999) . "-" .
+                        random_int(1000, 9999),
+                    "created_at" => Carbon::now()
+                        ->addHours(7)
                 ]);
             }
         });

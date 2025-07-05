@@ -62,7 +62,10 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            /*
+            | Custom user
+            */
+            'model' => App\Domains\User\Model\SiprUser::class, // default was ['model' => App\Models\User::class],
         ],
 
         // 'users' => [

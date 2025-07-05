@@ -309,11 +309,8 @@
                             Sistem Informasi Peminjaman Ruangan
                         </p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     </div>
     <!-- end of main content -->

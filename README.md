@@ -1,3 +1,8 @@
+# Roomify 
+
+This Laravel project started using Laravel 9. But already migrated to Laravel 12. so the project structure was version 9.
+
+
 # Laravel Application Setup
 
 This guide will walk you through the steps to run a Laravel application with PHP 8.2 and Composer.

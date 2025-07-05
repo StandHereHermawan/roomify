@@ -1,257 +1,362 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@php
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        integrity="sha256-PI8n5gCcz9cQqQXm3PEtDuPG8qx9oFsFctPg0S5zb8g=" crossorigin="anonymous">
-    <title>{{$title ?? "Lapo Marpaigon"}}</title>
+    $default_name = "Pinjam Ruangan";
+    $default_description = "Lorem ipsum dolor sit amet consectetur adipisicing elit.";
+    $default_pagination_view = "vendor.custom.bootstrap-5-custom";
+
+@endphp
+
+<x-layout.main :title="$default_name">
     <style>
         .bs-max-card-height-20rem {
             max-height: 20rem;
         }
     </style>
-</head>
+    <x-navbar></x-navbar>
 
-<body>
-    <!-- upper navbar -->
-    <header class="py-3 mb-4 border-bottom shadow sticky-top bg-body">
-        <div class="container d-flex flex-wrap justify-content-center">
-            <div href="#"
-                class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                    class="bi bi-door-open" viewBox="0 0 16 16">
-                    <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
-                    <path
-                        d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
-                </svg>
-                <span class="ms-2 fs-3">{{ $shopName ?? "Pinjam Ruangan" }}</span>
-            </div>
-            <div class="col-12 col-lg-auto">
-                <div class="d-flex justify-content-center mb-3 mb-lg-0 me-3">
-                    <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor"
-                            class="bi bi-card-list me-2" viewBox="0 0 16 16">
-                            <path
-                                d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
-                            <path
-                                d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
-                        </svg> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor"
-                            class="bi bi-three-dots" viewBox="0 0 16 16">
-                            <path
-                                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!-- end of upper navbar -->
-
-    <!-- offcanvas baru muncul kalau klik tombol navigation. -->
-    <div class="offcanvas offcanvas-start shadow-lg" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-        id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-
-        <!-- header inside offcanvas -->
-        <div class="offcanvas-header">
-            <div class="container-fluid row">
-                <div class="col">
-                    <h5 class="offcanvas-title text-dark" id="offcanvasScrollingLabel">{{$title ?? "Lapo Marpaigon"}}
-                    </h5>
-                </div>
-                <div class="col-1">
-                    <div class="pt-2">
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end of header inside offcanvas -->
-
-        <!-- sidebar -->
-        <div class="offcanvas-body">
-            <p>{{$offCanvaHeader ?? "Lapo Marpaigon dalam bahasa batak artinya toko makanan."}}</p>
-            <!-- first accordion -->
-            <div class="accordion mb-3" id="accordionExample1">
-
-                @if (isset($userRole))
-
-                    @if ($userRole === "SELLER")
-
+    {{-- <!-- item pagination  --> --}}
+    <div class="container my-5">
+        <div class="">
+            <div class="border rounded-3 p-4 gy-3 shadow">
+                {{-- Search accordion --}}
+                <div class="col my-3">
+                    <div class="accordion shadow-sm" id="accordion-room-search-specific">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#room-search-accordeon-specific" aria-expanded="true"
+                                    aria-controls="room-search-accordeon-specific" style="">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                        class="bi bi-box2-heart me-2" viewBox="0 0 16 16">
-                                        <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982" />
+                                        class="bi bi-search me-3" viewBox="0 0 16 16">
                                         <path
-                                            d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4zm0 1H7.5v3h-6zM8.5 4V1h3.75l2.25 3zM15 5v10H1V5z" />
+                                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                                     </svg>
-                                    Produk
+                                    Cari Ruangan Spesifik
                                 </button>
                             </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div id="room-search-accordeon-specific" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordion-room-search-specific">
                                 <div class="accordion-body">
-                                    <form action="{{ url()->route('add-product') }}" method="get"
-                                        class="d-flex justify-content-center mb-3 mb-lg-0">
-                                        <button class="btn btn-outline-dark w-100" type="submit" data-bs-toggle="offcanvas"
-                                            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-                                            Tambah Produk
-                                            </svg>
-                                        </button>
+                                    <form action="#" method="get">
+                                        <div class="row g-3 mb-3">
+                                            <div class="col">
+                                                <label for="search-nama-ruangan-label" class="form-label">Nama
+                                                    Ruangan</label>
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control" name="search-nama-ruangan"
+                                                        value="Ruang-Biasa" id="search-nama-ruangan-label"
+                                                        placeholder="name@example.com">
+                                                    <label for="search-nama-ruangan-label">Nama Ruangan</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="search-kode-ruangan-label" class="form-label">Kode
+                                                    Ruangan</label>
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control" name="search-kode-ruangan"
+                                                        value="A-101" id="search-kode-ruangan-label"
+                                                        placeholder="Password">
+                                                    <label for="search-kode-ruangan-label">Kode Ruangan</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{-- <div class="row g-3 mb-3">
+                                            <div class="col">
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control" id="search-"
+                                                        placeholder="name@example.com">
+                                                    <label for="search-">Luas Lantai Ruangan</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control" id="floatingPassword"
+                                                        placeholder="Password">
+                                                    <label for="floatingPassword">Tinggi Ruangan</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        --}}
+                                        <div class="d-flex justify-content-center mb-3 mb-lg-0">
+                                            <div class="col">
+                                                <button class="btn btn-primary btn-lg w-100 shadow-sm" type="submit">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                                        fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                    </svg>
+                                                    Cari
+                                                </button>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
-
-                    @endif
-
-                @endif
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                class="bi bi-bag-check me-2" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0" />
-                                <path
-                                    d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
-                            </svg>
-                            Belanja
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <form action="{{ url()->to('payment-status') }}" method="get"
-                                class="d-flex justify-content-center mb-3 mb-lg-0">
-                                <button class="btn btn-outline-dark w-100" type="submit" data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-                                    Histori Belanja
+                    </div>
+                </div>
+                <div class="col my-3">
+                    <div class="accordion shadow-sm" id="accordion-room-search-general">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#room-search-accordeon-general" aria-expanded="true"
+                                    aria-controls="room-search-accordeon-general" style="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                        class="bi bi-search me-3" viewBox="0 0 16 16">
+                                        <path
+                                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                                     </svg>
+                                    Cari Ruangan Berdasarkan Ukuran
                                 </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                class="bi bi-person me-2" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
-                            </svg>
-                            Bagian Pengguna
-                        </button>
-                    </h2>
-                    <div id="collapseOne1" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
-                        <div class="accordion-body">
-                            <form action="{{ url()->to('account') }}" method="get"
-                                class="d-flex justify-content-center mb-3 mb-lg-0">
-                                <button class="btn btn-outline-dark w-100" type="submit" data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-                                    Akun Pribadi
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end of first accordion -->
-        </div>
-        <!-- end of sidebar -->
-    </div>
-    <!-- offcanvas baru muncul kalau klik tombol navigation. -->
-
-    <!-- barang jualan -->
-    <div class="container">
-        <div class="col">
-
-            @if (isset($barang) && is_iterable($barang))
-
-                <div>{{ $barang->onEachSide(3)->links() }}</div>
-
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4">
-
-                    @foreach ($barang as $item)
-
-                        <div class="col">
-
-                            <div class="card h-100 shadow">
-                                <svg aria-label="Placeholder: Image cap" class="bd-placeholder-img card-img-top" height="140"
-                                    preserveAspectRatio="xMidYMid slice" role="img" width="100%"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <title>Placeholder</title>
-                                    <rect width="100%" height="100%" fill="#868e96"></rect>
-                                    <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
-                                </svg>
-                                <div class="card-body">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="card-title">
-                                            {{ $item->getNamaBarang() }}
-                                        </h5>
-                                        <h5 class="card-title opacity-50">
-                                            {{ "Rp" . $item->getHarga() }}
-                                        </h5>
-                                    </div>
-                                    <div>
-                                        <h6 class="opacity-50">Stok : {{ $item->stock->jumlah ?? "0" }}</h6>
-                                    </div>
-                                    <form action="/detail-item" method="get" class="mb-2">
-                                        <input type="hidden" name="id" value="{{ $item->getId() }}">
-                                        <button type="submit" class="btn btn-outline-secondary w-100">Beli</button>
-                                    </form>
-                                    <!-- <p class="card-text">This is a longer card with supporting text below as a natural
-                                                                lead-in to additional content. This content is a little bit longer.</p> -->
+                            </h2>
+                            <div id="room-search-accordeon-general" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordion-room-search-general">
+                                <div class="accordion-body">
+                                    {{--<form action="#" method="get">--}}
+                                        <form action="#" method="get">
+                                            <div class="row row-cols-1 row-cols-xl-3 g-3 mb-3">
+                                                <div class="col">
+                                                    <label for="search-tinggi-ruangan-terkecil-label"
+                                                        class="form-label">
+                                                        Tinggi Ruangan Terkecil <b class="opacity-50">Dalam Meter</b>
+                                                    </label>
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control"
+                                                            name="search-tinggi-terkecil-ruangan"
+                                                            value="{{ $tinggi_ruangan_terkecil ?? ""}}"
+                                                            id="search-tinggi-ruangan-terkecil-label"
+                                                            placeholder="name@example.com">
+                                                        <label for="search-tinggi-ruangan-terkecil-label">
+                                                            Tinggi Ruangan Terkecil
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="search-tinggi-ruangan-terbesar-label"
+                                                        class="form-label">
+                                                        Tinggi Ruangan Terbesar <b class="opacity-50">Dalam Meter</b>
+                                                    </label>
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control"
+                                                            name="search-tinggi-terbesar-ruangan"
+                                                            value="{{ $tinggi_ruangan_terbesar ?? "" }}"
+                                                            id="search-tinggi-ruangan-terbesar-label"
+                                                            placeholder="name@example.com">
+                                                        <label for="search-tinggi-ruangan-terbesar-label">
+                                                            Tinggi Ruangan Terbesar
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="search-luas-ruangan-terkecil-label" class="form-label">
+                                                        Cari <b class="opacity-50">ke database.</b>
+                                                    </label>
+                                                    <button class="btn btn-primary btn-lg w-100 shadow-sm"
+                                                        type="submit">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            fill="currentColor" class="bi bi-search"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                        </svg>
+                                                        Cari Berdasarkan Tinggi Ruangan
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <form action="#" method="get">
+                                            <div class="row row-cols-1 row-cols-xl-3 g-3 mb-3">
+                                                <div class="col">
+                                                    <label for="search-luas-ruangan-terkecil-label" class="form-label">
+                                                        Luas Ruangan Terkecil <b class="opacity-50">Dalam Meter</b>
+                                                    </label>
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control"
+                                                            name="search-luas-terkecil-ruangan"
+                                                            value="{{ $luas_ruangan_terkecil ?? ""}}"
+                                                            id="search-luas-ruangan-terkecil-label"
+                                                            placeholder="name@example.com">
+                                                        <label for="search-luas-ruangan-terkecil-label">
+                                                            Luas Ruangan Terkecil
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="search-luas-ruangan-terbesar-label" class="form-label">
+                                                        Luas Ruangan Terbesar <b class="opacity-50">Dalam Meter</b>
+                                                    </label>
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control"
+                                                            name="search-luas-terbesar-ruangan"
+                                                            value="{{ $luas_ruangan_terbesar ?? "" }}"
+                                                            id="search-luas-ruangan-terbesar-label"
+                                                            placeholder="name@example.com">
+                                                        <label for="search-luas-ruangan-terbesar-label">
+                                                            Luas Ruangan Terbesar
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="search-luas-ruangan-terkecil-label" class="form-label">
+                                                        Cari <b class="opacity-50">ke database.</b>
+                                                    </label>
+                                                    <button class="btn btn-primary btn-lg w-100 shadow-sm"
+                                                        type="submit">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            fill="currentColor" class="bi bi-search"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                        </svg>
+                                                        Cari Berdasarkan Luas Ruangan
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        {{--
+                                        <div class="d-flex justify-content-center mb-3 mb-lg-0">
+                                            <div class="col">
+                                                <button class="btn btn-primary btn-lg w-100 shadow-sm" type="submit">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                        fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                    </svg>
+                                                    Cari Berdasarkan Kriteria Tinggi dan Luas
+                                                </button>
+                                            </div>
+                                        </div>
+                                        --}}
+                                    {{--</form>--}}
                                 </div>
                             </div>
-
-                        </div>
-
-                    @endforeach
-
-                </div>
-
-            @else
-
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4">
-
-                    <div class="col">
-                        <div class="card h-100">
-                            <svg aria-label="Placeholder: Image cap" class="bd-placeholder-img card-img-top" height="140"
-                                preserveAspectRatio="xMidYMid slice" role="img" width="100%"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <title>Placeholder</title>
-                                <rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6"
-                                    dy=".3em">Image cap</text>
-                            </svg>
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a longer card with supporting text below as a natural
-                                    lead-in to additional content. This content is a little bit longer.</p>
-                            </div>
                         </div>
                     </div>
                 </div>
+                {{-- End of Search accordion --}}
 
-            @endif
+                {{-- Button section --}}
+                <div class="col my-3">
+                    <div class="d-flex justify-content-between">
+                        {{-- Button --}}
+                        <a href="{{ route('add-room') }}" class="text-decoration-none me-1">
+                            <button type="button" class="btn btn-primary d-flex shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                                </svg>
+                                <div>
+                                    Tambah Ruangan
+                                </div>
+                            </button>
+                        </a>
+                        {{-- End of Button --}}
+                        {{-- Button --}}
+                        {{--<a href="{{ route('list-of-room-session') }}" class="text-decoration-none">
+                            <button type="button" class="btn btn-primary d-flex shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-stopwatch me-1" viewBox="0 0 16 16">
+                                    <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z" />
+                                    <path
+                                        d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3" />
+                                </svg>
+                                <div>
+                                    Halaman Session
+                                </div>
+                            </button>
+                        </a>--}}
+                        {{-- End of Button --}}
+                    </div>
+                </div>
+                {{-- End of Button section --}}
+                {{-- Some view logic --}}
+                <div class="col my-3">
+                    @if (isset($paginatedRooms) && is_iterable($paginatedRooms) && $paginatedRooms->total() >= 1)
+                        {{-- Pagination Navigation --}}
+                        <div class="mt-2">
+                            {{ $paginatedRooms->links($default_pagination_view) }}
+                        </div>
+                        {{-- End of Pagination Navigation --}}
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">
+                            @foreach ($paginatedRooms as $room)
+                                <div class="col">
+                                    <div class="card h-100 shadow-sm">
+                                        {{-- Gray Placeholder --}}
+                                        <svg aria-label="Placeholder: Image cap" class="bd-placeholder-img card-img-top"
+                                            height="140" preserveAspectRatio="xMidYMid slice" role="img" width="100%"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <title>Placeholder</title>
+                                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                                            <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                                        </svg>
+                                        {{-- End of Gray Placeholder --}}
 
-
+                                        {{-- Card --}}
+                                        <div class="card-body">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <div class="fs-4 fw-bold text-primary">
+                                                    {{ $room->getRoomCode() }}
+                                                </div>
+                                                <div class="opacity-50 fs-4 fs-lg-5 fw-light">
+                                                    {{ $room->getName() }}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="opacity-75 fs-6">
+                                                    Tinggi: {{ (round($room->getRoomHeight(), 2) ?? "?") . " " . "meter." }}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="opacity-75 fs-6 mb-1">
+                                                    Luas Lantai: {{ (round($room->meter_squared_floor_wide, 2) ?? "?") }}
+                                                    <sup>2</sup>
+                                                    {{ " " . "meter." }}
+                                                </div>
+                                            </div>
+                                            <form action="{{ route('detail-room') }}" method="get">
+                                                <input type="hidden" name="id" value="{{ $room->getId() }}">
+                                                <button type="submit"
+                                                    class="btn btn-outline-primary w-100 shadow-sm">Lihat</button>
+                                            </form>
+                                        </div>
+                                        {{-- End of Card --}}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">
+                            @for ($i = 0; $i < 4; $i++)
+                                <div class="col">
+                                    {{-- card --}}
+                                    <div class="card h-100 shadow-sm">
+                                        {{-- Gray Placeholder --}}
+                                        <svg aria-label="Placeholder: Image cap" class="bd-placeholder-img card-img-top"
+                                            height="140" preserveAspectRatio="xMidYMid slice" role="img" width="100%"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <title>Placeholder</title>
+                                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                                            <text x="45%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                                        </svg>
+                                        {{-- end of Gray Placeholder --}}
+                                        <div class="card-body">
+                                            <h5 class="card-title text-primary">Ruangan tidak ketemu.</h5>
+                                            <p class="card-text opacity-50">
+                                                Coba untuk mengisi kriteria atau mengganti angka terbesar agar datanya ketemu.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {{-- end of card --}}
+                                </div>
+                            @endfor
+                        </div>
+                    @endif
+                </div>
+                {{-- end of some view logic --}}
+            </div>
         </div>
-
     </div>
-    <!-- end of barang jualan -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha256-3gQJhtmj7YnV1fmtbVcnAV6eI4ws0Tr48bVZCThtCGQ=" crossorigin="anonymous"></script>
-</body>
-
-</html>
+    {{-- <!-- end of item pagination --> --}}
+</x-layout.main>

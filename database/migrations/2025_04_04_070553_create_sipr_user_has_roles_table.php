@@ -42,12 +42,16 @@ return new class extends Migration {
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table
-                ->softDeletesDatetime();
-
-            $table
-                ->datetimes();
+            $table->softDeletesDatetime();
+            $table->datetimes();
         });
+
+        DB::table(SiprUserHasRole::TABLE_NAME)->insert([
+            "user_id" => "2",
+            "role_id" => "2",
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

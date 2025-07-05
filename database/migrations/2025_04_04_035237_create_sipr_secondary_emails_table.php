@@ -27,11 +27,25 @@ return new class extends Migration {
                 ->nullable();
 
             $table
-                ->softDeletesDatetime();
+                ->dateTime('created_at')
+                ->nullable(true)
+                ->useCurrent();
 
             $table
-                ->datetimes();
+                ->dateTime('updated_at')
+                ->nullable(true)
+                ->useCurrent()
+                ->useCurrentOnUpdate();
+
+            $table->softDeletesDatetime();
         });
+
+        DB::table(SiprSecondaryEmail::TABLE_NAME)->insert([
+            "email" => "terry.temple.os@localhost.com",
+            'email_verified_at' => \Illuminate\Support\Carbon::now(),
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

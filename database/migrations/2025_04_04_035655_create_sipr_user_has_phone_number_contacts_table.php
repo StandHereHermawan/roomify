@@ -41,16 +41,18 @@ return new class extends Migration {
                 ->on(SiprPhoneNumber::TABLE_NAME)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-
-            $table
-                ->unique(["user_id", "phone_number_id"]);
-
-            $table
-                ->softDeletesDatetime();
-
-            $table
-                ->datetimes();
+                
+            $table->unique(["user_id", "phone_number_id"]);
+            $table->softDeletesDatetime();
+            $table->datetimes();
         });
+
+        DB::table(SiprUserHasPhoneNumber::TABLE_NAME)->insert([
+            "user_id" => '2',
+            "phone_number_id" => '1',
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**
