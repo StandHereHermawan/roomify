@@ -16,6 +16,7 @@ return new class extends Migration {
     {
         Schema::create(SiprRoomReservationRequest::TABLE_NAME, function (Blueprint $table) {
             $table->id()->primary(true);
+            
             $table->unsignedBigInteger('room_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
 

@@ -37,57 +37,41 @@ class SiprSession extends Model
 
     public function getIdUser()
     {
-        if ($this->user_id != null) {
-            return $this->user_id;
-        } else {
-            return null;
-        }
+        return $this->user_id;
     }
 
     public function getUsername()
     {
-        if ($this->username != null) {
-            return $this->username;
-        } else {
-            return null;
-        }
+        return $this->username;
     }
 
     public function getSession()
     {
-        if ($this->session != null) {
-            return $this->session;
-        } else {
-            return null;
-        }
+        return $this->session;
     }
 
     public function getExpiredAt()
     {
-        if ($this->expired_at != null) {
-            return $this->expired_at;
-        } else {
-            return null;
-        }
+        return $this->expired_at;
     }
 
-    public function getExpiredAtMillis()
-    {
-        return Carbon::createFromTimeString($this->expired_at)->valueOf();
-    }
+    // public function getExpiredAtMillis()
+    // {
+    //     return Carbon::createFromTimeString($this->expired_at)->valueOf();
+    // }
 
-    public function getDurationLeftSessionExpired()
-    {
-        return $this->getExpiredAtMillis() - Carbon::now()->valueOf();
-    }
+    // public function getDurationLeftSessionExpired()
+    // {
+    //     return $this->getExpiredAtMillis() - Carbon::now()->valueOf();
+    // }
 
-    function getIdUserAndUsernameAndSessionAndExpiredAtAsArray()
+    public function getIdUserAndUsernameAndSessionAndExpiredAtAsArray()
     {
         return [
             "idUser" => $this->getIdUser(),
-            "username" => $this->getUsername(),
+            // "username" => $this->getUsername(),
             "session" => $this->getSession(),
-            "expired_at" => $this->getExpiredAt(),
+            // "expired_at" => $this->getExpiredAt(),
         ];
     }
 
@@ -98,7 +82,6 @@ class SiprSession extends Model
 
     public function ownedByUser(): BelongsTo
     {
-        return $this
-            ->belongsTo(SiprUser::class, "user_id", "id");
+        return $this->belongsTo(SiprUser::class, "user_id", "id");
     }
 }

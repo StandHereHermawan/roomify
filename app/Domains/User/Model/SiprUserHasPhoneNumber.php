@@ -12,6 +12,8 @@ class SiprUserHasPhoneNumber extends Model
     use HasFactory, SoftDeletes;
 
     public const TABLE_NAME = "sipr_user_has_phone_numbers";
+    public const COLUMN_PHONE_NUMBER_ID_ITS_NAME = "phone_number_id";
+    public const COLUMN_USER_ID_ITS_NAME = "user_id";
 
     protected $table = SiprUserHasPhoneNumber::TABLE_NAME;
     protected $primaryKey = "id";

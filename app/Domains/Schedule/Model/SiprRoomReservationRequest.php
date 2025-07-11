@@ -11,18 +11,28 @@ class SiprRoomReservationRequest extends Model
 
     public const TABLE_NAME = "sipr_room_reservation_requests";
     public const COLUMN_ID_ITS_NAME = "id";
+    public const COLUMN_USER_ID_ITS_NAME = "user_id";
+    public const COLUMN_ROOM_ID_ITS_NAME = "room_id";
+    public const COLUMN_RESERVATION_DATE_ITS_NAME = "reservation_date";
 
     protected $table = SiprRoomReservationRequest::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
-    private $paginate = 2;
 
     protected $fillable = [
         SiprRoomReservationRequest::COLUMN_ID_ITS_NAME,
+        SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME,
+        SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME,
+        SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME,
         SiprRoomReservationRequest::CREATED_AT,
         SiprRoomReservationRequest::UPDATED_AT,
         "deleted_at",
     ];
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

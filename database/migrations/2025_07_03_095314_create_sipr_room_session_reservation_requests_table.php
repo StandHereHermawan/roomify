@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Room\Model\SiprRoom;
 use App\Domains\Room\Model\SiprRoomSession;
+use App\Domains\Schedule\Model\SiprRoomReservationRequest;
 use App\Domains\Schedule\Model\SiprRoomSessionReservationRequest;
 use App\Domains\User\Model\SiprUser;
 
@@ -24,7 +24,7 @@ return new class extends Migration {
             $table
                 ->foreign("room_reservation_id")
                 ->references("id")
-                ->on(SiprRoomSessionReservationRequest::TABLE_NAME)
+                ->on(SiprRoomReservationRequest::TABLE_NAME)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 

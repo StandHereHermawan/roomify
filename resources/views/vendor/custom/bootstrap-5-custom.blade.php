@@ -46,21 +46,21 @@
             </div>
             <div>
                 <ul class="pagination shadow-sm" style="
-                                        --bs-border-color: var(--bs-secondary);
-                                        --bs-pagination-active-bg: var(--bs-secondary); 
-                                        --bs-pagination-active-border-color: var(--bs-secondary);
+                                        --bs-border-color: var(--bs-{{ $color_pagination ?? "primary" }});
+                                        --bs-pagination-active-bg: var(--bs-{{ $color_pagination ?? "primary" }}); 
+                                        --bs-pagination-active-border-color: var(--bs-{{ $color_pagination ?? "primary" }});
                                         --bs-pagination-hover-color: var(--bs-white);
-                                        --bs-pagination-color: var(--bs-secondary);
+                                        --bs-pagination-color: var(--bs-{{ $color_pagination ?? "primary" }});
                                         --bs-pagination-bg: var(--bs-body-bg);
                                         --bs-pagination-border-width: var(--bs-border-width);
                                         --bs-pagination-border-color: var(--bs-border-color);
-                                        --bs-pagination-hover-bg: var(--bs-secondary);
+                                        --bs-pagination-hover-bg: var(--bs-{{ $color_pagination ?? "primary" }});
                                         --bs-pagination-hover-border-color: var(--bs-border-color);
                                         --bs-pagination-focus-color: var(--bs-dark);
-                                        --bs-pagination-focus-bg: var(--bs-secondary-bg);
+                                        --bs-pagination-focus-bg: var(--bs-{{ $color_pagination ?? "primary" }}-bg);
                                         --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
                                         --bs-pagination-disabled-color: var(--bs-white);
-                                        --bs-pagination-disabled-bg: var(--bs-secondary);
+                                        --bs-pagination-disabled-bg: var(--bs-{{ $color_pagination ?? "primary" }});
                                         --bs-pagination-disabled-border-color: var(--bs-border-color);
                                         ">
                     {{-- Previous Page Link --}}

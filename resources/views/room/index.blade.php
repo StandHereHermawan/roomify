@@ -17,8 +17,9 @@
     {{-- <!-- item pagination  --> --}}
     <div class="container my-5">
         <div class="">
-            <div class="border rounded-3 p-4 gy-3 shadow">
+            <div class="border rounded-3 px-3 gy-3 shadow">
                 {{-- Search accordion --}}
+                {{--
                 <div class="col my-3">
                     <div class="accordion shadow-sm" id="accordion-room-search-specific">
                         <div class="accordion-item">
@@ -60,23 +61,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div class="row g-3 mb-3">
-                                            <div class="col">
-                                                <div class="form-floating">
-                                                    <input type="text" class="form-control" id="search-"
-                                                        placeholder="name@example.com">
-                                                    <label for="search-">Luas Lantai Ruangan</label>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-floating">
-                                                    <input type="text" class="form-control" id="floatingPassword"
-                                                        placeholder="Password">
-                                                    <label for="floatingPassword">Tinggi Ruangan</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        --}}
                                         <div class="d-flex justify-content-center mb-3 mb-lg-0">
                                             <div class="col">
                                                 <button class="btn btn-primary btn-lg w-100 shadow-sm" type="submit">
@@ -95,6 +79,7 @@
                         </div>
                     </div>
                 </div>
+                --}}
                 <div class="col my-3">
                     <div class="accordion shadow-sm" id="accordion-room-search-general">
                         <div class="accordion-item">
@@ -122,7 +107,7 @@
                                                         Tinggi Ruangan Terkecil <b class="opacity-50">Dalam Meter</b>
                                                     </label>
                                                     <div class="form-floating">
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" class="form-control shadow-sm"
                                                             name="search-tinggi-terkecil-ruangan"
                                                             value="{{ $tinggi_ruangan_terkecil ?? ""}}"
                                                             id="search-tinggi-ruangan-terkecil-label"
@@ -138,7 +123,7 @@
                                                         Tinggi Ruangan Terbesar <b class="opacity-50">Dalam Meter</b>
                                                     </label>
                                                     <div class="form-floating">
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" class="form-control shadow-sm"
                                                             name="search-tinggi-terbesar-ruangan"
                                                             value="{{ $tinggi_ruangan_terbesar ?? "" }}"
                                                             id="search-tinggi-ruangan-terbesar-label"
@@ -149,19 +134,27 @@
                                                     </div>
                                                 </div>
                                                 <div class="col">
-                                                    <label for="search-luas-ruangan-terkecil-label" class="form-label">
-                                                        Cari <b class="opacity-50">ke database.</b>
-                                                    </label>
-                                                    <button class="btn btn-primary btn-lg w-100 shadow-sm"
-                                                        type="submit">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                            fill="currentColor" class="bi bi-search"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                                        </svg>
-                                                        Cari Berdasarkan Tinggi Ruangan
-                                                    </button>
+                                                    <div class="row">
+                                                        <label for="search-luas-ruangan-terkecil-label"
+                                                            class="form-label">
+                                                            Cari <b class="opacity-50">ke database.</b>
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-floating">
+                                                        <label for="submit-tinggi">
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="text-white">
+                                                                        <i class="bi bi-search text-white"></i>
+                                                                        Cari Berdasarkan Tinggi Ruangan
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                        <button type="submit" id="submit-tinggi"
+                                                            class="form-control btn btn-primary shadow">
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </form>
@@ -172,7 +165,7 @@
                                                         Luas Ruangan Terkecil <b class="opacity-50">Dalam Meter</b>
                                                     </label>
                                                     <div class="form-floating">
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" class="form-control shadow-sm"
                                                             name="search-luas-terkecil-ruangan"
                                                             value="{{ $luas_ruangan_terkecil ?? ""}}"
                                                             id="search-luas-ruangan-terkecil-label"
@@ -187,7 +180,7 @@
                                                         Luas Ruangan Terbesar <b class="opacity-50">Dalam Meter</b>
                                                     </label>
                                                     <div class="form-floating">
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" class="form-control shadow-sm"
                                                             name="search-luas-terbesar-ruangan"
                                                             value="{{ $luas_ruangan_terbesar ?? "" }}"
                                                             id="search-luas-ruangan-terbesar-label"
@@ -201,16 +194,33 @@
                                                     <label for="search-luas-ruangan-terkecil-label" class="form-label">
                                                         Cari <b class="opacity-50">ke database.</b>
                                                     </label>
-                                                    <button class="btn btn-primary btn-lg w-100 shadow-sm"
-                                                        type="submit">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                            fill="currentColor" class="bi bi-search"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                                        </svg>
-                                                        Cari Berdasarkan Luas Ruangan
-                                                    </button>
+                                                    <div class="form-floating">
+                                                        {{--
+                                                        <button class="form-control btn btn-primary w-100 shadow"
+                                                            type="submit">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                                height="20" fill="currentColor" class="bi bi-search"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                            </svg>
+                                                            Cari Berdasarkan Luas Ruangan
+                                                        </button>
+                                                        --}}
+                                                        <label for="submit-luas" class="text-center">
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="text-white">
+                                                                        <i class="bi bi-search text-white"></i>
+                                                                        Cari Berdasarkan Luas Ruangan
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                        <button type="submit" id="submit-luas"
+                                                            class="form-control btn btn-primary shadow">
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </form>
@@ -228,7 +238,8 @@
                                             </div>
                                         </div>
                                         --}}
-                                    {{--</form>--}}
+                                        {{--
+                                    </form>--}}
                                 </div>
                             </div>
                         </div>
@@ -282,7 +293,7 @@
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">
                             @foreach ($paginatedRooms as $room)
                                 <div class="col">
-                                    <div class="card h-100 shadow-sm">
+                                    <div class="card h-100 shadow">
                                         {{-- Gray Placeholder --}}
                                         <svg aria-label="Placeholder: Image cap" class="bd-placeholder-img card-img-top"
                                             height="140" preserveAspectRatio="xMidYMid slice" role="img" width="100%"

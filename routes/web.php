@@ -1,11 +1,7 @@
 <?php
 
-use App\Domains\User\Middleware\CheckIfAlreadyLoginMiddleware;
-use App\Domains\User\Middleware\SessionMiddleware;
-use App\Domains\User\Model\SiprUserHasSession;
 use App\Http\Middleware\Custom\Authentication\EnsureUserIsLogin;
 use App\Http\Middleware\Custom\Authentication\EnsureUserIsNotYetLogin;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,7 +19,7 @@ Route::get('/', function () {
     return redirect()->route('registration'); // default: return view('welcome');
 });
 
-Route::middleware(EnsureUserIsNotYetLogin::class)->prefix('')->group(function () {
+Route::middleware(EnsureUserIsNotYetLogin::class)->group(function () {
     Route::prefix('/registration')->group(function () {
         Route::get('', [App\Domains\User\Controller\AuthController::class, "registerForm"])
             ->name('registration');
@@ -40,7 +36,6 @@ Route::middleware(EnsureUserIsNotYetLogin::class)->prefix('')->group(function ()
 });
 
 Route::middleware(EnsureUserIsLogin::class)->group(function () {
-
     Route::prefix('/room')->group(function () {
         Route::get('', [App\Domains\Room\Controller\RoomController::class, "roomSearchPaginate"])
             ->name('list-of-room');
@@ -54,7 +49,7 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
 
         Route::prefix('/reservation')->group(function () {
             Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "addRoomReservationForm"])
-                ->name('room-reservation');
+                ->name('room-reservation-appointment');
 
             Route::post('', [App\Domains\Schedule\Controller\RoomReservationController::class, "submitAddRoomReservationForm"]);
         });
@@ -72,7 +67,6 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
         });
 
         Route::prefix('/session')->group(function () {
-
             Route::get('', [App\Domains\Room\Controller\RoomSessionController::class, "roomSessionPaginate"])
                 ->name('list-of-room-session');
 
@@ -99,70 +93,45 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
     });
 
     Route::prefix('/dashboard')->group(function () {
-
-        Route::get('', function () {
-            return redirect(route('list-of-room'));
-        })->name('dashboard');
+        Route::get('', [App\Domains\Room\Controller\RoomController::class, "dashboard"])
+            ->name('dashboard');
 
         Route::prefix('/account')->group(function () {
-
-            Route::get('', [App\Domains\User\Controller\UserController::class, "listOfRegisteredAccount"])
+            Route::get('/list', [App\Domains\User\Controller\UserController::class, "listOfRegisteredAccount"])
                 ->name('list-of-account');
 
             Route::get('/current', [App\Domains\User\Controller\UserController::class, "accountDetail"])
                 ->name('account');
+
+            Route::prefix('/email')->group(function () {
+                Route::prefix('/add')->group(function () {
+                    Route::get('', [App\Domains\User\Controller\UserController::class, "addEmailForm"])
+                        ->name('add-email');
+                    Route::post('', [App\Domains\User\Controller\UserController::class, "submitAddEmailForm"]);
+                });
+                Route::prefix('/edit')->group(function () {
+                    Route::get('', [App\Domains\User\Controller\UserController::class, "editEmailForm"])
+                        ->name('edit-email');
+                    Route::post('', [App\Domains\User\Controller\UserController::class, "submitEditEmailForm"]);
+                });
+                Route::post('/delete', [App\Domains\User\Controller\UserController::class, "deleteEmail"])
+                    ->name('delete-email');
+            });
+
+            Route::prefix('/phone-number')->group(function () {
+                Route::prefix('/add')->group(function () {
+                    Route::get('', [App\Domains\User\Controller\UserController::class, "addPhoneNumberForm"])
+                        ->name('add-phone-number');
+                    Route::post('', [App\Domains\User\Controller\UserController::class, "submitAddPhoneNumberForm"]);
+                });
+                Route::prefix('/edit')->group(function () {
+                    Route::get('', [App\Domains\User\Controller\UserController::class, "editPhoneNumberForm"])
+                        ->name('edit-phone-number');
+                    Route::post('', [App\Domains\User\Controller\UserController::class, "submitEditPhoneNumberForm"]);
+                });
+                Route::post('/delete', [App\Domains\User\Controller\UserController::class, "deletePhoneNumber"])
+                    ->name('delete-phone-number');
+            });
         });
     });
 });
-
-// Route::prefix('/account-management')->group(function () {
-// 
-// Route::middleware(CheckIfAlreadyLoginMiddleware::class)->group(function () {
-// 
-// Route::prefix("/registration")->group(function () {
-// Route::post("", [App\Domains\User\Controller\AccountManagementController::class, "submitFormRegister"]);
-// Route::get("", [App\Domains\User\Controller\AccountManagementController::class, "formRegister"]);
-// });
-// 
-// Route::prefix("/login")->group(function () {
-// Route::post("", [App\Domains\User\Controller\AccountManagementController::class, "submitFormLogin"]);
-// Route::get("", [App\Domains\User\Controller\AccountManagementController::class, "formLogin"]);
-// });
-// });
-
-// Route::middleware(SessionMiddleware::class)->prefix('/dashboard')->group(function () {
-// 
-// Route::get('', [App\Domains\User\Controller\AccountManagementController::class, "dashboard"]);
-// 
-// Route::prefix('/account')->group(function () {
-// 
-// Route::get('', [App\Domains\User\Controller\AccountManagementController::class, "account"]);
-// 
-// Route::get('/edit-username', [App\Domains\User\Controller\AccountManagementController::class, "editUsernameForm"]);
-// Route::post('/edit-username', [App\Domains\User\Controller\AccountManagementController::class, "submitEditUsernameForm"]);
-// 
-// Route::get('/edit-name', [App\Domains\User\Controller\AccountManagementController::class, "editNameForm"]);
-// Route::post('/edit-name', [App\Domains\User\Controller\AccountManagementController::class, "submitEditNameForm"]);
-// 
-// Route::get('/add-email', [App\Domains\User\Controller\AccountManagementController::class, "addEmailForm"]);
-// Route::post('/add-email', [App\Domains\User\Controller\AccountManagementController::class, "submitAddEmailForm"]);
-// 
-// Route::get('/edit-email', [App\Domains\User\Controller\AccountManagementController::class, "editEmailForm"]);
-// Route::post('/edit-email', [App\Domains\User\Controller\AccountManagementController::class, "submitEditEmailForm"]);
-// 
-// Route::get('/delete-email', [App\Domains\User\Controller\AccountManagementController::class, "deleteEmail"]);
-// 
-// Route::get('/edit-phone-number', [App\Domains\User\Controller\AccountManagementController::class, "editPhoneNumberForm"]);
-// Route::post('/edit-phone-number', [App\Domains\User\Controller\AccountManagementController::class, "submitEditPhoneNumberForm"]);
-// 
-// Route::get('/delete-phone-number', [App\Domains\User\Controller\AccountManagementController::class, "deletePhoneNumber"]);
-// 
-// Route::get('/add-phone-number', [App\Domains\User\Controller\AccountManagementController::class, "addPhoneNumberForm"]);
-// Route::post('/add-phone-number', [App\Domains\User\Controller\AccountManagementController::class, "submitAddPhoneNumberForm"]);
-// });
-// 
-// Route::get('/logout', [App\Domains\User\Controller\AccountManagementController::class, "logout"]);
-// 
-// });
-
-// });

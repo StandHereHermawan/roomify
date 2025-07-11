@@ -12,30 +12,14 @@ class SiprUserHasSecondaryEmail extends Model
     use HasFactory, SoftDeletes;
 
     public const TABLE_NAME = "sipr_user_has_emails";
+    public const COLUMN_USER_ID_ITS_NAME = "user_id";
+    public const COLUMN_EMAIL_ID_ITS_NAME = "email_id";
 
     protected $table = SiprUserHasSecondaryEmail::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = false;
-
-    public function getUserId()
-    {
-        if ($this->user_id != null) {
-            return $this->user_id;
-        } else {
-            return null;
-        }
-    }
-
-    public function getEmailId()
-    {
-        if ($this->email_id != null) {
-            return $this->email_id;
-        } else {
-            return null;
-        }
-    }
 
     protected $fillable = [
         'user_id',
@@ -44,4 +28,14 @@ class SiprUserHasSecondaryEmail extends Model
         "updated_at",
         "deleted_at",
     ];
+
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    public function getEmailId()
+    {
+        return $this->email_id;
+    }
 }

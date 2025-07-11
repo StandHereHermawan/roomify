@@ -12,12 +12,14 @@ class SiprSecondaryEmail extends Model
     use HasFactory, SoftDeletes;
 
     public const TABLE_NAME = "sipr_secondary_emails";
+    public const COLUMN_ID_ITS_NAME = "id";
+    public const COLUMN_EMAIL_ITS_NAME = "email";
 
     protected $table = SiprSecondaryEmail::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'email',

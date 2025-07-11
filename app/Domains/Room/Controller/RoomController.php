@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
 {
+    public function dashboard(Request $request) {
+        return redirect(route('list-of-room'));
+    }
+
     public function roomSearchPaginate(Request $request)
     {
         $input = $request->only([
@@ -35,7 +39,29 @@ class RoomController extends Controller
             $paginatedRooms = SiprRoom::select()
                 ->whereBetween(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME, [$tinggi_ruangan_terkecil, $tinggi_ruangan_terbesar])
                 ->whereBetween(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME, [$luas_ruangan_terkecil, $luas_ruangan_terbesar])
-                ->paginate(4, ['*'], 'roomPage')
+                ->paginate(4, ['*'], 'room_page')
+                ->withQueryString()
+                ->appends($request->getQueryString());
+        }
+
+        if (
+            $luas_ruangan_terkecil !== null &&
+            $luas_ruangan_terbesar !== null
+        ) {
+            $paginatedRooms = SiprRoom::select()
+                ->whereBetween(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME, [$luas_ruangan_terkecil, $luas_ruangan_terbesar])
+                ->paginate(4, ['*'], 'room_page')
+                ->withQueryString()
+                ->appends($request->getQueryString());
+        }
+
+        if (
+            $tinggi_ruangan_terkecil !== null &&
+            $tinggi_ruangan_terbesar !== null
+        ) {
+            $paginatedRooms = SiprRoom::select()
+                ->whereBetween(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME, [$tinggi_ruangan_terkecil, $tinggi_ruangan_terbesar])
+                ->paginate(4, ['*'], 'room_page')
                 ->withQueryString()
                 ->appends($request->getQueryString());
         }
@@ -47,29 +73,7 @@ class RoomController extends Controller
             $luas_ruangan_terbesar === null
         ) {
             $paginatedRooms = SiprRoom::select()
-                ->paginate(4, ['*'], 'roomPage')
-                ->withQueryString()
-                ->appends($request->getQueryString());
-        }
-
-        if (
-            $luas_ruangan_terkecil !== null &&
-            $luas_ruangan_terbesar !== null
-        ) {
-            $paginatedRooms = SiprRoom::select()
-                ->whereBetween(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME, [$luas_ruangan_terkecil, $luas_ruangan_terbesar])
-                ->paginate(4, ['*'], 'roomPage')
-                ->withQueryString()
-                ->appends($request->getQueryString());
-        }
-
-        if (
-            $tinggi_ruangan_terkecil !== null &&
-            $tinggi_ruangan_terbesar !== null
-        ) {
-            $paginatedRooms = SiprRoom::select()
-                ->whereBetween(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME, [$tinggi_ruangan_terkecil, $tinggi_ruangan_terbesar])
-                ->paginate(4, ['*'], 'roomPage')
+                ->paginate(4, ['*'], 'room_page')
                 ->withQueryString()
                 ->appends($request->getQueryString());
         }
