@@ -2,7 +2,10 @@
 
 namespace App\Domains\Schedule\Model;
 
+use App\Domains\Room\Model\SiprRoomSession;
+use \App\Domains\User\Model\SiprUser;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SiprRoomSessionReservationRequest extends Model
@@ -33,4 +36,27 @@ class SiprRoomSessionReservationRequest extends Model
         SiprRoomSessionReservationRequest::UPDATED_AT,
         "deleted_at",
     ];
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function userRequest(): HasOne
+    {
+        return $this->hasOne(
+            SiprUser::class,
+            "id",
+            SiprRoomSessionReservationRequest::COLUMN_USER_ID_ITS_NAME,
+        );
+    }
+
+    public function roomSession(): HasOne
+    {
+        return $this->hasOne(
+            SiprRoomSession::class,
+            "id",
+            SiprRoomSessionReservationRequest::COLUMN_ROOM_SESSION_ID_ITS_NAME,
+        );
+    }
 }

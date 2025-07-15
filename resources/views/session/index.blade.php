@@ -9,12 +9,9 @@
 
 <x-layout.main :title="$title">
     <x-navbar></x-navbar>
-
     {{-- Main Content --}}
     <main class="container-fluid container-md my-5">
-
-        <div class="border rounded-3 px-4 pt-4 shadow">
-
+        <div class="border rounded-3 px-4 p-4 shadow">
             {{-- Search accordion --}}
             <div class="accordion mb-3 shadow-sm" id="accordionExample1">
                 <div class="accordion-item">
@@ -75,7 +72,6 @@
                 </div>
             </div>
             {{-- End of Search accordion --}}
-
             {{-- button section --}}
             <div class="d-flex justify-content-between mt-2 my-3">
                 {{-- Button --}}
@@ -110,8 +106,6 @@
                 {{-- End of Button --}}
             </div>
             {{-- end of button section --}}
-
-
             {{-- Bagian tabel --}}
             <div class="row">
 

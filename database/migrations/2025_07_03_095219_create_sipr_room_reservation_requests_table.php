@@ -14,9 +14,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        $column_ID_its_name = SiprRoomReservationRequest::COLUMN_ID_ITS_NAME;
+        $column_USER_ID_its_name = SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME;
+        $column_ROOM_ID_its_name = SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME;
+        $column_RESERVATION_DATE_its_name = SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
+        $column_CREATED_AT_its_name = SiprRoomReservationRequest::CREATED_AT;
+        $column_UPDATED_AT_its_name = SiprRoomReservationRequest::UPDATED_AT;
+
         Schema::create(SiprRoomReservationRequest::TABLE_NAME, function (Blueprint $table) {
             $table->id()->primary(true);
-            
             $table->unsignedBigInteger('room_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
 
@@ -28,6 +34,11 @@ return new class extends Migration {
                 ->cascadeOnDelete();
 
             $table
+                ->string('status', 255)
+                ->nullable()
+                ->default('PENDING');
+
+            $table
                 ->foreign("user_id")
                 ->references("id")
                 ->on(SiprUser::TABLE_NAME)
@@ -36,7 +47,11 @@ return new class extends Migration {
 
             $table->date('reservation_date');
             $table->softDeletes();
-            
+
+            $table
+            ->dateTime('determined_at')
+            ->nullable(true);
+
             $table
                 ->dateTime('created_at')
                 ->nullable(true)
@@ -48,6 +63,24 @@ return new class extends Migration {
                 ->useCurrent()
                 ->useCurrentOnUpdate();
         });
+
+        DB::table(SiprRoomReservationRequest::TABLE_NAME)->insert([
+            "{$column_ID_its_name}" => "1",
+            "{$column_USER_ID_its_name}" => "2",
+            "{$column_ROOM_ID_its_name}" => "1",
+            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        ]);
+
+        DB::table(SiprRoomReservationRequest::TABLE_NAME)->insert([
+            "{$column_ID_its_name}" => "2",
+            "{$column_USER_ID_its_name}" => "3",
+            "{$column_ROOM_ID_its_name}" => "2",
+            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

@@ -8,12 +8,21 @@ use Illuminate\View\Component;
 
 class Account extends Component
 {
+    public $color_primary;
+    public $opacity;
+    public $name;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
-    {
-        //
+    public function __construct(
+        $color_primary = "primary",
+        $opacity = "100",
+        $name = "Back to current account",
+    ) {
+        $this->color_primary = $color_primary;
+        $this->opacity = $opacity;
+        $this->name = $name;
     }
 
     /**

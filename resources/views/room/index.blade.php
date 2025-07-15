@@ -17,7 +17,7 @@
     {{-- <!-- item pagination  --> --}}
     <div class="container my-5">
         <div class="">
-            <div class="border rounded-3 px-3 gy-3 shadow">
+            <div class="border rounded-3 p-4 g-4 shadow">
                 {{-- Search accordion --}}
                 {{--
                 <div class="col my-3">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 --}}
-                <div class="col my-3">
+                <div class="col">
                     <div class="accordion shadow-sm" id="accordion-room-search-general">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
@@ -283,17 +283,17 @@
                 </div>
                 {{-- End of Button section --}}
                 {{-- Some view logic --}}
-                <div class="col my-3">
+                <div class="col mt-3">
                     @if (isset($paginatedRooms) && is_iterable($paginatedRooms) && $paginatedRooms->total() >= 1)
                         {{-- Pagination Navigation --}}
-                        <div class="mt-2">
+                        <div class="">
                             {{ $paginatedRooms->links($default_pagination_view) }}
                         </div>
                         {{-- End of Pagination Navigation --}}
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">
                             @foreach ($paginatedRooms as $room)
                                 <div class="col">
-                                    <div class="card h-100 shadow">
+                                    <div class="card h-100 shadow-sm">
                                         {{-- Gray Placeholder --}}
                                         <svg aria-label="Placeholder: Image cap" class="bd-placeholder-img card-img-top"
                                             height="140" preserveAspectRatio="xMidYMid slice" role="img" width="100%"

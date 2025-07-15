@@ -48,17 +48,43 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
         });
 
         Route::prefix('/reservation')->group(function () {
-            Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "addRoomReservationForm"])
-                ->name('room-reservation-appointment');
+            Route::prefix('/request')->group(function () {
 
-            Route::post('', [App\Domains\Schedule\Controller\RoomReservationController::class, "submitAddRoomReservationForm"]);
-        });
+                Route::prefix('/add')->group(function () {
+                    Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "addRoomReservationForm"])
+                        ->name('room-reservation-request');
+                    Route::post('', [App\Domains\Schedule\Controller\RoomReservationController::class, "submitAddRoomReservationForm"]);
+                });
 
-        Route::prefix('/reserved')->group(function () {
-            Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "listOfRoomReserved"])
-                ->name('list-of-room-reserved');
+                Route::prefix('/list')->group(function () {
+                    Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "listOfRoomReservationRequest"])
+                        ->name('list-of-room-reservation-request');
 
-            Route::post('', [App\Domains\Schedule\Controller\RoomReservationController::class, "submitAddRoomReservationForm"]);
+                    Route::prefix('/me')->group(function () {
+                        Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "listOfMyRoomReservationRequest"])
+                            ->name('list-of-my-room-reservation-request');
+                    });
+
+                    Route::prefix('/manage')->group(function () {
+                        Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "adminListOfRoomReservationRequest"])
+                            ->name('manage-list-of-room-reservation-request');
+                    });
+                });
+
+                Route::prefix('/delete')->group(function () {
+                    Route::post('/hard', [App\Domains\Schedule\Controller\RoomReservationController::class, "deleteFromDatabaseRoomReservationRequest"])
+                        ->name('delete-room-reservation-request-from-database');
+
+                    Route::post('/soft', [App\Domains\Schedule\Controller\RoomReservationController::class, "softDeleteRoomReservationRequest"])
+                        ->name('soft-delete-room-reservation-request');
+                });
+
+                Route::post('/accept', [App\Domains\Schedule\Controller\RoomReservationController::class, "acceptRoomReservationRequest"])
+                    ->name('accept-room-reservation-request');
+
+                Route::post('/reject', [App\Domains\Schedule\Controller\RoomReservationController::class, "acceptRoomReservationRequest"])
+                    ->name('reject-room-reservation-request');
+            });
         });
 
         Route::prefix('/detail')->group(function () {

@@ -97,7 +97,7 @@
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
                         <div class="row row-cols-1 g-2">
-                            <form action="{{ route('room-reservation-appointment') }}" method="get"
+                            <form action="{{ route('room-reservation-request') }}" method="get"
                                 class="d-flex justify-content-center mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
@@ -109,13 +109,31 @@
                                     Pengajuan Peminjaman Ruangan
                                 </button>
                             </form>
-                            <form action="{{ route('list-of-room') }}" method="get"
+                            <form action="{{ route('list-of-room-reservation-request') }}" method="get"
                                 class="d-flex justify-content-center mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-list fs-5 me-1"></i>
-                                    Daftar Pengajuan Pinjam Ruangan
+                                    Semua Pengajuan Pinjam Ruangan (Harusnya ga semua orang bisa akses url ini)
+                                </button>
+                            </form>
+                            <form action="{{ route('list-of-my-room-reservation-request') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Pengajuan Pinjam Ruangan oleh Saya
+                                </button>
+                            </form>
+                            <form action="{{ route('manage-list-of-room-reservation-request') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Kelola Pengajuan Pinjam Ruangan (Harusnya hanya boleh admin)
                                 </button>
                             </form>
                             <form action="{{ route('list-of-room') }}" method="get"
@@ -127,7 +145,7 @@
                                     Daftar Ruangan
                                 </button>
                             </form>
-                            <form action="{{ route('list-of-room-reserved') }}" method="get"
+                            <form action="{{ route('list-of-room') }}" method="get"
                                 class="d-flex justify-content-center mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"

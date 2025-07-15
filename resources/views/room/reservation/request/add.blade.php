@@ -13,7 +13,7 @@
             max-height: 20rem;
         }
     </style>
-    <div class="mt-3">
+    <div class="my-3">
         <div class="container-fluid container-lg">
             {{--
             <div class="col-auto col-sm-8 offset-sm-2 col-lg-6 offset-lg-3">
@@ -21,7 +21,10 @@
                 <div class="">
                     {{-- add room form with style --}}
                     <div class="p-4 border rounded-3 shadow">
-                        <h1 class="mb-4 text-center text-primary">{{ $full_title }}</h1>
+                        <h1 class="mb-4 text-center text-primary">
+                            {{ $full_title }}
+                            <hr />
+                        </h1>
                         <div class="col my-3">
                             {{-- search room specific accordion --}}
                             <div class="accordion shadow-sm" id="accordion-room-search-specific">
@@ -87,7 +90,7 @@
                         </div>
                         {{-- header form --}}
                         <div>
-                            <div class="fs-2 ">Ruangan yang akan dipinjam</div>
+                            <div class="fs-2">Ruangan yang akan dipinjam</div>
                         </div>
                         {{-- end header form --}}
                         <form id="myForm" action="#" method="post" novalidate>
@@ -211,7 +214,9 @@
                             </div>
                             @isset($error_room_search_input)
                                 @if (strlen($error_room_search_input) > 2)
-                                    <div class="text-danger fs-3 text-center">{{ $error_room_search_input }}</div>
+                                    <div class="w-100 fs-3 text-center btn btn-outline-danger shadow-sm">
+                                        {{ $error_room_search_input }}
+                                    </div>
                                 @endif
                             @endisset
                             <div>
@@ -385,7 +390,7 @@
                             </div>
                             {{-- end of submit button --}}
                         </form>
-                        {{-- session pagination --}}
+                        {{-- room pagination --}}
                         <div>
                             @if (isset($room_pagination))
                                 <div class="mt-3">
@@ -411,7 +416,7 @@
                                                         <div class="fs-4 fw-bold text-primary">
                                                             {{ $room->getRoomCode() }}
                                                         </div>
-                                                        <div class="opacity-50 fs-4 fs-lg-5 fw-light">
+                                                        <div class="opacity-50 fs-4 fw-light">
                                                             {{ $room->getName() }}
                                                         </div>
                                                     </div>
@@ -442,10 +447,10 @@
                                 </div>
                             @endif
                         </div>
-                        {{-- end of session pagination --}}
+                        {{-- end of room pagination --}}
                         {{-- back to room session page --}}
                         <a href="{{ route('list-of-room') }}">
-                            <div class="form-floating mt-3 shadow">
+                            <div class="form-floating mt-3 shadow-sm">
                                 <button type="reset" class="btn btn-outline-secondary w-100">
                                     Back to List of Room
                                 </button>
@@ -455,7 +460,9 @@
                     </div>
                     {{-- end of add room form with style --}}
                 </div>
+                {{--
             </div>
+            --}}
         </div>
     </div>
     <script>

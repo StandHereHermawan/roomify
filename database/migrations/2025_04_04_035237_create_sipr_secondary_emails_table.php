@@ -46,6 +46,13 @@ return new class extends Migration {
             "created_at" => \Illuminate\Support\Carbon::now(),
             "updated_at" => \Illuminate\Support\Carbon::now(),
         ]);
+
+        DB::table(SiprSecondaryEmail::TABLE_NAME)->insert([
+            "email" => "david.hansson@localhost.com",
+            'email_verified_at' => \Illuminate\Support\Carbon::now(),
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

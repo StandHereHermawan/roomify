@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
 {
-    public function dashboard(Request $request) {
+    public function dashboard(Request $request)
+    {
         return redirect(route('list-of-room'));
     }
 
@@ -79,44 +80,22 @@ class RoomController extends Controller
         }
 
         return view('room.index')
-            ->with(
-                'paginatedRooms',
-                $paginatedRooms
-            )
-            ->with(
-                'tinggi_ruangan_terkecil',
-                $tinggi_ruangan_terkecil
-            )->with(
-                'tinggi_ruangan_terbesar',
-                $tinggi_ruangan_terbesar
-            )->with(
-                'luas_ruangan_terkecil',
-                $luas_ruangan_terkecil
-            )->with(
-                'luas_ruangan_terbesar',
-                $luas_ruangan_terbesar
-            );
+            ->with('paginatedRooms', $paginatedRooms)
+            ->with('tinggi_ruangan_terkecil', $tinggi_ruangan_terkecil)
+            ->with('tinggi_ruangan_terbesar', $tinggi_ruangan_terbesar)
+            ->with('luas_ruangan_terkecil', $luas_ruangan_terkecil)
+            ->with('luas_ruangan_terbesar', $luas_ruangan_terbesar);
     }
 
     public function roomDetail(Request $request)
     {
-        $room_input = $request
-            ->only(['id']);
-
-        $room_id
-            = $room_input['id'];
-
+        $room_input = $request->only(['id']);
+        $room_id = $room_input['id'];
         $room_model = SiprRoom::select()
             ->where(SiprRoom::COLUMN_ID_ITS_NAME, '=', $room_id)
-            ->first()
-        ;
+            ->first();
 
-        return view('room.detail')
-            ->with(
-                'room',
-                $room_model
-            )
-        ;
+        return view('room.detail')->with('room', $room_model);
     }
 
     public function addRoomForm(Request $request)
@@ -137,7 +116,12 @@ class RoomController extends Controller
         $error_add_room_wide
             = $input['error_add_room_wide'] ?? null;
 
-        if ($error_add_room_code !== null && $error_add_room_name !== null && $error_add_room_height !== null && $error_add_room_wide !== null) {
+        if (
+            $error_add_room_code !== null &&
+            $error_add_room_name !== null &&
+            $error_add_room_height !== null &&
+            $error_add_room_wide !== null
+        ) {
             return view('room.add')
                 ->with('error_add_room_name', $error_add_room_name)
                 ->with('error_add_room_height', $error_add_room_height)
@@ -191,10 +175,14 @@ class RoomController extends Controller
         if ($validator->fails()) {
             $errorMessage = $validator->getMessageBag();
 
-            $error_nama = isset($errorMessage->get('nama-ruangan')[0]) ? $errorMessage->get('nama-ruangan')[0] : "";
-            $error_kode = isset($errorMessage->get('kode-ruangan')[0]) ? $errorMessage->get('kode-ruangan')[0] : "";
-            $error_height = isset($errorMessage->get('tinggi-ruangan')[0]) ? $errorMessage->get('tinggi-ruangan')[0] : "";
-            $error_wide = isset($errorMessage->get('luas-ruangan')[0]) ? $errorMessage->get('luas-ruangan')[0] : "";
+            $error_nama =
+                isset($errorMessage->get('nama-ruangan')[0]) ? $errorMessage->get('nama-ruangan')[0] : "";
+            $error_kode =
+                isset($errorMessage->get('kode-ruangan')[0]) ? $errorMessage->get('kode-ruangan')[0] : "";
+            $error_height =
+                isset($errorMessage->get('tinggi-ruangan')[0]) ? $errorMessage->get('tinggi-ruangan')[0] : "";
+            $error_wide =
+                isset($errorMessage->get('luas-ruangan')[0]) ? $errorMessage->get('luas-ruangan')[0] : "";
 
             return redirect(
                 url()->route('add-room') .
@@ -230,7 +218,6 @@ class RoomController extends Controller
         ]);
 
         DB::commit();
-
         return view('room.add');
     }
 }

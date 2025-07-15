@@ -53,6 +53,13 @@ return new class extends Migration {
             "created_at" => \Illuminate\Support\Carbon::now(),
             "updated_at" => \Illuminate\Support\Carbon::now(),
         ]);
+
+        DB::table(SiprUserHasPhoneNumber::TABLE_NAME)->insert([
+            "user_id" => '3',
+            "phone_number_id" => '1',
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

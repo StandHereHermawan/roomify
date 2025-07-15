@@ -48,6 +48,12 @@ return new class extends Migration {
             "created_at" => \Illuminate\Support\Carbon::now(),
             "updated_at" => \Illuminate\Support\Carbon::now(),
         ]);
+
+        DB::table(SiprRole::TABLE_NAME)->insert([
+            "role" => "OPERATOR",
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**

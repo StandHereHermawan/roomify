@@ -41,6 +41,12 @@ return new class extends Migration {
             "created_at" => \Illuminate\Support\Carbon::now(),
             "updated_at" => \Illuminate\Support\Carbon::now(),
         ]);
+
+        DB::table(SiprPhoneNumber::TABLE_NAME)->insert([
+            "phone_number" => "+62-852-7890-3456",
+            "created_at" => \Illuminate\Support\Carbon::now(),
+            "updated_at" => \Illuminate\Support\Carbon::now(),
+        ]);
     }
 
     /**
