@@ -4,44 +4,49 @@
     $default_description = "Lorem ipsum dolor sit amet consectetur adipisicing elit.";
     $default_pagination_view = "vendor.custom.bootstrap-5-custom";
 
-    $title = "Daftar Sesi"
+    $title = "Daftar Pengguna Teregistrasi"
 @endphp
 
 <x-layout.main :title="$title">
     <x-navbar></x-navbar>
-
     {{-- Main Content --}}
-    <main class="container-fluid container-md my-5">
+    <main class="container-fluid container-xl my-5">
         <div class="border rounded-3 px-4 pt-4 shadow">
-            {{-- Bagian produk tetap sama --}}
-            <div class="row">
+            {{-- --}}
+            <div class="">
+                {{-- --}}
                 <table class="table">
                     {{-- table header --}}
                     <thead>
                         <tr>
                             <th scope="col">
-                                <div class="h3 text-primary">
+                                <div class="fs-3 text-primary">
                                     id
                                 </div>
                             </th>
                             <th scope="col">
-                                <div class="h3 text-primary">
+                                <div class="fs-3 text-primary">
                                     Username
                                 </div>
                             </th>
                             <th scope="col">
-                                <div class="h3 text-primary">
+                                <div class="fs-3 text-primary">
                                     Name
                                 </div>
                             </th>
                             <th scope="col">
-                                <div class="h3 text-primary">
+                                <div class="fs-3 text-primary">
+                                    Role
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="fs-3 text-primary">
                                     Created
                                 </div>
                             </th>
                             <th scope="col">
                                 <div class="d-flex">
-                                    <div class="h3 text-primary me-1">
+                                    <div class="fs-3 text-primary me-1">
                                         Option
                                     </div>
                                 </div>
@@ -50,37 +55,51 @@
                         </tr>
                     </thead>
                     {{-- end of table header --}}
-
+                    {{-- --}}
                     {{-- table body --}}
                     <tbody class="table-group-divider text-primary">
                         @if (isset($listOfAccount) && is_iterable($listOfAccount))
-
+                            {{-- --}}
                             {{-- Pagination Navigation --}}
                             <div class="mt-2">
                                 {{ $listOfAccount->links($default_pagination_view) }}
                             </div>
                             {{-- End of Pagination Navigation --}}
-
+                            {{-- --}}
+                            {{-- --}}
                             @foreach ($listOfAccount as $account)
                                 {{-- Row --}}
                                 <tr>
                                     <th scope="row">
-                                        <div class="h3">
+                                        <div class="fs-5">
                                             {{ $account->getId() }}
                                         </div>
                                     </th>
                                     <td scope="row">
-                                        <div class="h3">
+                                        <div class="fs-5">
                                             {{ $account->getUsername() }}
                                         </div>
                                     </td>
                                     <td scope="row">
-                                        <div class="h3">
+                                        <div class="fs-5">
                                             {{ $account->getName() }}
                                         </div>
                                     </td>
                                     <td scope="row">
-                                        <div class="h3">
+                                        @if (isset($account->hasRoles) && is_iterable($account->hasRoles))
+                                            @foreach ($account->hasRoles as $role_model)
+                                                <div class="fs-5">
+                                                    {{ $role_model->role }}
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="fs-5">
+                                                Not yet available registered email.
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td scope="row">
+                                        <div class="fs-5">
                                             {{ Illuminate\Support\Carbon::parse($account->created_at)->translatedFormat('d F Y, h:iA') }}
                                         </div>
                                     </td>
@@ -114,11 +133,15 @@
                                 </tr>
                                 {{-- End of Row --}}
                             @endforeach
+                            {{-- --}}
                         @endif
                     </tbody>
                     {{-- end of table body --}}
+                    {{-- --}}
                 </table>
+                {{-- --}}
             </div>
+            {{-- --}}
         </div>
     </main>
     {{-- End of Main Content --}}

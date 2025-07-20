@@ -409,7 +409,6 @@
                                                     <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
                                                 </svg>
                                                 {{-- End of Gray Placeholder --}}
-
                                                 {{-- Card --}}
                                                 <div class="card-body">
                                                     <div class="d-flex w-100 justify-content-between">
@@ -434,7 +433,7 @@
                                                             {{ " " . "meter." }}
                                                         </div>
                                                     </div>
-                                                    <form action="{{ route('detail-room') }}" method="get">
+                                                    <form action="{{ route('detail-room', $room->getId()) }}" method="get">
                                                         <input type="hidden" name="id" value="{{ $room->getId() }}">
                                                         <button type="submit"
                                                             class="btn btn-outline-primary w-100 shadow-sm">Lihat</button>

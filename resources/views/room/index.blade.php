@@ -293,6 +293,7 @@
                         <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">
                             @foreach ($paginatedRooms as $room)
                                 <div class="col">
+                                    {{-- Card --}}
                                     <div class="card h-100 shadow-sm">
                                         {{-- Gray Placeholder --}}
                                         <svg aria-label="Placeholder: Image cap" class="bd-placeholder-img card-img-top"
@@ -303,8 +304,6 @@
                                             <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
                                         </svg>
                                         {{-- End of Gray Placeholder --}}
-
-                                        {{-- Card --}}
                                         <div class="card-body">
                                             <div class="d-flex w-100 justify-content-between">
                                                 <div class="fs-4 fw-bold text-primary">
@@ -326,11 +325,11 @@
                                                     {{ " " . "meter." }}
                                                 </div>
                                             </div>
-                                            <form action="{{ route('detail-room') }}" method="get">
-                                                <input type="hidden" name="id" value="{{ $room->getId() }}">
-                                                <button type="submit"
-                                                    class="btn btn-outline-primary w-100 shadow-sm">Lihat</button>
-                                            </form>
+                                            <a href="{{ route('detail-room', $room->getId()) }}">
+                                                <button type="submit" class="btn btn-outline-primary w-100 shadow-sm">
+                                                    Detail Ruangan
+                                                </button>
+                                            </a>
                                         </div>
                                         {{-- End of Card --}}
                                     </div>

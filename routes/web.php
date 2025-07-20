@@ -33,6 +33,9 @@ Route::middleware(EnsureUserIsNotYetLogin::class)->group(function () {
 
         Route::post('', [App\Domains\User\Controller\AuthController::class, "submitFormLogin"]);
     });
+
+    Route::post('/logout', [App\Domains\User\Controller\AuthController::class, "submitLogout"])
+            ->name('logout');
 });
 
 Route::middleware(EnsureUserIsLogin::class)->group(function () {
@@ -47,6 +50,11 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
             Route::post('', [App\Domains\Room\Controller\RoomController::class, "submitAddRoomForm"]);
         });
 
+        Route::prefix('/{id}/detail')->group(function () {
+            Route::get('', [App\Domains\Room\Controller\RoomController::class, "roomDetail"])
+                ->name('detail-room');
+        });
+
         Route::prefix('/reservation')->group(function () {
             Route::prefix('/request')->group(function () {
 
@@ -57,7 +65,7 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
                 });
 
                 Route::prefix('/list')->group(function () {
-                    Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "listOfRoomReservationRequest"])
+                    Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "listOfAllRoomReservationRequest"])
                         ->name('list-of-room-reservation-request');
 
                     Route::prefix('/me')->group(function () {
@@ -82,14 +90,9 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
                 Route::post('/accept', [App\Domains\Schedule\Controller\RoomReservationController::class, "acceptRoomReservationRequest"])
                     ->name('accept-room-reservation-request');
 
-                Route::post('/reject', [App\Domains\Schedule\Controller\RoomReservationController::class, "acceptRoomReservationRequest"])
+                Route::post('/reject', [App\Domains\Schedule\Controller\RoomReservationController::class, "rejectRoomReservationRequest"])
                     ->name('reject-room-reservation-request');
             });
-        });
-
-        Route::prefix('/detail')->group(function () {
-            Route::get('', [App\Domains\Room\Controller\RoomController::class, "roomDetail"])
-                ->name('detail-room');
         });
 
         Route::prefix('/session')->group(function () {
@@ -113,9 +116,6 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
                 Route::post('', [App\Domains\Room\Controller\RoomSessionController::class, "submitAddRoomSessionForm"]);
             });
         });
-
-        Route::post('/logout', [App\Domains\User\Controller\AuthController::class, "submitLogout"])
-            ->name('logout');
     });
 
     Route::prefix('/dashboard')->group(function () {

@@ -7,8 +7,8 @@
 
 <x-layout.main :title="$title">
     <x-navbar></x-navbar>
-    <div class="container-md mt-3">
-        <div class="col-auto col-sm-8 offset-sm-2 col-lg-6 offset-lg-3">
+    <div class="container-fluid container-lg mt-3">
+        <div class="col-auto col-md-8 offset-md-2 col-lg-6 offset-lg-3">
             <div class="border p-3 rounded-3 shadow">
                 <h1 class="text-center text-primary mb-4">Informasi Akun</h1>
                 <div class="list-group rounded-3 shadow-sm">
@@ -139,20 +139,47 @@
                         @endif
                     </div>
                     {{-- end of informasi nomor telepon --}}
-                    {{-- informasi contoh role -->
+                    {{-- informasi contoh role --}}
                     <div class="list-group-item">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">Role dimiliki</h5>
                             <small class="text-body-secondary">changed a long time ago.</small>
                         </div>
-                        <ul class="list-group mb-2">
-                            <li class="list-group-item list-group-item-action">
-                                Mahasiswa
-                            </li>
-                        </ul>
+                        @if (isset($role_model) && is_iterable($role_model))
+                            @if ($role_model->count() >= 1)
+                                <div>
+                                    {{ $role_model->links() }}
+                                </div>
+                                <ul class="list-group mb-2">
+                                    @foreach ($role_model as $phone_number_record)
+                                        <li class="list-group-item list-group-item-action shadow-sm">
+                                            <a class="d-flex justify-content-between text-decoration-none">
+                                                <div>
+                                                    {{ $phone_number_record->role }}
+                                                </div>
+                                                <div>
+                                                    {{ Illuminate\Support\Carbon::parse($phone_number_record->created_at)->translatedFormat('d F Y') }}
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <ul class="list-group mb-2">
+                                    <li class="list-group-item list-group-item-action shadow-sm">
+                                        Belum ada Role teregistrasi.
+                                    </li>
+                                </ul>
+                            @endif
+                        @else
+                            <ul class="list-group mb-2">
+                                <li class="list-group-item list-group-item-action shadow-sm">
+                                    Belum ada Role teregistrasi.
+                                </li>
+                            </ul>
+                        @endif
                     </div>
-                    {{-- end of informasi contoh role --/}}
-                    --}}
+                    {{-- end of informasi contoh role --}}
                     <div class="list-group-item" aria-current="true">
                         <div class="d-flex w-100 justify-content-center">
                             <h5 class="mb-1">

@@ -9,13 +9,15 @@ use Illuminate\View\Component;
 class Main extends Component
 {
     public $title;
+    public $theme;
 
     /**
      * Create a new component instance.
      */
-    public function __construct($title = "Dummy")
+    public function __construct($title = "Dummy", $theme = "light")
     {
         $this->title = $title;
+        $this->theme = $theme;
     }
 
     /**

@@ -6,8 +6,8 @@
 @endphp
 
 {{-- Simplicity is the essence of happiness. - Cedric Bledsoe --}}
-
-{{-- upper navbar --> --}}
+{{-- --}}
+{{-- upper navbar --}}
 <header class="py-3 mb-4 border-bottom shadow-sm sticky-top bg-body">
     <div class="container">
         <div class="d-flex flex-wrap justify-content-around">
@@ -49,12 +49,12 @@
         </div>
     </div>
 </header>
-{{-- end of upper navbar --> --}}
-
+{{-- end of upper navbar --}}
+{{-- --}}
 {{-- offcanvas baru muncul kalau klik tombol menut. --}}
 <div class="offcanvas offcanvas-start shadow-lg" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
     id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel" aria-modal="true" role="dialog">
-
+    {{-- --}}
     {{-- header inside offcanvas --}}
     <div class="offcanvas-header">
         <div class="container-fluid row">
@@ -71,13 +71,15 @@
         </div>
     </div>
     {{-- end of header inside offcanvas --}}
-
+    {{-- --}}
     {{-- sidebar --}}
     <div class="offcanvas-body">
         <p>{{$offCanvaHeader ?? $default_description}}</p>
         {{-- first accordion --}}
         <div class="accordion mb-3 shadow-sm" id="accordion-in-offcanva" style="">
+            {{-- --}}
             <div class="accordion-item">
+                {{-- --}}
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapse-room-accordion" aria-expanded="false"
@@ -93,7 +95,66 @@
                         </div>
                     </button>
                 </h2>
+                {{-- --}}
+                {{-- --}}
                 <div id="collapse-room-accordion" class="accordion-collapse collapse"
+                    data-bs-parent="#accordion-in-offcanva">
+                    <div class="accordion-body">
+                        <div class="row row-cols-1 g-2">
+                            <form action="{{ route('dashboard') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-house fs-5 me-1"></i>
+                                    Dashboard
+                                </button>
+                            </form>
+                            <form action="{{ route('list-of-room') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Daftar Ruangan
+                                </button>
+                            </form>
+                            <form action="{{ route('list-of-room') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Daftar Ruangan Dipinjam
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{-- --}}
+            </div>
+            {{-- --}}
+            {{-- --}}
+            <div class="accordion-item">
+                {{-- --}}
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-room-reservation-accordion" aria-expanded="false"
+                        aria-controls="collapse-room-reservation-accordion">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-door-open me-2" viewBox="0 0 16 16">
+                            <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
+                            <path
+                                d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
+                        </svg>
+                        <div>
+                            Bagian Pinjam Ruangan
+                        </div>
+                    </button>
+                </h2>
+                {{-- --}}
+                {{-- --}}
+                <div id="collapse-room-reservation-accordion" class="accordion-collapse collapse"
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
                         <div class="row row-cols-1 g-2">
@@ -102,9 +163,6 @@
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
-                                    {{--
-                                    <i class="bi bi-list fs-5 me-1"></i>
-                                    --}}
                                     <i class="bi bi-send fs-5 me-1"></i>
                                     Pengajuan Peminjaman Ruangan
                                 </button>
@@ -136,62 +194,63 @@
                                     Kelola Pengajuan Pinjam Ruangan (Harusnya hanya boleh admin)
                                 </button>
                             </form>
-                            <form action="{{ route('list-of-room') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
-                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
-                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-                                    aria-controls="offcanvasScrolling">
-                                    <i class="bi bi-list fs-5 me-1"></i>
-                                    Daftar Ruangan
-                                </button>
-                            </form>
-                            <form action="{{ route('list-of-room') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
-                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
-                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-                                    aria-controls="offcanvasScrolling">
-                                    <i class="bi bi-list fs-5 me-1"></i>
-                                    Daftar Ruangan Dipinjam
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </div>
+                {{-- --}}
             </div>
+            {{-- --}}
+            {{-- --}}
             <div class="accordion-item">
+                {{-- --}}
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapse-room-session-accordion" aria-expanded="false"
                         aria-controls="collapse-room-session-accordion">
-                        {{-- --}}
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                             class="bi bi-stopwatch me-2" viewBox="0 0 16 16">
                             <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z" />
                             <path
                                 d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3" />
                         </svg>
-                        {{-- --}}
                         <div>
                             Bagian Sesi Ruangan
                         </div>
                     </button>
                 </h2>
+                {{-- --}}
+                {{-- --}}
                 <div id="collapse-room-session-accordion" class="accordion-collapse collapse"
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
-                        <form action="{{ route('list-of-room-session') }}" method="get"
-                            class="d-flex justify-content-center mb-lg-0">
-                            <button class="btn btn-outline-primary w-100 text-start" type="submit"
-                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-                                aria-controls="offcanvasScrolling">
-                                <i class="bi bi-list fs-5 me-1"></i>
-                                Daftar Sesi Ruangan
-                            </button>
-                        </form>
+                        <div class="row row-cols-1 g-2">
+                            <form action="{{ route('list-of-room-session') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Daftar Sesi Ruangan
+                                </button>
+                            </form>
+                            <form action="{{ route('add-room-session') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Tambah Sesi Ruangan
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
+                {{-- --}}
             </div>
+            {{-- --}}
+            {{-- --}}
             <div class="accordion-item">
+                {{-- --}}
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapse-account-accordion" aria-expanded="false"
@@ -206,6 +265,8 @@
                         </div>
                     </button>
                 </h2>
+                {{-- --}}
+                {{-- --}}
                 <div id="collapse-account-accordion" class="accordion-collapse collapse"
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
@@ -266,7 +327,9 @@
                         </div>
                     </div>
                 </div>
+                {{-- --}}
             </div>
+            {{-- --}}
         </div>
         {{-- end of first accordion --}}
     </div>

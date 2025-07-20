@@ -83,6 +83,9 @@ class AuthController extends Controller
 
     public function submitFormLogin(Request $request)
     {
+        $user_table_its_name = SiprUser::TABLE_NAME;
+        $username_column_its_name = SiprUser::COLUMN_USERNAME_ITS_NAME;
+
         $login_input = $request->only([
             "username",
             "password",
@@ -91,20 +94,29 @@ class AuthController extends Controller
         $validator = Validator::make(
             $login_input,
             [
-                "username" => ["required"],
+                "username" => ["required", "exists:$user_table_its_name,$username_column_its_name"],
                 "password" => ["required"]
             ],
+            [
+                "username" => "Username or password is wrong.",
+                "password" => "Username or password is wrong.",
+            ]
         );
 
         if ($validator->fails()) {
-            $errorMessage = $validator->getMessageBag();
-            return response(
-                view("account.auth.login")
-                    ->with("errorUsernameInput", $errorMessage->get("username")[0] ?? null)
-                    ->with("errorPasswordInput", $errorMessage->get("password")[0] ?? null)
-                ,
-                400
-            );
+            $errorMessageList = $validator->getMessageBag();
+            $errorMessage = null;
+
+            if ($errorMessageList->get("username")[0] !== null && str_word_count($errorMessageList->get("username")[0]) > 2) {
+                $errorMessage = $errorMessageList->get("username")[0];
+            }
+
+            if ($errorMessageList->get("password")[0] !== null && str_word_count($errorMessageList->get("password")[0]) > 2) {
+                $errorMessage = $errorMessageList->get("password")[0];
+            }
+
+            return $this->loginForm($request)
+                ->with("errorPasswordInput", $errorMessage);
         }
 
         $username_input =
@@ -157,15 +169,15 @@ class AuthController extends Controller
         }
 
         if ($user_registered !== null) {
-            Log::info("User logout with user_id: {id}.", [
+            Log::info("User logout with user_id: {id} and username: {username}.", [
                 "id" => $user_registered->getId(),
+                "username" => $user_registered->getUsername(),
             ]);
         }
 
-
         DB::beginTransaction();
 
-        $request->session()->flush(); // Hapus informasi 1.0.1 di kolom payload
+        $request->session()->flush(); // Hapus informasi 1.0.1 yang ada di function 'submitFormLogin()' di kolom payload table sipr_session.
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

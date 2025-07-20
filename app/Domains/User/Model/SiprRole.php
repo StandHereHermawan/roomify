@@ -26,7 +26,14 @@ class SiprRole extends Model
         "deleted_at",
     ];
 
-    public function ownedByUsers(): BelongsToMany {
+    public function ownedByUsers(): BelongsToMany
+    {
         return $this->belongsToMany(SiprUser::class, "sipr_users_has_roles", "role_id", "user_id");
+    }
+
+
+    public function getId()
+    {
+        return $this->id;
     }
 }

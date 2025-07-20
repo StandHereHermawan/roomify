@@ -105,7 +105,21 @@
                                     </td>
                                     <td scope="row">
                                         <div class="fs-5">
-                                            <button class="btn btn-warning">{{ $reservation_request->status }}</button>
+                                            @if ($reservation_request->status === "PENDING")
+                                                <button class="btn btn-warning">
+                                                    {{ $reservation_request->status }}
+                                                </button>
+                                            @endif
+                                            @if ($reservation_request->status === "REJECTED")
+                                                <button class="btn btn-outline-danger">
+                                                    {{ $reservation_request->status }}
+                                                </button>
+                                            @endif
+                                            @if ($reservation_request->status === "ACCEPTED")
+                                                <button class="btn btn-success">
+                                                    {{ $reservation_request->status }}
+                                                </button>
+                                            @endif
                                         </div>
                                     </td>
                                     <td scope="row">
@@ -118,7 +132,8 @@
                                             {{ Illuminate\Support\Carbon::parse($reservation_request->created_at)->translatedFormat('d F Y') }}
                                         </div>
                                         <div class="fs-5 row">
-                                            Pukul {{ Illuminate\Support\Carbon::parse($reservation_request->created_at)->translatedFormat('H:i') }}
+                                            Pukul
+                                            {{ Illuminate\Support\Carbon::parse($reservation_request->created_at)->translatedFormat('H:i') }}
                                         </div>
                                     </td>
                                     <td scope="row">
@@ -140,9 +155,26 @@
                                     </td>
                                     <td scope="row">
                                         <div class="fs-5">
-                                            <button class="btn btn-outline-warning">
-                                                {{ $reservation_request->determined_at ?? "Belum diputuskan" }}
-                                            </button>
+                                            @if ($reservation_request->determined_at === null)
+                                                <button class="btn btn-outline-warning">
+                                                    {{ "Belum diputuskan" }}
+                                                </button>
+                                            @endif
+                                            @if ($reservation_request->determined_at !== null)
+                                                <div class="">
+                                                    <div class="fs-5 row mb-1">
+                                                        <button class="btn btn-outline-success">
+                                                            {{ Illuminate\Support\Carbon::parse($reservation_request->determined_at)->translatedFormat('d F Y') }}
+                                                        </button>
+                                                    </div>
+                                                    <div class="fs-5 row">
+                                                        <button class="btn btn-outline-success">
+                                                            Pukul
+                                                            {{ Illuminate\Support\Carbon::parse($reservation_request->determined_at)->translatedFormat('H:i') }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </td>
                                     {{--

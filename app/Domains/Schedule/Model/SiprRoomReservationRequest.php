@@ -18,7 +18,7 @@ class SiprRoomReservationRequest extends Model
     public const COLUMN_ID_ITS_NAME = "id";
     public const COLUMN_USER_ID_ITS_NAME = "user_id";
     public const COLUMN_ROOM_ID_ITS_NAME = "room_id";
-    public const COLUMN_STATUS_ITS_NAME = "status";    
+    public const COLUMN_STATUS_ITS_NAME = "status";
     public const COLUMN_DETERMINED_AT_ITS_NAME = "determined_at";
     public const COLUMN_RESERVATION_DATE_ITS_NAME = "reservation_date";
 

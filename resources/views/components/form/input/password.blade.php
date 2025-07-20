@@ -5,9 +5,11 @@
         placeholder="password" required />
     <label for="password-input">Password</label>
     @isset($errorPasswordInput)
-        {{-- username error message --}}
-        <div class="text-danger">{{ $errorPasswordInput }}</div>
-        {{-- end username error message --}}
+        @if (str_word_count($errorPasswordInput) > 2)
+            {{-- username error message --}}
+            <div class="btn btn-outline-danger mt-3 w-100">{{ $errorPasswordInput }}</div>
+            {{-- end username error message --}}
+        @endif
     @endisset
     <div class="d-flex w-100 justify-content-between">
         <div id="" class="form-text">{{ $sweetenMessage }}</div>

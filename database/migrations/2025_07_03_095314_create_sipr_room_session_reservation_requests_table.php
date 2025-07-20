@@ -65,65 +65,158 @@ return new class extends Migration {
                 ->useCurrentOnUpdate();
         });
 
-        DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
-            "{$column_ID_its_name}" => "1",
-            "{$column_USER_ID_its_name}" => "2",
-            "{$column_ROOM_RESERVATION_ID_its_name}" => "1",
-            "{$column_ROOM_SESSION_ID_its_name}" => "1",
-            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
-            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-        ]);
+        (new \Database\Seeders\SiprRoomReservationAndRoomSessionReservationSeeder)->run();
 
-        DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
-            "{$column_ID_its_name}" => "2",
-            "{$column_USER_ID_its_name}" => "2",
-            "{$column_ROOM_RESERVATION_ID_its_name}" => "1",
-            "{$column_ROOM_SESSION_ID_its_name}" => "2",
-            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
-            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
-            "{$column_ID_its_name}" => "3",
-            "{$column_USER_ID_its_name}" => "2",
-            "{$column_ROOM_RESERVATION_ID_its_name}" => "1",
-            "{$column_ROOM_SESSION_ID_its_name}" => "3",
-            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
-            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
-            "{$column_ID_its_name}" => "4",
-            "{$column_USER_ID_its_name}" => "2",
-            "{$column_ROOM_RESERVATION_ID_its_name}" => "2",
-            "{$column_ROOM_SESSION_ID_its_name}" => "4",
-            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
-            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
-            "{$column_ID_its_name}" => "5",
-            "{$column_USER_ID_its_name}" => "2",
-            "{$column_ROOM_RESERVATION_ID_its_name}" => "2",
-            "{$column_ROOM_SESSION_ID_its_name}" => "5",
-            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
-            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
-            "{$column_ID_its_name}" => "6",
-            "{$column_USER_ID_its_name}" => "2",
-            "{$column_ROOM_RESERVATION_ID_its_name}" => "2",
-            "{$column_ROOM_SESSION_ID_its_name}" => "6",
-            "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
-            "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-            "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
-        ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "1",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "1",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "1",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "2",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "1",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "2",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "3",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "1",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "3",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "4",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "2",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "4",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "5",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "2",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "5",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "6",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "2",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "6",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "1",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "4",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "1",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "2",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "4",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "2",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "3",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "4",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "3",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "1",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "3",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "1",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "2",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "3",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "2",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "3",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "3",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "3",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(7),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "1",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "5",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "1",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(8),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "2",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "5",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "2",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(8),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
+        // 
+        // DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+            // "{$column_ID_its_name}" => "3",
+            // "{$column_USER_ID_its_name}" => "2",
+            // "{$column_ROOM_RESERVATION_ID_its_name}" => "5",
+            // "{$column_ROOM_SESSION_ID_its_name}" => "3",
+            // "{$column_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays(8),
+            // "{$column_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            // "{$column_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+        // ]);
     }
 
     /**

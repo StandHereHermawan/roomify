@@ -8,6 +8,7 @@ use App\Domains\Schedule\Model\SiprRoomReservationRequest;
 use App\Domains\Schedule\Model\SiprRoomSessionReservationRequest;
 use App\Domains\User\Model\SiprSession;
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -15,21 +16,50 @@ use Illuminate\Support\Facades\Log;
 
 class RoomReservationController extends Controller
 {
-    public function listOfRoomReservationRequest(Request $request)
+    public function listOfAllRoomReservationRequest(Request $request)
     {
-        $room_reservation_model = SiprRoomReservationRequest::select()
+        Log::debug("Controller: RoomReservationController | method: listOfAllRoomReservationRequest | called.");
+
+        $input = $request->only(["room_paginate_size"]);
+        $room_paginate_size = $input["room_paginate_size"] ?? 10;
+
+        $room_reservation_pending_pagination = SiprRoomReservationRequest::select()
             ->with('userRequest')
             ->with('roomReserved')
             ->with('sessionBorrowed')
-            ->paginate(6)
+            
+            ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', "PENDING")
+            ->paginate($room_paginate_size, ['*'], 'reservation_pending_page')
             ->withQueryString();
 
-        return view('room.reservation.request.list')
-            ->with('list_of_room_reservation_request', $room_reservation_model);
+        $room_reservation_accepted_pagination = SiprRoomReservationRequest::select()
+            ->with('userRequest')
+            ->with('roomReserved')
+            ->with('sessionBorrowed')
+            ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', "ACCEPTED")
+            ->paginate($room_paginate_size, ['*'], 'reservation_accepted_page')
+            ->withQueryString();
+
+        $room_reservation_rejected_pagination = SiprRoomReservationRequest::select()
+            ->with('userRequest')
+            ->with('roomReserved')
+            ->with('sessionBorrowed')
+            ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', "REJECTED")
+            ->paginate($room_paginate_size, ['*'], 'reservation_rejected_page')
+            ->withQueryString();
+
+        return view('room.reservation.request.all.list')
+            ->with('list_of_room_reservation_request_pending', $room_reservation_pending_pagination)
+            ->with('list_of_room_reservation_request_accepted', $room_reservation_accepted_pagination)
+            ->with('list_of_room_reservation_request_rejected', $room_reservation_rejected_pagination)
+            ;
     }
 
     public function listOfMyRoomReservationRequest(Request $request)
     {
+        $input = $request->only(["room_paginate_size"]);
+        $room_paginate_size = $input["room_paginate_size"] ?? 10;
+
         $user_id = null;
         $session_id = $request->session()->getId();
 
@@ -42,7 +72,7 @@ class RoomReservationController extends Controller
         }
 
         if ($user_id === null) {
-            return redirect(route('dashboard'));
+            return redirect(route('login'));
         }
 
         $room_reservation_model = SiprRoomReservationRequest::select()
@@ -50,7 +80,7 @@ class RoomReservationController extends Controller
             ->with('roomReserved')
             ->with('sessionBorrowed')
             ->where(SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME, '=', $user_id)
-            ->paginate(6)
+            ->paginate($room_paginate_size)
             ->withQueryString();
 
         return view('room.reservation.request.list.myself')
@@ -59,31 +89,86 @@ class RoomReservationController extends Controller
 
     public function adminListOfRoomReservationRequest(Request $request)
     {
-        $room_reservation_model = SiprRoomReservationRequest::select()
+        $room_reservation_model_pending = SiprRoomReservationRequest::select()
             ->with('userRequest')
             ->with('roomReserved')
             ->with('sessionBorrowed')
-            ->paginate(6)
+            ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', 'PENDING')
+            ->paginate(6, ['*'], 'room_pending_page')
+            ->appends($request->query())
+            ->withQueryString();
+
+        $room_reservation_model_accepted = SiprRoomReservationRequest::select()
+            ->with('userRequest')
+            ->with('roomReserved')
+            ->with('sessionBorrowed')
+            ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', 'ACCEPTED')
+            ->paginate(6, ['*'], 'room_accepted_page')
+            ->appends($request->query())
+            ->withQueryString();
+
+        $room_reservation_model_rejected = SiprRoomReservationRequest::select()
+            ->with('userRequest')
+            ->with('roomReserved')
+            ->with('sessionBorrowed')
+            ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', 'REJECTED')
+            ->paginate(6, ['*'], 'room_accepted_page')
+            ->appends($request->query())
             ->withQueryString();
 
         return view('room.reservation.request.option.manage')
-            ->with('list_of_room_reservation_request', $room_reservation_model);
+            ->with('list_of_room_reservation_request_pending', $room_reservation_model_pending)
+            ->with('list_of_room_reservation_request_accepted', $room_reservation_model_accepted)
+            ->with('list_of_room_reservation_request_rejected', $room_reservation_model_rejected)
+        ;
     }
 
     public function acceptRoomReservationRequest(Request $request)
     {
         $input = $request->only(["room_reservation_id"]);
 
-        var_dump($input);
-        var_dump($request->url());
+        $room_reservation_id = $input["room_reservation_id"];
+        $room_reservation_model = SiprRoomReservationRequest::select()
+            ->where(SiprRoomReservationRequest::COLUMN_ID_ITS_NAME, '=', $room_reservation_id)
+            ->first();
+
+        $column_DETERMINED_AT_its_name = SiprRoomReservationRequest::COLUMN_DETERMINED_AT_ITS_NAME;
+        $column_STATUS_its_name = SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME;
+
+        DB::beginTransaction();
+
+        $room_reservation_model->update([
+            "{$column_STATUS_its_name}" => "ACCEPTED",
+            "{$column_DETERMINED_AT_its_name}" => Carbon::now(),
+        ]);
+
+        DB::commit();
+
+        return redirect(route('manage-list-of-room-reservation-request'));
     }
 
     public function rejectRoomReservationRequest(Request $request)
     {
         $input = $request->only(["room_reservation_id"]);
 
-        var_dump($input);
-        var_dump($request->url());
+        $room_reservation_id = $input["room_reservation_id"];
+        $room_reservation_model = SiprRoomReservationRequest::select()
+            ->where(SiprRoomReservationRequest::COLUMN_ID_ITS_NAME, '=', $room_reservation_id)
+            ->first();
+
+        $column_DETERMINED_AT_its_name = SiprRoomReservationRequest::COLUMN_DETERMINED_AT_ITS_NAME;
+        $column_STATUS_its_name = SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME;
+
+        DB::beginTransaction();
+
+        $room_reservation_model->update([
+            "{$column_STATUS_its_name}" => "REJECTED",
+            "{$column_DETERMINED_AT_its_name}" => Carbon::now(),
+        ]);
+
+        DB::commit();
+
+        return redirect(route('manage-list-of-room-reservation-request'));
     }
 
     public function softDeleteRoomReservationRequest(Request $request)
