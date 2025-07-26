@@ -13,7 +13,7 @@
         }
     </style>
     <x-navbar></x-navbar>
-
+    {{-- --}}
     {{-- <!-- item pagination  --> --}}
     <div class="container my-5">
         <div class="">
@@ -246,7 +246,7 @@
                     </div>
                 </div>
                 {{-- End of Search accordion --}}
-
+                {{-- --}}
                 {{-- Button section --}}
                 <div class="col my-3">
                     <div class="d-flex justify-content-between">
@@ -282,6 +282,7 @@
                     </div>
                 </div>
                 {{-- End of Button section --}}
+                {{-- --}}
                 {{-- Some view logic --}}
                 <div class="col mt-3">
                     @if (isset($paginatedRooms) && is_iterable($paginatedRooms) && $paginatedRooms->total() >= 1)

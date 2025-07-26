@@ -15,16 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('registration'); // default: return view('welcome');
-});
+Route::get('/', [\App\Domains\Home\Controller\MainController::class, 'main']);
 
 Route::middleware(EnsureUserIsNotYetLogin::class)->group(function () {
     Route::prefix('/registration')->group(function () {
-        Route::get('', [App\Domains\User\Controller\AuthController::class, "registerForm"])
+        Route::get('', [App\Domains\User\Controller\UserController::class, "registerForm"])
             ->name('registration');
 
-        Route::post('', [App\Domains\User\Controller\AuthController::class, "submitFormRegister"]);
+        Route::post('', [App\Domains\User\Controller\UserController::class, "submitFormRegister"]);
     });
 
     Route::prefix('/login')->group(function () {
@@ -33,12 +31,12 @@ Route::middleware(EnsureUserIsNotYetLogin::class)->group(function () {
 
         Route::post('', [App\Domains\User\Controller\AuthController::class, "submitFormLogin"]);
     });
-
-    Route::post('/logout', [App\Domains\User\Controller\AuthController::class, "submitLogout"])
-            ->name('logout');
 });
 
 Route::middleware(EnsureUserIsLogin::class)->group(function () {
+    Route::post('/logout', [App\Domains\User\Controller\AuthController::class, "submitLogout"])
+        ->name('logout');
+
     Route::prefix('/room')->group(function () {
         Route::get('', [App\Domains\Room\Controller\RoomController::class, "roomSearchPaginate"])
             ->name('list-of-room');
@@ -74,7 +72,7 @@ Route::middleware(EnsureUserIsLogin::class)->group(function () {
                     });
 
                     Route::prefix('/manage')->group(function () {
-                        Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "adminListOfRoomReservationRequest"])
+                        Route::get('', [App\Domains\Schedule\Controller\RoomReservationController::class, "manageByAdminListOfRoomReservationRequest"])
                             ->name('manage-list-of-room-reservation-request');
                     });
                 });

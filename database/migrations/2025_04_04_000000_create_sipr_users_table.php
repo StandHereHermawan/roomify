@@ -48,29 +48,32 @@ return new class extends Migration {
 
         });
 
-        DB::table(SiprUser::TABLE_NAME)->insert([
-            "username" => "superadmin",
-            "name" => "Super Admin",
-            "password" => Hash::make('Rahasia@1234'),
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
+    // 
+    // DB::table(SiprUser::TABLE_NAME)->insert([
+    //     "username" => "superadmin",
+    //     "name" => "Super Admin",
+    //     "password" => Hash::make('Rahasia@1234'),
+    //     "created_at" => \Illuminate\Support\Carbon::now(),
+    //     "updated_at" => \Illuminate\Support\Carbon::now(),
+    // ]);
+    // 
+    // DB::table(SiprUser::TABLE_NAME)->insert([
+    //     "username" => "terryandrewdavis",
+    //     "name" => "Terry Andrew Davis",
+    //     "password" => Hash::make('Rahasia@1234'),
+    //     "created_at" => \Illuminate\Support\Carbon::now(),
+    //     "updated_at" => \Illuminate\Support\Carbon::now(),
+    // ]);
+    // 
+    // DB::table(SiprUser::TABLE_NAME)->insert([
+    //     "username" => "davidheinemeierhansson",
+    //     "name" => "David Heinemeier Hansson",
+    //     "password" => Hash::make('Rahasia@1234'),
+    //     "created_at" => \Illuminate\Support\Carbon::now(),
+    //     "updated_at" => \Illuminate\Support\Carbon::now(),
+    // ]);
+    // 
 
-        DB::table(SiprUser::TABLE_NAME)->insert([
-            "username" => "terryandrewdavis",
-            "name" => "Terry Andrew Davis",
-            "password" => Hash::make('Rahasia@1234'),
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprUser::TABLE_NAME)->insert([
-            "username" => "davidheinemeierhansson",
-            "name" => "David Heinemeier Hansson",
-            "password" => Hash::make('Rahasia@1234'),
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
     }
 
     /**

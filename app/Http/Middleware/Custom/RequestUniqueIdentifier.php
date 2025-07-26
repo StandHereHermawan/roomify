@@ -26,12 +26,12 @@ class RequestUniqueIdentifier
 
         // Simpan ke context log Laravel (bisa digunakan di Log::debug/info)
         Log::withContext([
-            'request_uuid' => $uuid,
+            'request_id' => $uuid,
             'client_ip_address' => $request->ip(),
             'url' => $request->url(),
             'http_method' => $request->method(),
             "timestamp" => Carbon::now(),
-            // "log_level" => env('LOG_LEVEL', config('logging.channels.stderr.level', 'debug')),
+         // "log_level" => env('LOG_LEVEL', config('logging.channels.stderr.level', 'debug')),
         ]);
 
         return $next($request);

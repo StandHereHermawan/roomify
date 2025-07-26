@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::defaultView('vendor.custom.bootstrap-5-custom');
 
         DB::listen(function (QueryExecuted $queryExecuted) {
-            Log::debug("", ["sql" => $queryExecuted->sql, "binding_value" => $queryExecuted->bindings, "millisecond" => $queryExecuted->time,]);
+            Log::debug("class: QueryExecuted.", ["sql" => $queryExecuted->sql, "binding_value" => $queryExecuted->bindings, "millisecond" => $queryExecuted->time]);
         });
 
         Session::extend('database', function ($app) {

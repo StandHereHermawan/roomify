@@ -8,9 +8,9 @@ use App\Domains\Schedule\Model\SiprRoomReservationRequest;
 use App\Domains\Schedule\Model\SiprRoomSessionReservationRequest;
 use App\Domains\User\Model\SiprSession;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -87,7 +87,7 @@ class RoomReservationController extends Controller
             ->with('list_of_room_reservation_request', $room_reservation_model);
     }
 
-    public function adminListOfRoomReservationRequest(Request $request)
+    public function manageByAdminListOfRoomReservationRequest(Request $request)
     {
         $room_reservation_model_pending = SiprRoomReservationRequest::select()
             ->with('userRequest')
@@ -112,7 +112,7 @@ class RoomReservationController extends Controller
             ->with('roomReserved')
             ->with('sessionBorrowed')
             ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', 'REJECTED')
-            ->paginate(6, ['*'], 'room_accepted_page')
+            ->paginate(6, ['*'], 'room_rejected_page')
             ->appends($request->query())
             ->withQueryString();
 
@@ -290,8 +290,8 @@ class RoomReservationController extends Controller
         |   Peminjam ruangan berdasarkan siapa akun pemilik sesi.
         |
         */
-        if ($session_model !== null && $session_model->getIdUser() !== null) {
-            $user_id = $session_model->getIdUser();
+        if ($session_model !== null && $session_model->getUserId() !== null) {
+            $user_id = $session_model->getUserId();
             Log::debug(
                 "Pengguna dengan id: {user_id} hendak meminjam ruangan.",
                 ["user_id" => $user_id]

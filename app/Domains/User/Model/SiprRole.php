@@ -12,6 +12,8 @@ class SiprRole extends Model
     use HasFactory, SoftDeletes;
 
     public const TABLE_NAME = "sipr_roles";
+    public const COLUMN_ROLE_ITS_NAME = "role";
+    public const GUEST_ROLE = "GUEST";
 
     protected $table = SiprRole::TABLE_NAME;
     protected $primaryKey = "id";
@@ -20,7 +22,7 @@ class SiprRole extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'role',
+        SiprRole::COLUMN_ROLE_ITS_NAME,
         "created_at",
         "updated_at",
         "deleted_at",

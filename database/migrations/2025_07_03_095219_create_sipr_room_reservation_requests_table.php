@@ -14,14 +14,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        $column_ID_its_name = SiprRoomReservationRequest::COLUMN_ID_ITS_NAME;
-        $column_USER_ID_its_name = SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME;
-        $column_ROOM_ID_its_name = SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME;
-        $column_RESERVATION_DATE_its_name = SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
-        $column_CREATED_AT_its_name = SiprRoomReservationRequest::CREATED_AT;
-        $column_UPDATED_AT_its_name = SiprRoomReservationRequest::UPDATED_AT;
-        $column_STATUS_its_name = SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME;
-     // $column_STATUS_its_name = SiprRoomReservationRequest::;
+        // $column_ID_its_name = SiprRoomReservationRequest::COLUMN_ID_ITS_NAME;
+        // $column_USER_ID_its_name = SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME;
+        // $column_ROOM_ID_its_name = SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME;
+        // $column_RESERVATION_DATE_its_name = SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
+        // $column_CREATED_AT_its_name = SiprRoomReservationRequest::CREATED_AT;
+        // $column_UPDATED_AT_its_name = SiprRoomReservationRequest::UPDATED_AT;
+        // $column_STATUS_its_name = SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME;
 
         Schema::create(SiprRoomReservationRequest::TABLE_NAME, function (Blueprint $table) {
             $table->id()->primary(true);

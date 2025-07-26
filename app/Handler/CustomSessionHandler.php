@@ -3,11 +3,13 @@
 namespace App\Handler;
 
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Contracts\Auth\Guard;
+
+use Illuminate\Database\ConnectionInterface;
+
+use Illuminate\Session\DatabaseSessionHandler;
+
 use Illuminate\Support\Facades\Log;
-use ReflectionClass;
 
 class CustomSessionHandler extends DatabaseSessionHandler
 {
@@ -23,6 +25,8 @@ class CustomSessionHandler extends DatabaseSessionHandler
             $this->minutes = $minutes,
             $this->container = $container,
         );
+
+        Log::debug("class: CustomSessionHandler | method: __construct | called.");
     }
 
     /**
@@ -32,12 +36,12 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function userId()
     {
+        Log::debug("class: CustomSessionHandler | method: userId | called.");
         $user_id = $this->container->make(Guard::class)->id();
-        Log::debug("", [
-            "class_name" => CustomSessionHandler::class,
-            "method_name" => "userId",
+        Log::debug("class: CustomSessionHandler | method: userId | user_id: {user_id}.", [
             "user_id" => $user_id,
         ]);
+
         return $user_id;
     }
 }

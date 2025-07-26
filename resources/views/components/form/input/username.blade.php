@@ -5,9 +5,11 @@
         placeholder="username" autocomplete="true" required />
     <label for="username-input">Username</label>
     @isset($errorUsernameInput)
-        {{-- username error message --}}
-        <div class="text-danger">{{ $errorUsernameInput }}</div>
-        {{-- end username error message --}}
+        @if (str_word_count($errorUsernameInput) > 2)
+            {{-- username error message --}}
+            <div class="btn btn-outline-danger mt-3 w-100">{{ $errorUsernameInput }}</div>
+            {{-- end username error message --}}
+        @endif
     @endisset
     <div class="d-flex w-100 justify-content-between">
         <div id="" class="form-text">{{ $sweetenMessage }}</div>

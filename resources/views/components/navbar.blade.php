@@ -101,33 +101,33 @@
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
                         <div class="row row-cols-1 g-2">
-                            <form action="{{ route('dashboard') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            <a href="{{ route('dashboard') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-house fs-5 me-1"></i>
                                     Dashboard
                                 </button>
-                            </form>
-                            <form action="{{ route('list-of-room') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            </a>
+                            <a href="{{ route('list-of-room') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-list fs-5 me-1"></i>
                                     Daftar Ruangan
                                 </button>
-                            </form>
-                            <form action="{{ route('list-of-room') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            </a>
+                            <a href="{{ route('list-of-room') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-list fs-5 me-1"></i>
                                     Daftar Ruangan Dipinjam
                                 </button>
-                            </form>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -158,42 +158,42 @@
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
                         <div class="row row-cols-1 g-2">
-                            <form action="{{ route('room-reservation-request') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            <a href="{{ route('room-reservation-request') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-send fs-5 me-1"></i>
                                     Pengajuan Peminjaman Ruangan
                                 </button>
-                            </form>
-                            <form action="{{ route('list-of-room-reservation-request') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            </a>
+                            <a href="{{ route('list-of-room-reservation-request') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-list fs-5 me-1"></i>
                                     Semua Pengajuan Pinjam Ruangan (Harusnya ga semua orang bisa akses url ini)
                                 </button>
-                            </form>
-                            <form action="{{ route('list-of-my-room-reservation-request') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            </a>
+                            <a href="{{ route('list-of-my-room-reservation-request') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-list fs-5 me-1"></i>
                                     Pengajuan Pinjam Ruangan oleh Saya
                                 </button>
-                            </form>
-                            <form action="{{ route('manage-list-of-room-reservation-request') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            </a>
+                            <a href="{{ route('manage-list-of-room-reservation-request') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
                                     <i class="bi bi-list fs-5 me-1"></i>
                                     Kelola Pengajuan Pinjam Ruangan (Harusnya hanya boleh admin)
                                 </button>
-                            </form>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -224,6 +224,16 @@
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
                         <div class="row row-cols-1 g-2">
+                            <a href="{{ route('list-of-room-session') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Daftar Sesi Ruangan
+                                </button>
+                            </a>
+                            {{--
                             <form action="{{ route('list-of-room-session') }}" method="get"
                                 class="d-flex justify-content-center mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
@@ -233,6 +243,17 @@
                                     Daftar Sesi Ruangan
                                 </button>
                             </form>
+                            --}}
+                            <a href="{{ route('add-room-session') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    Tambah Sesi Ruangan
+                                </button>
+                            </a>
+                            {{--
                             <form action="{{ route('add-room-session') }}" method="get"
                                 class="d-flex justify-content-center mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
@@ -242,6 +263,7 @@
                                     Tambah Sesi Ruangan
                                 </button>
                             </form>
+                            --}}
                         </div>
                     </div>
                 </div>
@@ -271,8 +293,8 @@
                     data-bs-parent="#accordion-in-offcanva">
                     <div class="accordion-body">
                         <div class="row row-cols-1 g-2">
-                            <form action="{{ route('account') }}" method="get"
-                                class="d-flex justify-content-center mb-lg-0">
+                            <a href="{{ route('account') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
@@ -286,9 +308,27 @@
                                     --}}
                                     Akun Saat Ini
                                 </button>
-                            </form>
-                            <form action="{{ route('list-of-account') }}" method="get"
+                            </a>
+                            {{--
+                            <form action="{{ route('account') }}" method="get"
                                 class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-gear-wide fs-5 me-1"></i>
+                                    {{--
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                        class="bi bi-gear-wide" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z" />
+                                    </svg>
+                                    --/}}
+                                    Akun Saat Ini
+                                </button>
+                            </form>
+                            --}}
+                            <a href="{{ route('list-of-account') }}"
+                                class="d-flex justify-content-center text-decoration-none mb-lg-0">
                                 <button class="btn btn-outline-primary w-100 text-start" type="submit"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                                     aria-controls="offcanvasScrolling">
@@ -304,7 +344,27 @@
                                     --}}
                                     Daftar Akun Teregistrasi (Harusnya hanya boleh admin)
                                 </button>
+                            </a>
+                            {{--
+                            <form action="{{ route('list-of-account') }}" method="get"
+                                class="d-flex justify-content-center mb-lg-0">
+                                <button class="btn btn-outline-primary w-100 text-start" type="submit"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                                    aria-controls="offcanvasScrolling">
+                                    <i class="bi bi-list fs-5 me-1"></i>
+                                    {{--
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                        class="bi bi-list-ol" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5" />
+                                        <path
+                                            d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635z" />
+                                    </svg>
+                                    --/}}
+                                    Daftar Akun Teregistrasi (Harusnya hanya boleh admin)
+                                </button>
                             </form>
+                            --}}
                             <form action="{{ route('logout') }}" method="post"
                                 class="d-flex justify-content-center mb-lg-0">
                                 @csrf

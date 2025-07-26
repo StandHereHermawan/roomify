@@ -12,6 +12,8 @@ class SiprUserHasRole extends Model
     use HasFactory, SoftDeletes;
 
     public const TABLE_NAME = "sipr_user_has_roles";
+    public const COLUMN_USER_ID_ITS_NAME = "user_id";
+    public const COLUMN_ROLE_ID_ITS_NAME = "role_id";
 
     protected $table = SiprUserHasRole::TABLE_NAME;
     protected $primaryKey = "id";

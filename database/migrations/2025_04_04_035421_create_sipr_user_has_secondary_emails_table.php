@@ -47,19 +47,19 @@ return new class extends Migration {
             $table->datetimes();
         });
 
-        DB::table(SiprUserHasSecondaryEmail::TABLE_NAME)->insert([
-            "user_id" => '2',
-            "email_id" => '1',
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprUserHasSecondaryEmail::TABLE_NAME)->insert([
-            "user_id" => '3',
-            "email_id" => '1',
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
+        // DB::table(SiprUserHasSecondaryEmail::TABLE_NAME)->insert([
+            // "user_id" => '2',
+            // "email_id" => '1',
+            // "created_at" => \Illuminate\Support\Carbon::now(),
+            // "updated_at" => \Illuminate\Support\Carbon::now(),
+        // ]);
+// 
+        // DB::table(SiprUserHasSecondaryEmail::TABLE_NAME)->insert([
+            // "user_id" => '3',
+            // "email_id" => '1',
+            // "created_at" => \Illuminate\Support\Carbon::now(),
+            // "updated_at" => \Illuminate\Support\Carbon::now(),
+        // ]);
     }
 
     /**

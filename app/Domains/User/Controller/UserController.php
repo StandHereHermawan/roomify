@@ -3,60 +3,145 @@
 namespace App\Domains\User\Controller;
 
 use App\Domains\User\Model\SiprPhoneNumber;
+use App\Domains\User\Model\SiprRole;
 use App\Domains\User\Model\SiprSecondaryEmail;
 use App\Domains\User\Model\SiprSession;
 use App\Domains\User\Model\SiprUser;
 use App\Domains\User\Model\SiprUserHasPhoneNumber;
+use App\Domains\User\Model\SiprUserHasRole;
 use App\Domains\User\Model\SiprUserHasSecondaryEmail;
+
+use App\Domains\User\Request\UserAddPhoneNumberRequests;
+use App\Domains\User\Request\UserRegistrationRequests;
+
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
+    public function registerForm(Request $request)
+    {
+        Log::debug('class: UserController | method: registerForm | called. session_id: {session_id}.', [
+            "session_id" => $request->session()->getId(),
+        ]);
+
+        return view('account.auth.registration');
+    }
+
+    public function submitFormRegister(UserRegistrationRequests $request)
+    {
+        Log::debug('class: UserController | method: submitFormRegister | called.');
+
+        $register_input = $request->validated();
+
+        $username_column_name = SiprUser::COLUMN_USERNAME_ITS_NAME;
+        $name_column_name = SiprUser::COLUMN_NAME_ITS_NAME;
+        $password_column_name = SiprUser::COLUMN_PASSWORD_ITS_NAME;
+        $role_column_name = SiprRole::COLUMN_ROLE_ITS_NAME;
+        $user_id_column_name = SiprUserHasRole::COLUMN_USER_ID_ITS_NAME;
+        $role_id_column_name = SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME;
+
+        $guest_role_record = SiprRole::select()->where(SiprRole::COLUMN_ROLE_ITS_NAME, '=', SiprRole::GUEST_ROLE)->first();
+        $guest_role_id = null;
+
+        DB::beginTransaction();
+
+        $user_created_record_model = SiprUser::create([
+            "{$username_column_name}" => $register_input['username'],
+            "{$name_column_name}" => $register_input['name'],
+            "{$password_column_name}" => password_hash($register_input['password'], PASSWORD_BCRYPT),
+        ]);
+
+        if ($guest_role_record === null) {
+            $guest_role_record = SiprRole::create([
+                "{$role_column_name}" => SiprRole::GUEST_ROLE,
+            ]);
+        }
+
+        if ($guest_role_record !== null) {
+            # code...
+            $guest_role_id = $guest_role_record->getId();
+        }
+
+        SiprUserHasRole::create([
+            "{$user_id_column_name}" => $user_created_record_model->getId(),
+            "{$role_id_column_name}" => $guest_role_id,
+        ]);
+
+        Log::info('class: UserController | method: submitFormRegister | user created with username: {input}, session_id: {session_id}', [
+            "input" => $register_input['username'],
+            "session_id" => $request->session()->getId(),
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('login');
+    }
+
     public function accountDetail(Request $request)
     {
+        $user_id = null;
+        $session_id = null;
+
+        $user_model = null;
+        $session_model = null;
+
+        $email_collection = null;
+        $roles_collection = null;
+        $phone_number_collection = null;
+
         Log::debug("Controller: UserController | method: accountDetail | called.");
 
         $session_id = $request->session()->getId();
-
         $session_model = SiprSession::select()
             ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
             ->first();
 
-        $user_model = null;
-        $email_collection = null;
-        $phone_number_collection = null;
-        $roles_collection = null;
+        if ($session_model !== null) {
+            Log::debug(
+                'Controller: UserController | method: accountDetail | session_id: {session_id} registered in database.',
+                ["session_id" => $session_id]
+            );
+
+            $user_id = $session_model->user_id;
+        }
 
         if ($session_model->user_id !== null) {
             Log::debug(
-                'Search user_id: {user_id} from session table.',
-                [
-                    "user_id" => $session_model->user_id
-                ]
+                'Controller: UserController | method: accountDetail | session_id: {session_id} has user_id: {user_id}.',
+                ["user_id" => $session_model->user_id, "session_id" => $session_id]
             );
 
-            $user_model = SiprUser::select()
-                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
-                ->first();
+            $user_id = $session_model->user_id;
+        }
 
-            $email_collection = $user_model->hasEmails;
-            $phone_number_collection = $user_model->hasPhoneNumbers;
-            $roles_collection = $user_model->hasRoles;
+        if ($user_id !== null) {
+            $user_model = SiprUser::select()
+                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $user_id)
+                ->first();
         }
 
         if ($user_model !== null) {
             Log::debug(
-                'User view his account with user id: {user_id} and username: {username}.',
+                'Controller: UserController | method: accountDetail | User view his account with user id: {user_id} and username: {username}.',
                 [
                     "user_id" => $user_model->getId(),
                     "username" => $user_model->getUsername()
                 ]
             );
+
+            $email_collection = $user_model->hasEmails;
+            $phone_number_collection = $user_model->hasPhoneNumbers;
+            $roles_collection = $user_model->hasRoles;
         }
 
         $current_page_email = LengthAwarePaginator::resolveCurrentPage('email_pages');
@@ -151,10 +236,8 @@ class UserController extends Controller
 
         if ($session_model->user_id !== null) {
             Log::debug(
-                'Search user_id: {user_id} from session table.',
-                [
-                    "user_id" => $session_model->user_id
-                ]
+                'Controller: UserController | method: addEmailForm | Search user_id: {user_id} from session table.',
+                ["user_id" => $session_model->user_id]
             );
 
             $user_model = SiprUser::select()
@@ -166,10 +249,72 @@ class UserController extends Controller
             ->with('username', $user_model->getUsername());
     }
 
+    public function submitAddEmailForm(Request $request)
+    {
+        $email_table_name = SiprSecondaryEmail::TABLE_NAME;
+        $email_column_name = SiprSecondaryEmail::COLUMN_EMAIL_ITS_NAME;
+        $user_id_column_name = SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME;
+        $email_id_column_name = SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME;
+
+        Log::debug("Controller: UserController | method: submitAddEmailForm | called.");
+
+        $session_id = $request->session()->getId();
+        $session_model = SiprSession::select()
+            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
+            ->first();
+
+        $user_model = null;
+        $user_id = null;
+
+        $input = $request->only([
+            "new-email",
+        ]);
+
+        $validator = Validator::make($input, [
+            "new-email" => ['required', "unique:{$email_table_name},{$email_column_name}", "email"]
+        ]);
+
+        if ($validator->fails()) {
+            $message = $validator->getMessageBag()->get('new-email')[0];
+
+            return $this->addEmailForm($request)->with('error_new_email_input', $message);
+        }
+
+        if ($session_model->user_id !== null) {
+            Log::debug(
+                'Controller: UserController | method: submitAddEmailForm | Search user_id: {user_id} from session table.',
+                ["user_id" => $session_model->user_id]
+            );
+
+            $user_model = SiprUser::select()
+                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
+                ->first();
+
+            $user_id = $user_model->getId();
+        }
+
+        $new_email_data = $input['new-email'];
+
+        DB::beginTransaction();
+
+        $email_model = SiprSecondaryEmail::create([
+            "{$email_column_name}" => $new_email_data
+        ]);
+
+        SiprUserHasSecondaryEmail::create([
+            "{$email_id_column_name}" => $email_model->getId(),
+            "{$user_id_column_name}" => $user_id,
+        ]);
+
+        DB::commit();
+
+        return redirect(route('account'));
+    }
+
     public function addPhoneNumberForm(Request $request)
     {
         Log::debug("Controller: UserController | method: addPhoneNumberForm | called.");
-        
+
         $session_id = $request->session()->getId();
         $session_model = SiprSession::select()
             ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
@@ -179,7 +324,7 @@ class UserController extends Controller
 
         if ($session_model->user_id !== null) {
             Log::debug(
-                'Search user_id: {user_id} from session table. user_id acquired.',
+                'Controller: UserController | method: addPhoneNumberForm | Search user_id: {user_id} from session table. user_id acquired.',
                 [
                     "user_id" => $session_model->user_id
                 ]
@@ -193,6 +338,116 @@ class UserController extends Controller
         return view('account.management.phone.add')
             ->with('username', $user_model->getUsername());
     }
+
+    public function submitAddPhoneNumberForm(UserAddPhoneNumberRequests $request)
+    {
+        $phone_number_column_name = SiprPhoneNumber::COLUMN_PHONE_NUMBER_ITS_NAME;
+        $user_id_column_name = SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME;
+        $email_id_column_name = SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME;
+
+        Log::debug("Controller: UserController | method: submitAddPhoneNumberForm | called.");
+
+        $session_id = $request->session()->getId();
+        $session_model = SiprSession::select()
+            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
+            ->first();
+
+        $user_model = null;
+        $user_id = null;
+
+        $input = $request->validated();
+
+        if ($session_model->user_id !== null) {
+            Log::debug(
+                'Controller: UserController | method: submitAddPhoneNumberForm | Search user_id: {user_id} from session table.',
+                ["user_id" => $session_model->user_id]
+            );
+
+            $user_model = SiprUser::select()
+                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
+                ->first();
+
+            $user_id = $user_model->getId();
+        }
+
+        $new_email_data = $input['new-phone-number'];
+
+        DB::beginTransaction();
+
+        $email_model = SiprPhoneNumber::create([
+            "{$phone_number_column_name}" => $new_email_data
+        ]);
+
+        SiprUserHasPhoneNumber::create([
+            "{$email_id_column_name}" => $email_model->getId(),
+            "{$user_id_column_name}" => $user_id,
+        ]);
+
+        DB::commit();
+
+        return redirect(route('account'));
+    }
+
+    // public function submitAddPhoneNumberForm(Request $request)
+    // {
+    //     Log::debug("Controller: UserController | method: submitAddPhoneNumberForm | called.");
+
+    //     $session_id = $request->session()->getId();
+    //     $session_model = SiprSession::select()
+    //         ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
+    //         ->first();
+
+    //     $user_model = null;
+    //     $user_id = null;
+
+    //     $input = $request->only([
+    //         "new-phone-number",
+    //     ]);
+
+    //     $phone_number_table_name = SiprPhoneNumber::TABLE_NAME;
+    //     $phone_number_column_name = SiprPhoneNumber::COLUMN_PHONE_NUMBER_ITS_NAME;
+    //     $user_id_column_name = SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME;
+    //     $email_id_column_name = SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME;
+
+    //     $validator = Validator::make($input, [
+    //         "new-phone-number" => ['required', "unique:{$phone_number_table_name},{$phone_number_column_name}", "regex:^\+(?:[0-9][0-9]?)-\d{3}-\d{4}-\d+^"]
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         $message = $validator->getMessageBag()->get('new-phone-number')[0];
+    //         return $this->addPhoneNumberForm($request)->with('error_new_phone_number_input', $message);
+    //     }
+
+    //     if ($session_model->user_id !== null) {
+    //         Log::debug(
+    //             'Controller: UserController | method: submitAddPhoneNumberForm | Search user_id: {user_id} from session table.',
+    //             ["user_id" => $session_model->user_id]
+    //         );
+
+    //         $user_model = SiprUser::select()
+    //             ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
+    //             ->first();
+
+    //         $user_id = $user_model->getId();
+    //     }
+
+    //     $new_email_data = $input['new-phone-number'];
+
+    //     DB::beginTransaction();
+
+    //     $email_model = SiprPhoneNumber::create([
+    //         "{$phone_number_column_name}" => $new_email_data
+    //     ]);
+
+    //     SiprUserHasPhoneNumber::create([
+    //         "{$email_id_column_name}" => $email_model->getId(),
+    //         "{$user_id_column_name}" => $user_id,
+    //     ]);
+
+    //     DB::commit();
+
+    //     return redirect(route('account'));
+    // }
 
     public function editEmailForm(Request $request)
     {
@@ -283,132 +538,5 @@ class UserController extends Controller
         }
 
         return response()->view("account.management.phone.edit", ["username" => $username, "oldPhoneNumber" => $old_phone_number]);
-    }
-
-    public function submitAddPhoneNumberForm(Request $request)
-    {
-        Log::debug("Controller: UserController | method: submitAddPhoneNumberForm | called.");
-
-        $session_id = $request->session()->getId();
-        $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
-            ->first();
-
-        $user_model = null;
-        $user_id = null;
-
-        $input = $request->only([
-            "new-phone-number",
-        ]);
-
-        $phone_number_table_name = SiprPhoneNumber::TABLE_NAME;
-        $phone_number_column_name = SiprPhoneNumber::COLUMN_PHONE_NUMBER_ITS_NAME;
-        $user_id_column_name = SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME;
-        $email_id_column_name = SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME;
-
-        $validator = Validator::make($input, [
-            "new-phone-number" => ['required', "unique:{$phone_number_table_name},{$phone_number_column_name}", "regex:^\+(?:[0-9][0-9]?)-\d{3}-\d{4}-\d+^"]
-        ]);
-
-        if ($validator->fails()) {
-            $message = $validator->getMessageBag()->get('new-phone-number')[0];
-            return $this->addPhoneNumberForm($request)->with('error_new_phone_number_input', $message);
-        }
-
-        if ($session_model->user_id !== null) {
-            Log::debug(
-                'Search user_id: {user_id} from session table.',
-                ["user_id" => $session_model->user_id]
-            );
-
-            $user_model = SiprUser::select()
-                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
-                ->first();
-
-            $user_id = $user_model->getId();
-        }
-
-        $new_email_data = $input['new-phone-number'];
-
-        DB::beginTransaction();
-
-        $email_model = SiprPhoneNumber::create([
-            "{$phone_number_column_name}" => $new_email_data
-        ]);
-
-        SiprUserHasPhoneNumber::create([
-            "{$email_id_column_name}" => $email_model->getId(),
-            "{$user_id_column_name}" => $user_id,
-        ]);
-
-        DB::commit();
-
-        return redirect(route('account'));
-
-        // return redirect(route('list-of-room'));
-    }
-
-    public function submitAddEmailForm(Request $request)
-    {
-        Log::debug("Controller: UserController | method: submitAddEmailForm | called.");
-
-        $session_id = $request->session()->getId();
-        $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
-            ->first();
-
-        $user_model = null;
-        $user_id = null;
-
-        $input = $request->only([
-            "new-email",
-        ]);
-
-        $email_table_name = SiprSecondaryEmail::TABLE_NAME;
-        $email_column_name = SiprSecondaryEmail::COLUMN_EMAIL_ITS_NAME;
-        $user_id_column_name = SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME;
-        $email_id_column_name = SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME;
-
-        $validator = Validator::make($input, [
-            "new-email" => ['required', "unique:{$email_table_name},{$email_column_name}", "email"]
-        ]);
-
-        if ($validator->fails()) {
-            $message = $validator->getMessageBag()->get('new-email')[0];
-
-            return $this->addEmailForm($request)->with('error_new_email_input', $message);
-        }
-
-        if ($session_model->user_id !== null) {
-            Log::debug(
-                'Search user_id: {user_id} from session table.',
-                [
-                    "user_id" => $session_model->user_id
-                ]
-            );
-
-            $user_model = SiprUser::select()
-                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
-                ->first();
-
-            $user_id = $user_model->getId();
-        }
-
-        $new_email_data = $input['new-email'];
-
-        DB::beginTransaction();
-
-        $email_model = SiprSecondaryEmail::create([
-            "{$email_column_name}" => $new_email_data
-        ]);
-
-        SiprUserHasSecondaryEmail::create([
-            "{$email_id_column_name}" => $email_model->getId(),
-            "{$user_id_column_name}" => $user_id,
-        ]);
-
-        DB::commit();
-
-        return redirect(route('account'));
     }
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string(SiprSession::COLUMN_IP_ADDRESS_ITS_NAME, 45)->nullable();
             $table->text(SiprSession::COLUMN_USER_AGENT_ITS_NAME)->nullable();
             $table->longText(SiprSession::COLUMN_PAYLOAD_ITS_NAME);
-            $table->integer(SiprSession::COLUMN_LAST_ACTIVITY_ITS_NAME)->index();
+            $table->unsignedBigInteger(SiprSession::COLUMN_LAST_ACTIVITY_ITS_NAME)->index();
         });
     }
 

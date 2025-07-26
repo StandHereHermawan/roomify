@@ -37,23 +37,23 @@ return new class extends Migration {
                 ->useCurrentOnUpdate();
         });
 
-        DB::table(SiprRole::TABLE_NAME)->insert([
-            "role" => "SUPER_ADMIN",
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprRole::TABLE_NAME)->insert([
-            "role" => "GUEST",
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
-
-        DB::table(SiprRole::TABLE_NAME)->insert([
-            "role" => "OPERATOR",
-            "created_at" => \Illuminate\Support\Carbon::now(),
-            "updated_at" => \Illuminate\Support\Carbon::now(),
-        ]);
+        // DB::table(SiprRole::TABLE_NAME)->insert([
+            // "role" => "SUPER_ADMIN",
+            // "created_at" => \Illuminate\Support\Carbon::now(),
+            // "updated_at" => \Illuminate\Support\Carbon::now(),
+        // ]);
+// 
+        // DB::table(SiprRole::TABLE_NAME)->insert([
+            // "role" => "GUEST",
+            // "created_at" => \Illuminate\Support\Carbon::now(),
+            // "updated_at" => \Illuminate\Support\Carbon::now(),
+        // ]);
+// 
+        // DB::table(SiprRole::TABLE_NAME)->insert([
+            // "role" => "OPERATOR",
+            // "created_at" => \Illuminate\Support\Carbon::now(),
+            // "updated_at" => \Illuminate\Support\Carbon::now(),
+        // ]);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Domains\User\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -35,7 +36,7 @@ class SiprSession extends Model
         SiprSession::COLUMN_LAST_ACTIVITY_ITS_NAME,
     ];
 
-    public function getIdUser()
+    public function getUserId()
     {
         return $this->user_id;
     }
@@ -47,41 +48,16 @@ class SiprSession extends Model
 
     public function getSession()
     {
-        return $this->session;
+        return $this->id;
     }
 
-    public function getExpiredAt()
+    public function getLastActivity()
     {
-        return $this->expired_at;
+        return $this->last_activity;
     }
 
-    // public function getExpiredAtMillis()
-    // {
-    //     return Carbon::createFromTimeString($this->expired_at)->valueOf();
-    // }
-
-    // public function getDurationLeftSessionExpired()
-    // {
-    //     return $this->getExpiredAtMillis() - Carbon::now()->valueOf();
-    // }
-
-    public function getIdUserAndUsernameAndSessionAndExpiredAtAsArray()
+    public function ownedByUser(): HasOne
     {
-        return [
-            "idUser" => $this->getIdUser(),
-            // "username" => $this->getUsername(),
-            "session" => $this->getSession(),
-            // "expired_at" => $this->getExpiredAt(),
-        ];
-    }
-
-    public function getSessionOwner()
-    {
-        return $this->ownedByUser;
-    }
-
-    public function ownedByUser(): BelongsTo
-    {
-        return $this->belongsTo(SiprUser::class, "user_id", "id");
+        return $this->hasOne(SiprUser::class, "id", "user_id");
     }
 }

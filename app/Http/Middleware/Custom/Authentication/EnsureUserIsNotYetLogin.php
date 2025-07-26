@@ -19,24 +19,53 @@ class EnsureUserIsNotYetLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Log::debug('Ensuring session_id: {session_id} not yet login.', ["session_id" => $request->session()->getId() ?? null]);
+        $session_id = $request->session()->getId();
+
+        Log::debug(
+            'class: EnsureUserIsNotYetLogin | method: handle | Ensuring session_id: {session_id} state in database.',
+            ["session_id" => $session_id ?? null]
+        );
+
         $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $request->getSession()->getId())
+            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
             ->first();
 
+        $user_id = null;
+
         if ($session_model === null) {
+            Log::debug(
+                'class: EnsureUserIsNotYetLogin | method: handle | session_id: {session_id} not registered in database.',
+                ["session_id" => $session_id ?? null]
+            );
+
             return $next($request);
         }
 
-        if ($session_model->user_id === null) {
-            Log::debug('Session_id {session_id} not yet login.', ["session_id" => $request->session()->getId() ?? null]);
+        if ($session_model !== null) {
+            Log::debug(
+                'class: EnsureUserIsNotYetLogin | method: handle | session_id: {session_id} registered in database.',
+                ["session_id" => $session_id ?? null]
+            );
+
+            $user_id = $session_model->getUserId();
+        }
+
+        if ($user_id === null) {
+            Log::debug(
+                'class: EnsureUserIsNotYetLogin | method: handle | session_id: {session_id} not yet login.',
+                ["session_id" => $request->session()->getId() ?? null]
+            );
+
             return $next($request);
         }
 
-        if ($session_model->user_id !== null) {
-            Log::debug('Session_id: {session_id} already login with user_id: {user_id}.', ["session_id" => $request->session()->getId() ?? null, "user_id" => $session_model->user_id]);
+        if ($user_id !== null) {
+            Log::debug(
+                'class: EnsureUserIsNotYetLogin | method: handle | session_id: {session_id} already login with user_id: {user_id}. Redirect to {route}',
+                ["session_id" => $request->session()->getId() ?? null, "user_id" => $session_model->user_id, "route" => route('dashboard')]
+            );
         }
 
-        return redirect(route('list-of-room'));
+        return redirect(route('dashboard'));
     }
 }

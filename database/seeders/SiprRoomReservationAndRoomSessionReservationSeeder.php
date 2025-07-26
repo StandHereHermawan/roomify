@@ -38,29 +38,30 @@ class SiprRoomReservationAndRoomSessionReservationSeeder extends Seeder
         $id_room_reservation = 1;
         $days_added = 1;
         $room_id = 1;
+        $user_id = 2;
         $status = null;
         $determined_at = null;
 
         DB::beginTransaction();
-        for ($iteration_room_reservation = 0; $iteration_room_reservation < 10; $iteration_room_reservation++) {
+        for ($iteration_room_reservation = 0; $iteration_room_reservation < 15; $iteration_room_reservation++) {
             
             if ($iteration_room_reservation < 6) {
                 $status = "PENDING";
             }
 
-            if ($iteration_room_reservation >= 6 && $iteration_room_reservation <= 8) {
+            if ($iteration_room_reservation >= 6 && $iteration_room_reservation <= 10) {
                 $status = "ACCEPTED";
                 $determined_at = \Illuminate\Support\Carbon::now()->addDays($days_added);
             }
 
-            if ($iteration_room_reservation > 8) {
+            if ($iteration_room_reservation > 10) {
                 $status = "REJECTED";
                 $determined_at = \Illuminate\Support\Carbon::now()->addDays($days_added);
             }
 
             DB::table(SiprRoomReservationRequest::TABLE_NAME)->insert([
                 "{$column_table_room_reservation_ID_its_name}" => $id_room_reservation,
-                "{$column_table_room_reservation_USER_ID_its_name}" => "2",
+                "{$column_table_room_reservation_USER_ID_its_name}" => $user_id,
                 "{$column_table_room_reservation_ROOM_ID_its_name}" => $room_id,
                 "{$column_table_room_reservation_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays($days_added),
                 "{$column_table_room_reservation_DETERMINED_AT_its_name}" => $determined_at,
@@ -75,7 +76,62 @@ class SiprRoomReservationAndRoomSessionReservationSeeder extends Seeder
                 
                 DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
                  // "{$column_table_room_session_reservation_ID_its_name}" => $id_room_session_reservation,
-                    "{$column_table_room_session_reservation_USER_ID_its_name}" => "2",
+                    "{$column_table_room_session_reservation_USER_ID_its_name}" => $user_id,
+                    "{$column_table_room_session_reservation_ROOM_RESERVATION_ID_its_name}" => $id_room_reservation,
+                    "{$column_table_room_session_reservation_ROOM_SESSION_ID_its_name}" => $id_room_session,
+                    "{$column_table_room_session_reservation_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays($days_added),
+                    "{$column_table_room_session_reservation_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+                    "{$column_table_room_session_reservation_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+                ]);
+                $id_room_session++;
+            }
+
+            $id_room_reservation++;
+            $days_added++;
+            $room_id++;
+        }
+
+        // $id_room_reservation = 1;
+        // $days_added = 1;
+        // $room_id = 1;
+        $user_id = 3;
+        $status = null;
+        $determined_at = null;
+
+        for ($iteration_room_reservation = 0; $iteration_room_reservation < 15; $iteration_room_reservation++) {
+            
+            if ($iteration_room_reservation < 6) {
+                $status = "PENDING";
+            }
+
+            if ($iteration_room_reservation >= 6 && $iteration_room_reservation <= 10) {
+                $status = "ACCEPTED";
+                $determined_at = \Illuminate\Support\Carbon::now()->addDays($days_added);
+            }
+
+            if ($iteration_room_reservation > 10) {
+                $status = "REJECTED";
+                $determined_at = \Illuminate\Support\Carbon::now()->addDays($days_added);
+            }
+
+            DB::table(SiprRoomReservationRequest::TABLE_NAME)->insert([
+                "{$column_table_room_reservation_ID_its_name}" => $id_room_reservation,
+                "{$column_table_room_reservation_USER_ID_its_name}" => $user_id,
+                "{$column_table_room_reservation_ROOM_ID_its_name}" => $room_id,
+                "{$column_table_room_reservation_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays($days_added),
+                "{$column_table_room_reservation_DETERMINED_AT_its_name}" => $determined_at,
+                "{$column_table_room_reservation_STATUS_its_name}" => $status,
+                "{$column_table_room_reservation_CREATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+                "{$column_table_room_reservation_UPDATED_AT_its_name}" => \Illuminate\Support\Carbon::now(),
+            ]);
+
+            
+            $id_room_session = 1;
+            for ($iteration_room_session_reservation = 0; $iteration_room_session_reservation < 3; $iteration_room_session_reservation++) {
+                
+                DB::table(SiprRoomSessionReservationRequest::TABLE_NAME)->insert([
+                 // "{$column_table_room_session_reservation_ID_its_name}" => $id_room_session_reservation,
+                    "{$column_table_room_session_reservation_USER_ID_its_name}" => $user_id,
                     "{$column_table_room_session_reservation_ROOM_RESERVATION_ID_its_name}" => $id_room_reservation,
                     "{$column_table_room_session_reservation_ROOM_SESSION_ID_its_name}" => $id_room_session,
                     "{$column_table_room_session_reservation_RESERVATION_DATE_its_name}" => \Illuminate\Support\Carbon::now()->addDays($days_added),

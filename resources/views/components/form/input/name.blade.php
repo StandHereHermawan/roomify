@@ -4,9 +4,11 @@
     <input class="form-control shadow-sm" name="name" id="Name-input" type="text" value="" placeholder="Name" />
     <label for="Name-input">Name</label>
     @isset($errorNameInput)
-        {{-- username error message --}}
-        <div class="text-danger">{{ $errorNameInput }}</div>
-        {{-- end username error message --}}
+        @if (str_word_count($errorNameInput) > 2)
+            {{-- username error message --}}
+            <div class="btn btn-outline-danger mt-3 w-100">{{ $errorNameInput }}</div>
+            {{-- end username error message --}}
+        @endif
     @endisset
     <div class="d-flex w-100 justify-content-between">
         <div id="" class="form-text">Pick Your Name Here!</div>

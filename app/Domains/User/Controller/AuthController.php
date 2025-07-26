@@ -3,121 +3,40 @@
 namespace App\Domains\User\Controller;
 
 use App\Domains\User\Model\SiprSession;
+use App\Domains\User\Model\SiprUser;
+
+use App\Domains\User\Request\UserLoginRequests;
 use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\Password;
-use App\Domains\User\Model\SiprUser;
 use Validator;
 
+/*
+|
+|   Auth here stands for authentication.
+|   Authentication is stands for who are you in the system.
+|   it was different from authorization.
+|
+*/
 class AuthController extends Controller
 {
-    public function registerForm(Request $request)
-    {
-        $request;
-        return view('account.auth.registration');
-    }
-
     public function loginForm(Request $request)
     {
-        $request;
+        Log::debug('class: AuthController | method: loginForm | called. session_id: {session_id}.', [
+            "session_id" => $request->session()->getId(),
+        ]);
+
         return view('account.auth.login');
     }
 
-    public function submitFormRegister(Request $request)
+    public function submitFormLogin(UserLoginRequests $request)
     {
-        $register_input = $request->only([
-            "username",
-            "name",
-            "password",
-            "agreedTermsOfUse"
-        ]);
+        Log::debug("class: AuthController | method: submitFormLogin | called.");
 
-        Log::debug('Input Received.', [
-            "url" => $request->url(),
-            "input" => $register_input,
-        ]);
-
-        $validator = Validator::make($register_input, [
-            "username" => ["required", "min:8", "max:255", "lowercase", "unique:sipr_users,username"],
-            "name" => ["required", "min:8", "max:255"],
-            "agreedTermsOfUse" => "required",
-            "password" => [Password::min(8)->letters()->numbers()->symbols()->mixedCase()->max(100)]
-        ], [
-            "agreedTermsOfUse" => "Harus mengisi persetujuan penggunaan.",
-        ]);
-
-        if ($validator->fails()) {
-            $errorMessage = $validator->getMessageBag();
-
-            return response(
-                view("account.auth.registration")
-                    ->with("errorUsernameInput", $errorMessage->get("username")[0] ?? null)
-                    ->with("errorNameInput", $errorMessage->get("name")[0] ?? null)
-                    ->with("errorPasswordInput", $errorMessage->get("password")[0] ?? null)
-                    ->with("errorTermsOfUseInput", $errorMessage->get("agreedTermsOfUse")[0] ?? null)
-                ,
-                422
-            );
-        }
-
-        $username_column_name = SiprUser::COLUMN_USERNAME_ITS_NAME;
-        $name_column_name = SiprUser::COLUMN_NAME_ITS_NAME;
-        $password_column_name = SiprUser::COLUMN_PASSWORD_ITS_NAME;
-
-        DB::beginTransaction();
-
-        SiprUser::create([
-            "{$username_column_name}" => $register_input['username'],
-            "{$name_column_name}" => $register_input['name'],
-            "{$password_column_name}" => password_hash($register_input['password'], PASSWORD_BCRYPT),
-        ]);
-
-        DB::commit();
-
-        return redirect()->route('login');
-    }
-
-    public function submitFormLogin(Request $request)
-    {
-        $user_table_its_name = SiprUser::TABLE_NAME;
-        $username_column_its_name = SiprUser::COLUMN_USERNAME_ITS_NAME;
-
-        $login_input = $request->only([
-            "username",
-            "password",
-        ]);
-
-        $validator = Validator::make(
-            $login_input,
-            [
-                "username" => ["required", "exists:$user_table_its_name,$username_column_its_name"],
-                "password" => ["required"]
-            ],
-            [
-                "username" => "Username or password is wrong.",
-                "password" => "Username or password is wrong.",
-            ]
-        );
-
-        if ($validator->fails()) {
-            $errorMessageList = $validator->getMessageBag();
-            $errorMessage = null;
-
-            if ($errorMessageList->get("username")[0] !== null && str_word_count($errorMessageList->get("username")[0]) > 2) {
-                $errorMessage = $errorMessageList->get("username")[0];
-            }
-
-            if ($errorMessageList->get("password")[0] !== null && str_word_count($errorMessageList->get("password")[0]) > 2) {
-                $errorMessage = $errorMessageList->get("password")[0];
-            }
-
-            return $this->loginForm($request)
-                ->with("errorPasswordInput", $errorMessage);
-        }
+        $login_input = $request->validated();
 
         $username_input =
             $login_input["username"];
@@ -128,6 +47,11 @@ class AuthController extends Controller
         $user_registered = SiprUser::select()
             ->where(SiprUser::COLUMN_USERNAME_ITS_NAME, '=', $username_input)
             ->first();
+
+        Log::debug(
+            "class: AuthController | method: submitFormLogin | User try to authenticate. user_id: {id}, username: {username}, session_id: {session_id}.",
+            ["id" => $user_registered->getId(), "username" => $username_input, "session_id" => $request->session()->getId()]
+        );
 
         DB::beginTransaction();
 
@@ -141,10 +65,13 @@ class AuthController extends Controller
         DB::commit();
 
         // Auth::attempt sudah termasuk cek password input dan hashed password di database.
-        if (Auth::attempt(["username" => $username_input, "password" => $password_input,])) {
+        if (Auth::attempt(["username" => $username_input, "password" => $password_input])) {
 
             $request->session()->regenerate();
-            Log::info("User login With user_id: {id}.", ["id" => $user_registered->getId()]);
+            Log::info(
+                "class: AuthController | method: submitFormLogin | User authenticated with user_id: {id}, username: {username}, session_id: {session_id}.",
+                ["id" => $user_registered->getId(), "username" => $username_input, "session_id" => $request->session()->getId()]
+            );
             return redirect()->route('dashboard');
         }
 
