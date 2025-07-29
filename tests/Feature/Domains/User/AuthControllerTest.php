@@ -108,14 +108,13 @@ class AuthControllerTest extends TestCase
 
         $session_model = SiprSession::select()
             ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
+            ->with('ownedByUser')
             ->first();
-
-        // var_dump($cookie);
-        // var_dump($session_id);
 
         assertNotNull($session_model);
         assertNotNull($session_model->user_id);
         assertEquals($this->user->getId(), $session_model->user_id);
+        assertEquals($this->user->getUsername(), $session_model->ownedByUser()->first()->getUsername());
 
         $response->assertRedirect();
     }
@@ -128,6 +127,9 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertBadRequest();
+        $response->assertSeeText('sername');
+        $response->assertSeeText('password');
+        $response->assertSeeText('wrong');
     }
 
     public function test_it_should_be_failed_login_username_is_wrong(): void
@@ -138,6 +140,9 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertBadRequest();
+        $response->assertSeeText('sername');
+        $response->assertSeeText('password');
+        $response->assertSeeText('wrong');
     }
 
     public function test_it_should_be_failed_login_password_is_wrong(): void
@@ -148,6 +153,9 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertBadRequest();
+        $response->assertSeeText('sername');
+        $response->assertSeeText('password');
+        $response->assertSeeText('wrong');
     }
 
     public function test_it_should_be_failed_login_password_is_null(): void
@@ -158,5 +166,8 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertBadRequest();
+        $response->assertSeeText('sername');
+        $response->assertSeeText('password');
+        $response->assertSeeText('wrong');
     }
 }

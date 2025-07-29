@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Domains\Home\Controller\MainController::class, 'main']);
 
-Route::middleware(EnsureUserIsNotYetLogin::class)->group(function () {
+Route::middleware('guest')->group(function () {
     Route::prefix('/registration')->group(function () {
         Route::get('', [App\Domains\User\Controller\UserController::class, "registerForm"])
             ->name('registration');
@@ -33,7 +33,7 @@ Route::middleware(EnsureUserIsNotYetLogin::class)->group(function () {
     });
 });
 
-Route::middleware(EnsureUserIsLogin::class)->group(function () {
+Route::middleware('auth')->group(function () {
     Route::post('/logout', [App\Domains\User\Controller\AuthController::class, "submitLogout"])
         ->name('logout');
 

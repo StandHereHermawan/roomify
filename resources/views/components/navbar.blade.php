@@ -9,8 +9,8 @@
 {{-- --}}
 {{-- upper navbar --}}
 <header class="py-3 mb-4 border-bottom shadow-sm sticky-top bg-body">
-    <div class="container">
-        <div class="d-flex flex-wrap justify-content-around">
+    <div class="container-fluid container-md">
+        <div class="d-flex flex-wrap justify-content-between">
             <div class="d-flex align-items-center mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
                 {{-- icon --}}
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
@@ -26,6 +26,9 @@
             </div>
             <div class="col-auto">
                 <div class="d-flex justify-content-center mb-lg-0">
+                    <a href="" class="me-3">
+                        <i class="bi bi-person-circle fs-1"></i>
+                    </a>
                     {{-- button offcanva trigger --}}
                     <button class="btn btn-lg btn-outline-primary shadow-sm" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">

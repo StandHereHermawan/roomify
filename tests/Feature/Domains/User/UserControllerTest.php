@@ -4,6 +4,7 @@ namespace Tests\Feature\Domains\User;
 
 use App\Domains\Schedule\Model\SiprRoomReservationRequest;
 use App\Domains\Schedule\Model\SiprRoomSessionReservationRequest;
+
 use App\Domains\User\Model\SiprPhoneNumber;
 use App\Domains\User\Model\SiprRole;
 use App\Domains\User\Model\SiprSecondaryEmail;
@@ -15,8 +16,8 @@ use App\Domains\User\Model\SiprUser;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 // use Illuminate\Foundation\Testing\WithFaker;
-
 // use Illuminate\Foundation\Testing\WithoutMiddleware;
+
 use App\Http\Middleware\Custom\Authentication\EnsureUserIsLogin;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
@@ -149,6 +150,31 @@ class UserControllerTest extends TestCase
         $response->assertUnprocessable(); // 422 Http Status Code
     }
 
+    public function test_it_should_be_failed_register_caused_by_already_login(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $username = "davidheinemeierhansson";
+
+        $response = $this
+            ->withCookie(config('session.cookie'), $cookie)
+            ->post('/registration', [
+                "username" => $username,
+                "name" => "David Heinemeier Hansson",
+                "password" => 'Rahasia@1234',
+                "agreedTermsOfUse" => "true"
+            ]);
+
+        $response->assertRedirect();
+    }
+
     public function test_it_should_be_failed_register_caused_by_username_is_null(): void
     {
         $username = "";
@@ -163,9 +189,31 @@ class UserControllerTest extends TestCase
         $response->assertUnprocessable(); // 422 Http Status Code
     }
 
-    public function test_it_should_be_failed_register_caused_by_username_is_not_8_characters_length(): void
+    public function test_it_should_be_failed_register_caused_by_username_is_below_8_characters_length(): void
     {
         $username = "terry";
+
+        $response = $this->post('/registration', [
+            "username" => $username,
+            "name" => "David Heinemeier Hansson",
+            "password" => 'Rahasia@1234',
+            "agreedTermsOfUse" => "true"
+        ]);
+
+        $response->assertUnprocessable(); // 422 Http Status Code
+    }
+
+    public function test_it_should_be_failed_register_caused_by_username_is_exceed_maximum_character_length(): void
+    {
+        $username =
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry";
 
         $response = $this->post('/registration', [
             "username" => $username,
@@ -205,13 +253,35 @@ class UserControllerTest extends TestCase
         $response->assertUnprocessable(); // 422 Http Status Code
     }
 
-    public function test_it_should_be_failed_register_caused_by_name_is_not_8_characters_length(): void
+    public function test_it_should_be_failed_register_caused_by_name_is_below_8_characters_length(): void
     {
         $username = "davidheinemeierhansson";
 
         $response = $this->post('/registration', [
             "username" => $username,
             "name" => "David",
+            "password" => 'Rahasia@1234',
+            "agreedTermsOfUse" => "true"
+        ]);
+
+        $response->assertUnprocessable(); // 422 Http Status Code
+    }
+
+    public function test_it_should_be_failed_register_caused_by_name_is_exceed_maximum_character_length(): void
+    {
+        $name =
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry" .
+            "terryterryterryterryterryterryterryterry";
+
+        $response = $this->post('/registration', [
+            "username" => "terryandrewdavis",
+            "name" => $name,
             "password" => 'Rahasia@1234',
             "agreedTermsOfUse" => "true"
         ]);
@@ -310,6 +380,8 @@ class UserControllerTest extends TestCase
             "password" => "Rahasia@1234",
         ]);
 
+        $phone_number = "+62-812-3456-78901";
+
         $cookie = $response
             ->getCookie(config('session.cookie'), false)
             ->getValue();
@@ -317,9 +389,214 @@ class UserControllerTest extends TestCase
         $response = $this->withCookie(config('session.cookie'), $cookie)
             ->post(
                 '/dashboard/account/phone-number/add',
-                ["new-phone-number" => ""]
+                ["new-phone-number" => $phone_number]
             );
 
-        $response->assertBadRequest();
+        $phone_number_record_model = SiprPhoneNumber::where(SiprPhoneNumber::COLUMN_PHONE_NUMBER_ITS_NAME, '=', $phone_number)
+            ->first();
+
+        assertNotNull($phone_number_record_model);
+        assertEquals($phone_number_record_model->phone_number, $phone_number);
+        $response->assertRedirect();
+    }
+
+    public function test_it_should_be_failed_add_phone_number_unauthorized(): void
+    {
+        $phone_number = "+62-812-3456-7890";
+        $response = $this->post(
+            '/dashboard/account/phone-number/add',
+            ["new-phone-number" => $phone_number]
+        );
+
+        $response->assertRedirect();
+    }
+
+    public function test_it_should_be_failed_add_phone_number_field_null(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $phone_number = "";
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $response = $this->withCookie(config('session.cookie'), $cookie)
+            ->post(
+                '/dashboard/account/phone-number/add',
+                ["new-phone-number" => $phone_number]
+            );
+
+        $response->assertUnprocessable();
+    }
+
+    public function test_it_should_be_failed_add_phone_number_field_format_invalid(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $phone_number = "62-8";
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $response = $this
+            ->withCookie(config('session.cookie'), $cookie)
+            ->post(
+                '/dashboard/account/phone-number/add',
+                ["new-phone-number" => $phone_number]
+            );
+
+        $response->assertUnprocessable();
+    }
+
+    public function test_it_should_be_failed_add_phone_number_field_too_long(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $phone_number = "+62-812-3456-7890-1234";
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $response = $this
+            ->withCookie(config('session.cookie'), $cookie)
+            ->post(
+                '/dashboard/account/phone-number/add',
+                ["new-phone-number" => $phone_number]
+            );
+
+        $response->assertUnprocessable();
+    }
+
+    public function test_it_should_be_success_add_email(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $email = "sample.email@localhost.com";
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $response = $this->withCookie(config('session.cookie'), $cookie)
+            ->post(
+                '/dashboard/account/email/add',
+                ["new-email" => $email]
+            );
+
+        $email_record_model = SiprSecondaryEmail::where(SiprSecondaryEmail::COLUMN_EMAIL_ITS_NAME, '=', $email)
+            ->first();
+
+        $response->assertRedirect();
+        assertNotNull($email_record_model);
+        assertEquals($email_record_model->email, $email);
+    }
+
+    public function test_it_should_be_failed_add_email_unauthorized(): void
+    {
+        $email = "sample.email@localhost.com";
+
+        $response = $this->post(
+            '/dashboard/account/email/add',
+            ["new-email" => $email]
+        );
+
+        $response->assertRedirect();
+        $response->assertSeeText('ogin');
+    }
+
+    public function test_it_should_be_failed_add_email_field_null(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $email = "";
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $response = $this->withCookie(config('session.cookie'), $cookie)
+            ->post(
+                '/dashboard/account/email/add',
+                ["new-email" => $email]
+            );
+
+        $response->assertUnprocessable();
+        $response->assertSeeText('tidak');
+        $response->assertSeeText('boleh');
+        $response->assertSeeText('kosong');
+    }
+
+    public function test_it_should_be_failed_add_email_field_format_invalid(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $email = "aokwokakokwo";
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $response = $this->withCookie(config('session.cookie'), $cookie)
+            ->post(
+                '/dashboard/account/email/add',
+                ["new-email" => $email]
+            );
+
+        $response->assertUnprocessable();
+    }
+
+    public function test_it_should_be_failed_add_email_field_too_long(): void
+    {
+        $response = $this->post('/login', [
+            "username" => "terryandrewdavis",
+            "password" => "Rahasia@1234",
+        ]);
+
+        $email =
+            "sample.sample.sample.sample.sample.sample.sample." .
+            "sample.sample.sample.sample.sample.sample.sample." .
+            "sample.sample.sample.sample.sample.sample.sample." .
+            "sample.sample.sample.sample.sample.sample.sample." .
+            "sample.sample.sample.sample.sample.sample.sample." .
+            "sample.sample.sample.sample.sample.sample.sample." .
+            "sample.sample.sample.sample.sample.sample.sample." .
+            "sample.sample.sample.sample.email@localhost.com";
+
+        $cookie = $response
+            ->getCookie(config('session.cookie'), false)
+            ->getValue();
+
+        $response = $this->withCookie(config('session.cookie'), $cookie)
+            ->post(
+                '/dashboard/account/email/add',
+                ["new-email" => $email]
+            );
+
+        $response->assertUnprocessable();
+        $response->assertSeeText('tidak');
+        $response->assertSeeText('bisa');
+        $response->assertSeeText('lebih');
+        $response->assertSeeText('255');
     }
 }

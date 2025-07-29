@@ -13,12 +13,15 @@ use App\Domains\User\Model\SiprUserHasSecondaryEmail;
 
 use App\Domains\User\Request\UserAddPhoneNumberRequests;
 use App\Domains\User\Request\UserRegistrationRequests;
+use App\Domains\User\Request\UserAddEmailRequests;
 
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -99,7 +102,7 @@ class UserController extends Controller
         $roles_collection = null;
         $phone_number_collection = null;
 
-        Log::debug("Controller: UserController | method: accountDetail | called.");
+        Log::debug("class: UserController | method: accountDetail | called.");
 
         $session_id = $request->session()->getId();
         $session_model = SiprSession::select()
@@ -108,7 +111,7 @@ class UserController extends Controller
 
         if ($session_model !== null) {
             Log::debug(
-                'Controller: UserController | method: accountDetail | session_id: {session_id} registered in database.',
+                'class: UserController | method: accountDetail | session_id: {session_id} registered in database.',
                 ["session_id" => $session_id]
             );
 
@@ -117,7 +120,7 @@ class UserController extends Controller
 
         if ($session_model->user_id !== null) {
             Log::debug(
-                'Controller: UserController | method: accountDetail | session_id: {session_id} has user_id: {user_id}.',
+                'class: UserController | method: accountDetail | session_id: {session_id} has user_id: {user_id}.',
                 ["user_id" => $session_model->user_id, "session_id" => $session_id]
             );
 
@@ -132,7 +135,7 @@ class UserController extends Controller
 
         if ($user_model !== null) {
             Log::debug(
-                'Controller: UserController | method: accountDetail | User view his account with user id: {user_id} and username: {username}.',
+                'class: UserController | method: accountDetail | User view his account with user id: {user_id} and username: {username}.',
                 [
                     "user_id" => $user_model->getId(),
                     "username" => $user_model->getUsername()
@@ -209,7 +212,7 @@ class UserController extends Controller
 
     public function listOfRegisteredAccount(Request $request)
     {
-        Log::debug("Controller: UserController | method: listOfRegisteredAccount | called.");
+        Log::debug("class: UserController | method: listOfRegisteredAccount | called.");
 
         $user_account_paginate = SiprUser::select()
             ->with('hasEmails')
@@ -225,233 +228,342 @@ class UserController extends Controller
 
     public function addEmailForm(Request $request)
     {
-        Log::debug("Controller: UserController | method: addEmailForm | called.");
+        Log::debug("class: UserController | method: addEmailForm | called.");
 
-        $session_id = $request->session()->getId();
-        $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
-            ->first();
-
+        $user_id = null;
         $user_model = null;
+        $session_model = null;
+        $session_id_from_cookie = null;
+        $cookie_value = $request->cookie(config('session.cookie'));
 
-        if ($session_model->user_id !== null) {
-            Log::debug(
-                'Controller: UserController | method: addEmailForm | Search user_id: {user_id} from session table.',
-                ["user_id" => $session_model->user_id]
-            );
+        Log::debug(
+            'class: UserController | method: addEmailForm | retrieved cookie with length: {len} from request, its value: {cookie}.',
+            ["cookie" => $cookie_value ?? null, "len" => strlen($cookie_value)]
+        );
 
-            $user_model = SiprUser::select()
-                ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
+        if (strlen($cookie_value) >= 41) {
+            Log::debug('class: UserController | method: addEmailForm | the cookie_value length is more than 40.');
+            Log::debug('class: UserController | method: addEmailForm | assuming cookie_value is encrypted caused by its length more than 40.');
+            Log::debug('class: UserController | method: addEmailForm | attempt to decrypt cookie_value.');
+
+            $decrypted_cookie = decrypt($cookie_value, false);
+
+            Log::debug('class: UserController | method: addEmailForm | decrypted cookie_value: {cookie}.', ["cookie" => $decrypted_cookie]);
+            Log::debug('class: UserController | method: addEmailForm | decrypted cookie_value its length: {cookie_length}.', ["cookie_length" => strlen($decrypted_cookie)]);
+            Log::debug('class: UserController | method: addEmailForm | attempt to retrieve session_id from decrypted cookie value.');
+
+            list($hmac, $session_id_from_decrypted_cookie) = explode('|', $decrypted_cookie);
+
+            Log::debug('class: UserController | method: addEmailForm | retrieved from decrypted cookie session_id: {from_cookie}.', ["from_cookie" => $session_id_from_decrypted_cookie]);
+            Log::debug('class: UserController | method: addEmailForm | retrieved from decrypted cookie hmac: {hmac}.', ["hmac" => $hmac]);
+            Log::debug('class: UserController | method: addEmailForm | attempt to check session_id from decrypted cookie value state in database.');
+
+            $session_id_from_cookie = $session_id_from_decrypted_cookie;
+        }
+
+        if (strlen($cookie_value) <= 40) {
+            Log::debug('class: UserController | method: addEmailForm | the cookie_value length is doesnt beyond than 40.');
+            Log::debug('class: UserController | method: addEmailForm | assuming cookie_value is not encrypted caused by its doesnt beyond than 40.');
+            Log::debug('class: UserController | method: addEmailForm | attempt to check not encrypted cookie_value state in database.');
+
+            $session_id_from_cookie = $cookie_value;
+        }
+
+        if ($session_id_from_cookie !== null) {
+            $session_model = SiprSession::select()
+                ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id_from_cookie)
                 ->first();
         }
 
-        return view('account.management.email.add')
-            ->with('username', $user_model->getUsername());
+        if ($session_model !== null) {
+            Log::debug('class: UserController | method: addEmailForm | session_id: {session_id} was exist in database.', ["session_id" => $session_id_from_cookie]);
+            $user_id = $session_model->getUserId();
+        }
+
+        if ($user_id !== null) {
+            Log::debug(
+                'class: UserController | method: addEmailForm | Search user_id: {user_id} from session table.',
+                ["user_id" => $user_id]
+            );
+
+            $user_model = SiprUser::select()
+                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $user_id)
+                ->first();
+
+            return view('account.management.email.add')
+                ->with('username', $user_model->getUsername());
+        }
+
+        throw new \Illuminate\Http\Exceptions\HttpResponseException(
+            response(redirect(route('login')), 401)
+        );
     }
 
-    public function submitAddEmailForm(Request $request)
+    public function submitAddEmailForm(UserAddEmailRequests $request)
     {
-        $email_table_name = SiprSecondaryEmail::TABLE_NAME;
+        Log::debug("class: UserController | method: submitAddEmailForm | called.");
+
         $email_column_name = SiprSecondaryEmail::COLUMN_EMAIL_ITS_NAME;
         $user_id_column_name = SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME;
         $email_id_column_name = SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME;
 
-        Log::debug("Controller: UserController | method: submitAddEmailForm | called.");
-
-        $session_id = $request->session()->getId();
-        $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
-            ->first();
-
-        $user_model = null;
         $user_id = null;
+        $user_model = null;
+        $session_model = null;
+        $session_id_from_cookie = null;
+        $cookie_value = $request->cookie(config('session.cookie'));
 
-        $input = $request->only([
-            "new-email",
-        ]);
+        Log::debug(
+            'class: UserController | method: submitAddEmailForm | retrieved cookie with length: {len} from request, its value: {cookie}.',
+            ["cookie" => $cookie_value ?? null, "len" => strlen($cookie_value)]
+        );
 
-        $validator = Validator::make($input, [
-            "new-email" => ['required', "unique:{$email_table_name},{$email_column_name}", "email"]
-        ]);
+        $input = $request->validated();
 
-        if ($validator->fails()) {
-            $message = $validator->getMessageBag()->get('new-email')[0];
+        if (strlen($cookie_value) >= 41) {
+            Log::debug('class: UserController | method: submitAddEmailForm | the cookie_value length is more than 40.');
+            Log::debug('class: UserController | method: submitAddEmailForm | assuming cookie_value is encrypted caused by its length more than 40.');
+            Log::debug('class: UserController | method: submitAddEmailForm | attempt to decrypt cookie_value.');
 
-            return $this->addEmailForm($request)->with('error_new_email_input', $message);
+            $decrypted_cookie = decrypt($cookie_value, false);
+
+            Log::debug('class: UserController | method: submitAddEmailForm | decrypted cookie_value: {cookie}.', ["cookie" => $decrypted_cookie]);
+            Log::debug('class: UserController | method: submitAddEmailForm | decrypted cookie_value its length: {cookie_length}.', ["cookie_length" => strlen($decrypted_cookie)]);
+            Log::debug('class: UserController | method: submitAddEmailForm | attempt to retrieve session_id from decrypted cookie value.');
+
+            list($hmac, $session_id_from_decrypted_cookie) = explode('|', $decrypted_cookie);
+
+            Log::debug('class: UserController | method: submitAddEmailForm | retrieved from decrypted cookie session_id: {from_cookie}.', ["from_cookie" => $session_id_from_decrypted_cookie]);
+            Log::debug('class: UserController | method: submitAddEmailForm | retrieved from decrypted cookie hmac: {hmac}.', ["hmac" => $hmac]);
+            Log::debug('class: UserController | method: submitAddEmailForm | attempt to check session_id from decrypted cookie value state in database.');
+
+            $session_id_from_cookie = $session_id_from_decrypted_cookie;
         }
 
-        if ($session_model->user_id !== null) {
+        if (strlen($cookie_value) <= 40) {
+            Log::debug('class: UserController | method: submitAddEmailForm | the cookie_value length is doesnt beyond than 40.');
+            Log::debug('class: UserController | method: submitAddEmailForm | assuming cookie_value is not encrypted caused by its doesnt beyond than 40.');
+            Log::debug('class: UserController | method: submitAddEmailForm | attempt to check not encrypted cookie_value state in database.');
+
+            $session_id_from_cookie = $cookie_value;
+        }
+
+        if ($session_id_from_cookie !== null) {
+            $session_model = SiprSession::select()
+                ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id_from_cookie)
+                ->first();
+        }
+
+        if ($session_model !== null) {
+            Log::debug('class: UserController | method: submitAddEmailForm | session_id: {session_id} was exist in database.', ["session_id" => $session_id_from_cookie]);
+            $user_id = $session_model->getUserId();
+        }
+
+        if ($user_id !== null) {
             Log::debug(
-                'Controller: UserController | method: submitAddEmailForm | Search user_id: {user_id} from session table.',
+                'class: UserController | method: submitAddEmailForm | Search user_id: {user_id} from session table.',
                 ["user_id" => $session_model->user_id]
             );
 
             $user_model = SiprUser::select()
-                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
+                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $user_id)
                 ->first();
 
-            $user_id = $user_model->getId();
+            $new_email_data = $input['new-email'];
+
+            DB::beginTransaction();
+
+            $email_model = SiprSecondaryEmail::create([
+                "{$email_column_name}" => $new_email_data
+            ]);
+
+            SiprUserHasSecondaryEmail::create([
+                "{$email_id_column_name}" => $email_model->getId(),
+                "{$user_id_column_name}" => $user_id,
+            ]);
+
+            DB::commit();
+
+            Log::info(
+                'class: UserController | method: submitAddPhoneNumberForm | user: {username} added new email contacts. the email: {phone}.',
+                ["username" => $user_model->getUsername() ?? null, "phone" => $new_email_data]
+            );
+
+            return redirect(route('account'));
         }
 
-        $new_email_data = $input['new-email'];
-
-        DB::beginTransaction();
-
-        $email_model = SiprSecondaryEmail::create([
-            "{$email_column_name}" => $new_email_data
-        ]);
-
-        SiprUserHasSecondaryEmail::create([
-            "{$email_id_column_name}" => $email_model->getId(),
-            "{$user_id_column_name}" => $user_id,
-        ]);
-
-        DB::commit();
-
-        return redirect(route('account'));
+        throw new \Illuminate\Http\Exceptions\HttpResponseException(
+            response(redirect(route('login')), 401)
+        );
     }
 
     public function addPhoneNumberForm(Request $request)
     {
-        Log::debug("Controller: UserController | method: addPhoneNumberForm | called.");
+        Log::debug("class: UserController | method: addPhoneNumberForm | called.");
 
-        $session_id = $request->session()->getId();
-        $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
-            ->first();
-
+        $user_id = null;
+        $username = null;
         $user_model = null;
+        $session_model = null;
+        $session_id_from_cookie = null;
+        $cookie_value = $request->cookie(config('session.cookie'));
 
-        if ($session_model->user_id !== null) {
-            Log::debug(
-                'Controller: UserController | method: addPhoneNumberForm | Search user_id: {user_id} from session table. user_id acquired.',
-                [
-                    "user_id" => $session_model->user_id
-                ]
-            );
+        Log::debug(
+            'class: UserController | method: addPhoneNumberForm | retrieved cookie with length: {len} from request, its value: {cookie}.',
+            ["cookie" => $cookie_value ?? null, "len" => strlen($cookie_value)]
+        );
 
-            $user_model = SiprUser::select()
-                ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
-                ->first();
+        if (strlen($cookie_value) >= 41) {
+            Log::debug('class: UserController | method: addPhoneNumberForm | the cookie_value length is more than 40.');
+            Log::debug('class: UserController | method: addPhoneNumberForm | assuming cookie_value is encrypted caused by its length more than 40.');
+            Log::debug('class: UserController | method: addPhoneNumberForm | attempt to decrypt cookie_value.');
+
+            $decrypted_cookie = decrypt($cookie_value, false);
+
+            Log::debug('class: UserController | method: addPhoneNumberForm | decrypted cookie_value: {cookie}.', ["cookie" => $decrypted_cookie]);
+            Log::debug('class: UserController | method: addPhoneNumberForm | decrypted cookie_value its length: {cookie_length}.', ["cookie_length" => strlen($decrypted_cookie)]);
+            Log::debug('class: UserController | method: addPhoneNumberForm | attempt to retrieve session_id from decrypted cookie value.');
+
+            list($hmac, $session_id_from_decrypted_cookie) = explode('|', $decrypted_cookie);
+
+            Log::debug('class: UserController | method: addPhoneNumberForm | retrieved from decrypted cookie session_id: {from_cookie}.', ["from_cookie" => $session_id_from_decrypted_cookie]);
+            Log::debug('class: UserController | method: addPhoneNumberForm | retrieved from decrypted cookie hmac: {hmac}.', ["hmac" => $hmac]);
+            Log::debug('class: UserController | method: addPhoneNumberForm | attempt to check session_id from decrypted cookie value state in database.');
+
+            $session_id_from_cookie = $session_id_from_decrypted_cookie;
         }
 
-        return view('account.management.phone.add')
-            ->with('username', $user_model->getUsername());
+        if (strlen($cookie_value) <= 40) {
+            Log::debug('class: UserController | method: addPhoneNumberForm | the cookie_value length is doesnt beyond than 40.');
+            Log::debug('class: UserController | method: addPhoneNumberForm | assuming cookie_value is not encrypted caused by its doesnt beyond than 40.');
+            Log::debug('class: UserController | method: addPhoneNumberForm | attempt to check not encrypted cookie_value state in database.');
+
+            $session_id_from_cookie = $cookie_value;
+        }
+
+        $session_model = SiprSession::select()
+            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id_from_cookie)
+            ->first();
+
+        if ($session_model !== null) {
+            $user_id = $session_model->getUserId();
+        }
+
+        if ($user_id !== null) {
+            $user_model = SiprUser::select()
+                ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $user_id)
+                ->first();
+            $username = $user_model->getUsername();
+
+            return view('account.management.phone.add')
+                ->with('username', $username);
+        }
+
+        throw new \Illuminate\Http\Exceptions\HttpResponseException(
+            response(redirect(route('login')), 401)
+        );
     }
 
     public function submitAddPhoneNumberForm(UserAddPhoneNumberRequests $request)
     {
+        Log::debug("class: UserController | method: submitAddPhoneNumberForm | called.");
+
+        $email_id_column_name = SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME;
         $phone_number_column_name = SiprPhoneNumber::COLUMN_PHONE_NUMBER_ITS_NAME;
         $user_id_column_name = SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME;
-        $email_id_column_name = SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME;
 
-        Log::debug("Controller: UserController | method: submitAddPhoneNumberForm | called.");
-
-        $session_id = $request->session()->getId();
-        $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
-            ->first();
-
-        $user_model = null;
         $user_id = null;
+        $user_model = null;
+        $session_model = null;
+        $session_id_from_cookie = null;
+        $cookie_value = Cookie::get(config('session.cookie'));
 
-        $input = $request->validated();
+        Log::debug(
+            'class: UserController | method: submitAddPhoneNumberForm | retrieved cookie with length: {len} from request, its value: {cookie}.',
+            ["cookie" => $cookie_value ?? null, "len" => strlen($cookie_value)]
+        );
 
-        if ($session_model->user_id !== null) {
-            Log::debug(
-                'Controller: UserController | method: submitAddPhoneNumberForm | Search user_id: {user_id} from session table.',
-                ["user_id" => $session_model->user_id]
-            );
+        if (strlen($cookie_value) >= 41) {
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | the cookie_value length is more than 40.');
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | assuming cookie_value is encrypted caused by its length more than 40.');
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | attempt to decrypt cookie_value.');
 
-            $user_model = SiprUser::select()
-                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
-                ->first();
+            $decrypted_cookie = decrypt($cookie_value, false);
 
-            $user_id = $user_model->getId();
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | decrypted cookie_value: {cookie}.', ["cookie" => $decrypted_cookie]);
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | decrypted cookie_value its length: {cookie_length}.', ["cookie_length" => strlen($decrypted_cookie)]);
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | attempt to retrieve session_id from decrypted cookie value.');
+
+            list($hmac, $session_id_from_decrypted_cookie) = explode('|', $decrypted_cookie);
+
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | retrieved from decrypted cookie session_id: {from_cookie}.', ["from_cookie" => $session_id_from_decrypted_cookie]);
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | retrieved from decrypted cookie hmac: {hmac}.', ["hmac" => $hmac]);
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | attempt to check session_id from decrypted cookie value state in database.');
+
+            $session_id_from_cookie = $session_id_from_decrypted_cookie;
         }
 
-        $new_email_data = $input['new-phone-number'];
+        if (strlen($cookie_value) <= 40) {
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | the cookie_value length is doesnt beyond than 40.');
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | assuming cookie_value is not encrypted caused by its doesnt beyond than 40.');
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | attempt to check not encrypted cookie_value state in database.');
 
-        DB::beginTransaction();
+            $session_id_from_cookie = $cookie_value;
+        }
 
-        $email_model = SiprPhoneNumber::create([
-            "{$phone_number_column_name}" => $new_email_data
-        ]);
+        if ($session_id_from_cookie !== null) {
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | attempt check session_id state in database from decrypted cookie value.');
+            $session_model = SiprSession::select()
+                ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id_from_cookie)
+                ->first();
+        }
 
-        SiprUserHasPhoneNumber::create([
-            "{$email_id_column_name}" => $email_model->getId(),
-            "{$user_id_column_name}" => $user_id,
-        ]);
+        if ($session_model !== null) {
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | session_id: {session_id} was exist in database.', ["session_id" => $session_id_from_cookie]);
+            $user_id = $session_model->getUserId();
+        }
 
-        DB::commit();
+        if ($user_id !== null) {
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | session_id: {session_id} was owned by user with id: {id}.', ["session_id" => $session_id_from_cookie, "id" => $user_id]);
 
-        return redirect(route('account'));
+            $user_model = SiprUser::select()
+                ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $user_id)
+                ->first();
+
+            $input = $request->validated();
+            $new_phone_number_data = $input['new-phone-number'];
+
+            DB::beginTransaction();
+
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | attempt to save new phone number. the phone number: {phone}', ["phone" => $new_phone_number_data]);
+            $email_model = SiprPhoneNumber::create([
+                "{$phone_number_column_name}" => $new_phone_number_data
+            ]);
+
+            Log::debug('class: UserController | method: submitAddPhoneNumberForm | attempt to assign the phone number: {phone} to username: {username}', ["phone" => $new_phone_number_data, "username" => $user_model->getUsername()]);
+            SiprUserHasPhoneNumber::create([
+                "{$email_id_column_name}" => $email_model->getId(),
+                "{$user_id_column_name}" => $user_id,
+            ]);
+
+            Log::info(
+                'class: UserController | method: submitAddPhoneNumberForm | user: {username} added new phone number contacts. the phone: {phone}.',
+                ["username" => $user_model->getUsername() ?? null, "phone" => $new_phone_number_data]
+            );
+
+            DB::commit();
+
+            return redirect(route('account'));
+        }
+
+        throw new \Illuminate\Http\Exceptions\HttpResponseException(
+            response(redirect(route('login')), 401)
+        );
     }
-
-    // public function submitAddPhoneNumberForm(Request $request)
-    // {
-    //     Log::debug("Controller: UserController | method: submitAddPhoneNumberForm | called.");
-
-    //     $session_id = $request->session()->getId();
-    //     $session_model = SiprSession::select()
-    //         ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
-    //         ->first();
-
-    //     $user_model = null;
-    //     $user_id = null;
-
-    //     $input = $request->only([
-    //         "new-phone-number",
-    //     ]);
-
-    //     $phone_number_table_name = SiprPhoneNumber::TABLE_NAME;
-    //     $phone_number_column_name = SiprPhoneNumber::COLUMN_PHONE_NUMBER_ITS_NAME;
-    //     $user_id_column_name = SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME;
-    //     $email_id_column_name = SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME;
-
-    //     $validator = Validator::make($input, [
-    //         "new-phone-number" => ['required', "unique:{$phone_number_table_name},{$phone_number_column_name}", "regex:^\+(?:[0-9][0-9]?)-\d{3}-\d{4}-\d+^"]
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         $message = $validator->getMessageBag()->get('new-phone-number')[0];
-    //         return $this->addPhoneNumberForm($request)->with('error_new_phone_number_input', $message);
-    //     }
-
-    //     if ($session_model->user_id !== null) {
-    //         Log::debug(
-    //             'Controller: UserController | method: submitAddPhoneNumberForm | Search user_id: {user_id} from session table.',
-    //             ["user_id" => $session_model->user_id]
-    //         );
-
-    //         $user_model = SiprUser::select()
-    //             ->where(SiprUser::COLUMN_ID_ITS_NAME, '=', $session_model->user_id)
-    //             ->first();
-
-    //         $user_id = $user_model->getId();
-    //     }
-
-    //     $new_email_data = $input['new-phone-number'];
-
-    //     DB::beginTransaction();
-
-    //     $email_model = SiprPhoneNumber::create([
-    //         "{$phone_number_column_name}" => $new_email_data
-    //     ]);
-
-    //     SiprUserHasPhoneNumber::create([
-    //         "{$email_id_column_name}" => $email_model->getId(),
-    //         "{$user_id_column_name}" => $user_id,
-    //     ]);
-
-    //     DB::commit();
-
-    //     return redirect(route('account'));
-    // }
 
     public function editEmailForm(Request $request)
     {
-        Log::debug("Controller: UserController | method: editEmailForm | called.");
+        Log::debug("class: UserController | method: editEmailForm | called.");
 
         $session_id = $request->session()->getId();
 
@@ -501,7 +613,7 @@ class UserController extends Controller
 
     public function editPhoneNumberForm(Request $request)
     {
-        Log::debug("Controller: UserController | method: editPhoneNumberForm | called.");
+        Log::debug("class: UserController | method: editPhoneNumberForm | called.");
 
         $session_id = $request->session()->getId();
 
