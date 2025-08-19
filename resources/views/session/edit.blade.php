@@ -4,9 +4,13 @@
 
 @endphp
 
+{{-- --}}
 <x-layout.main :title="$title">
+    {{-- --}}
     <div class="mt-3">
+        {{-- --}}
         <div class="container-fluid container-md">
+            {{-- --}}
             <div class="col-auto col-sm-8 offset-sm-2 col-lg-6 offset-lg-3">
                 {{-- change username form with style --}}
                 <div class="p-4 border rounded-3 shadow">
@@ -65,12 +69,16 @@
                         <div class="form-floating mb-3">
                             {{-- --}}
                             <input class="form-control shadow-sm updated-room-session-start"
-                                id="updated-room-session-start" 
-                                name="updated-room-session-start" type="time" step="1"
+                                id="updated-room-session-start" name="updated-room-session-start" type="time" step="1"
                                 placeholder="updated-room-session-start" required />
                             <label for="updated-room-session-start">Updated Room Session Start</label>
                             {{-- --}}
                             {{-- --}}
+                            @if ($errors->any())
+                                @error('updated-room-session-start')
+                                    <div class="btn btn-outline-danger my-2 w-100"> {{ $errors->first('updated-room-session-start') }} </div>
+                                @enderror
+                            @endif
                             @isset($error_updated_session_start)
                                 <div class="text-danger"> {{ $error_updated_session_start }} </div>
                             @endisset
@@ -92,6 +100,11 @@
                             <label for="updated-room-session-end">Updated Room Session end</label>
                             {{-- --}}
                             {{-- --}}
+                            @if ($errors->any())
+                                @error('updated-room-session-end')
+                                    <div class="btn btn-outline-danger my-2 w-100"> {{ $errors->first('updated-room-session-end') }} </div>
+                                @enderror
+                            @endif
                             @isset($error_updated_session_end)
                                 <div class="text-danger"> {{ $error_updated_session_end }} </div>
                             @endisset
@@ -122,6 +135,10 @@
                 </div>
                 {{-- end of change username form with style --}}
             </div>
+            {{-- --}}
         </div>
+        {{-- --}}
     </div>
+    {{-- --}}
 </x-layout.main>
+{{-- --}}

@@ -1,6 +1,6 @@
 @php
 
-    $default_name = "Pinjam Ruangan";
+    $default_name = "Daftar Sesi Pinjam Ruangan";
     $default_description = "Lorem ipsum dolor sit amet consectetur adipisicing elit.";
     $default_pagination_view = "vendor.custom.bootstrap-5-custom";
 
@@ -8,11 +8,15 @@
 @endphp
 
 <x-layout.main :title="$title">
+    {{-- --}}
     <x-navbar></x-navbar>
+    {{-- --}}
     {{-- Main Content --}}
     <main class="container-fluid container-md my-5">
+        {{-- --}}
         <div class="border rounded-3 px-4 p-4 shadow">
             {{-- Search accordion --}}
+            {{--
             <div class="accordion mb-3 shadow-sm" id="accordionExample1">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
@@ -71,44 +75,17 @@
                     </div>
                 </div>
             </div>
+            --}}
             {{-- End of Search accordion --}}
-            {{-- button section --}}
-            <div class="d-flex justify-content-between mt-2 my-3">
-                {{-- Button --}}
-                <a href="{{ url()->route('add-room-session') }}" class="text-decoration-none me-1">
-                    <button type="button" class="btn btn-primary d-flex shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                            class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                        </svg>
-                        <div>
-                            Tambah Sesi
-                        </div>
-                    </button>
-                </a>
-                {{-- End of Button --}}
-
-                {{-- Button --}}
-                {{--<a href="{{ route('list-of-room') }}" class="text-decoration-none">
-                    <button type="button" class="btn btn-primary d-flex shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                            class="bi bi-door-open me-1" viewBox="0 0 16 16">
-                            <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
-                            <path
-                                d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
-                        </svg>
-                        <div>
-                            Halaman Ruangan
-                        </div>
-                    </button>
-                </a>--}}
-                {{-- End of Button --}}
+            {{-- --}}
+            <div>
+                <div class="text-center text-primary fs-1 fw-medium">{{ $default_name }}</div>
+                <hr />
             </div>
-            {{-- end of button section --}}
+            {{-- --}}
             {{-- Bagian tabel --}}
             <div class="row">
-
+                {{-- --}}
                 <table class="table">
                     {{-- table header --}}
                     <thead>
@@ -170,8 +147,8 @@
                                     </td>
                                     <td scope="row">
                                         <div class="d-flex">
-                                            <form action="{{ url()->route('edit-room-session') }}" method="get">
-                                                <input type="hidden" name="room-session-id" value="{{ $oneSession->id }}">
+                                            <a href="{{ url()->route('edit-room-session', $oneSession) }}"
+                                                class="text-decoration-none">
                                                 <button class="btn btn-primary me-1" type="submit">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -181,10 +158,9 @@
                                                             d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                                     </svg>
                                                 </button>
-                                            </form>
-                                            <form action="{{ url()->route('delete-session') }}" method="post">
+                                            </a>
+                                            <form action="{{ url()->route('delete-room-session', $oneSession) }}" method="post">
                                                 @csrf
-                                                <input type="hidden" name="room-session-id" value="{{ $oneSession->id }}">
                                                 <button class="btn btn-primary" type="submit">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -202,9 +178,48 @@
                     </tbody>
                     {{-- end of table body --}}
                 </table>
+                {{-- --}}
             </div>
             {{-- End of Bagian tabel --}}
+            {{-- button section --}}
+            <div class="d-flex justify-content-between mt-2 my-3">
+                {{-- Button --}}
+                {{--
+                <a href="{{ route('list-of-room') }}" class="text-decoration-none">
+                    <button type="button" class="btn btn-primary d-flex shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-door-open me-1" viewBox="0 0 16 16">
+                            <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
+                            <path
+                                d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
+                        </svg>
+                        <div>
+                            Halaman Ruangan
+                        </div>
+                    </button>
+                </a>
+                --}}
+                {{-- End of Button --}}
+                {{-- --}}
+                {{-- Button --}}
+                <a href="{{ url()->route('add-room-session') }}" class="text-decoration-none me-1">
+                    <button type="button" class="btn btn-primary d-flex shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                        </svg>
+                        <div>
+                            Tambah Sesi
+                        </div>
+                    </button>
+                </a>
+                {{-- End of Button --}}
+            </div>
+            {{-- end of button section --}}
         </div>
+        {{-- --}}
     </main>
     {{-- End of Main Content --}}
+    {{-- --}}
 </x-layout.main>

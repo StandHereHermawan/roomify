@@ -21,10 +21,13 @@
                 <div class="">
                     {{-- add room form with style --}}
                     <div class="p-4 border rounded-3 shadow">
+                        {{-- --}}
                         <h1 class="mb-4 text-center text-primary">
+                            <hr class="mb-1" />
                             {{ $full_title }}
-                            <hr />
+                            <hr class="mt-1" />
                         </h1>
+                        {{-- --}}
                         <div class="col my-3">
                             {{-- search room specific accordion --}}
                             <div class="accordion shadow-sm" id="accordion-room-search-specific">
@@ -43,6 +46,7 @@
                                         </button>
                                     </h2>
                                     {{-- end of Tombol tampil/hilang akordeon --}}
+                                    {{-- --}}
                                     {{-- body search accordion --}}
                                     <div id="room-search-accordeon-specific" class="accordion-collapse collapse show"
                                         data-bs-parent="#accordion-room-search-specific">
@@ -66,14 +70,6 @@
                                                 <div class="row">
                                                     <div class="d-flex justify-content-center mb-3 mb-lg-0">
                                                         <button class="btn btn-primary w-100 shadow-sm" type="submit">
-                                                            {{--
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="22"
-                                                                height="22" fill="currentColor" class="bi bi-search"
-                                                                viewBox="0 0 16 16">
-                                                                <path
-                                                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                                            </svg>
-                                                            --}}
                                                             <i class="bi bi-search"></i>
                                                             Cari
                                                         </button>
@@ -88,9 +84,15 @@
                             </div>
                             {{-- end of search room specific accordion --}}
                         </div>
+                        {{-- --}}
+                        {{-- --}}
                         {{-- header form --}}
                         <div>
-                            <div class="fs-2">Ruangan yang akan dipinjam</div>
+                            <div class="fs-2 fw-medium text-center text-primary">
+                                <hr class="my-0" />
+                                Ruangan yang akan dipinjam
+                                <hr class="mt-0" />
+                            </div>
                         </div>
                         {{-- end header form --}}
                         <form id="myForm" action="#" method="post" novalidate>
@@ -187,6 +189,7 @@
                                     </div>
                                 </div>
                                 {{-- end of tinggi ruangan --}}
+                                {{-- --}}
                                 {{-- luas ruangan --}}
                                 <div class="col">
                                     <div class="form-floating mb-3">
@@ -212,6 +215,23 @@
                                 </div>
                                 {{-- end of luas ruangan --}}
                             </div>
+                            @if ($errors->any())
+                                @error('room_id')
+                                    <div class="w-100 fs-3 text-center btn btn-outline-danger shadow-sm">
+                                        {{ $errors->first('room_id') }}
+                                    </div>
+                                @enderror
+                                @error('session')
+                                    <div class="w-100 fs-3 text-center btn btn-outline-danger shadow-sm">
+                                        {{ $errors->first('session') }}
+                                    </div>
+                                @enderror
+                                @error('date_room_reservation')
+                                    <div class="w-100 fs-3 text-center btn btn-outline-danger shadow-sm">
+                                        {{ $errors->first('date_room_reservation') }}
+                                    </div>
+                                @enderror
+                            @endif
                             @isset($error_room_search_input)
                                 @if (strlen($error_room_search_input) > 2)
                                     <div class="w-100 fs-3 text-center btn btn-outline-danger shadow-sm">
@@ -219,21 +239,15 @@
                                     </div>
                                 @endif
                             @endisset
+                            {{-- --}}
                             <div>
-                                <div class="fs-2 ">Sesi Pinjam Ruangan</div>
+                                <hr class="mb-0" />
+                                <div class="fs-2 fw-medium text-center text-primary">Sesi Pinjam Ruangan Tersedia</div>
+                                <hr class="mt-0" />
                             </div>
+                            {{-- --}}
                             <div class="col">
                                 <div class="row row-cols-1 gx-3" id="input-session-container">
-                                    {{--
-                                    <div class="col">
-                                        <div class="form-floating mb-3">
-                                            <input name="sesi-ruangan[]" type="text" class="form-control shadow-sm"
-                                                value="{{ " Not yet available" }}" id="sesi-ruangan-label[]"
-                                                placeholder="sesi-ruangan-input[]" readonly>
-                                            <label for="sesi-ruangan-label[]">Sesi Ruangan</label>
-                                        </div>
-                                    </div>
-                                    --}}
                                     <table class="table">
                                         {{-- table header --}}
                                         <thead>
@@ -258,15 +272,6 @@
                                                         Option
                                                     </div>
                                                 </th>
-
-                                                {{--
-                                                <th scope="col">
-                                                    <div class="fs-3 text-primary me-1">
-                                                        Option
-                                                    </div>
-                                                </th>
-                                                --}}
-                                                {{-- <th scope="col">Handle</th> --}}
                                             </tr>
                                         </thead>
                                         {{-- end of table header --}}

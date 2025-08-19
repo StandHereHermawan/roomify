@@ -30,6 +30,13 @@
                             <label for="nama-ruangan-label">Nama Ruangan</label>
                             {{-- --}}
                             {{-- room name error message --}}
+                            @if ($errors->any())
+                                @error('nama-ruangan')
+                                    <div class="btn btn-outline-danger my-2 w-100">
+                                        {{ $errors->first('nama-ruangan') }}
+                                    </div>
+                                @enderror
+                            @endif
                             @isset($error_add_room_name)
                                 @if (strlen($error_add_room_name) > 2)
                                     <div class="btn btn-outline-danger w-100 mt-2">{{ $error_add_room_name }}</div>
@@ -51,6 +58,13 @@
                             <label for="kode-ruangan-label">Kode Ruangan</label>
                             {{-- --}}
                             {{-- room code error message --}}
+                            @if ($errors->any())
+                                @error('kode-ruangan')
+                                    <div class="btn btn-outline-danger my-2 w-100">
+                                        {{ $errors->first('kode-ruangan') }}
+                                    </div>
+                                @enderror
+                            @endif
                             @isset($error_add_room_code)
                                 @if (strlen($error_add_room_code) > 2)
                                     <div class="btn btn-outline-danger w-100 mt-2"> {{ $error_add_room_code }} </div>
@@ -72,6 +86,13 @@
                             <label for="tinggi-ruangan-label">Tinggi Ruangan</label>
                             {{-- --}}
                             {{-- error message --}}
+                            @if ($errors->any())
+                                @error('tinggi-ruangan')
+                                    <div class="btn btn-outline-danger my-2 w-100">
+                                        {{ $errors->first('tinggi-ruangan') }}
+                                    </div>
+                                @enderror
+                            @endif
                             @isset($error_add_room_height)
                                 @if (strlen($error_add_room_height) > 2)
                                     <div class="btn btn-outline-danger w-100 mt-2"> {{ $error_add_room_height }} </div>
@@ -93,6 +114,13 @@
                             <label for="luas-ruangan-label">Luas Ruangan</label>
                             {{-- --}}
                             {{-- error message --}}
+                            @if ($errors->any())
+                                @error('luas-ruangan')
+                                    <div class="btn btn-outline-danger my-2 w-100">
+                                        {{ $errors->first('luas-ruangan') }}
+                                    </div>
+                                @enderror
+                            @endif
                             @isset($error_add_room_wide)
                                 @if (strlen($error_add_room_wide) > 2)
                                     <div class="btn btn-outline-danger w-100 mt-2"> {{ $error_add_room_wide }} </div>

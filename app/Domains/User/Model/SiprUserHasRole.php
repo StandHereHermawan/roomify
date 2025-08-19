@@ -19,15 +19,11 @@ class SiprUserHasRole extends Model
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
-    public $timestamps = false;
-
-    public function getSession() {
-        return $this->session;
-    }
+    public $timestamps = true;
 
     protected $fillable = [
-        'user_id',
-        'role_id',
+        SiprUserHasRole::COLUMN_USER_ID_ITS_NAME,
+        SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME,
         "created_at",
         "updated_at",
         "deleted_at",

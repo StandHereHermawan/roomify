@@ -12,8 +12,11 @@ class SiprRole extends Model
     use HasFactory, SoftDeletes;
 
     public const TABLE_NAME = "sipr_roles";
-    public const COLUMN_ROLE_ITS_NAME = "role";
-    public const GUEST_ROLE = "GUEST";
+    public const ID = "id";
+    public const ROLE = "role";
+    public const GUEST = "GUEST";
+    public const CUSTOMER = "CUSTOMER";
+    public const SUPER_ADMIN = "SUPER_ADMIN";
 
     protected $table = SiprRole::TABLE_NAME;
     protected $primaryKey = "id";
@@ -22,20 +25,29 @@ class SiprRole extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        SiprRole::COLUMN_ROLE_ITS_NAME,
+        SiprRole::ROLE,
         "created_at",
         "updated_at",
         "deleted_at",
     ];
 
-    public function ownedByUsers(): BelongsToMany
-    {
-        return $this->belongsToMany(SiprUser::class, "sipr_users_has_roles", "role_id", "user_id");
-    }
-
-
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    public function ownedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            SiprUser::class,
+            SiprUserHasRole::TABLE_NAME,
+            SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME,
+            SiprUserHasRole::COLUMN_USER_ID_ITS_NAME
+        );
     }
 }

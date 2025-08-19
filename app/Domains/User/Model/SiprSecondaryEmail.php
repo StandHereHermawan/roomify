@@ -13,7 +13,7 @@ class SiprSecondaryEmail extends Model
 
     public const TABLE_NAME = "sipr_secondary_emails";
     public const COLUMN_ID_ITS_NAME = "id";
-    public const COLUMN_EMAIL_ITS_NAME = "email";
+    public const EMAIL = "email";
 
     protected $table = SiprSecondaryEmail::TABLE_NAME;
     protected $primaryKey = "id";
@@ -29,15 +29,23 @@ class SiprSecondaryEmail extends Model
         "deleted_at",
     ];
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function ownedByUsers(): BelongsToMany {
-        return $this->belongsToMany(SiprUser::class, "sipr_users_has_emails", "email_id", "user_id");
+    public function ownedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            SiprUser::class,
+            SiprUserHasSecondaryEmail::TABLE_NAME,
+            SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME,
+            SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME
+        );
     }
 }

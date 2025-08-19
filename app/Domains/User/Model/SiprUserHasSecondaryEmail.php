@@ -19,7 +19,7 @@ class SiprUserHasSecondaryEmail extends Model
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'user_id',

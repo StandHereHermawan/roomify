@@ -5,6 +5,7 @@
 
 @if ($paginator->hasPages())
     <nav class="d-flex justify-items-center justify-content-between">
+        {{-- Appears when it was small viewport --}}
         <div class="d-flex justify-content-between flex-fill d-sm-none">
             <ul class="pagination">
                 {{-- Previous Page Link --}}
@@ -18,7 +19,8 @@
                             rel="prev">@lang('pagination.previous')</a>
                     </li>
                 @endif
-
+                {{-- End of Previous Page Link --}}
+                {{-- --}}
                 {{-- Next Page Link --}}
                 @if ($paginator->hasMorePages())
                     <li class="page-item">
@@ -30,39 +32,29 @@
                         <span class="page-link text-dark">@lang('pagination.next')</span>
                     </li>
                 @endif
+                {{-- End of Next Page Link --}}
             </ul>
         </div>
+        {{-- End of Appears when it was small viewport --}}
+        {{-- --}}
+        {{-- --}}
         <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
+            {{-- --}}
             <div>
-                <p class="small text-muted">
+                <p class="small fs-5 text-muted">
                     {!! __('Showing') !!}
-                    <span class="fw-semibold">{{ $paginator->firstItem() }}</span>
+                    <span class="fs-5 fw-semibold">{{ $paginator->firstItem() }}</span>
                     {!! __('to') !!}
-                    <span class="fw-semibold">{{ $paginator->lastItem() }}</span>
+                    <span class="fs-5 fw-semibold">{{ $paginator->lastItem() }}</span>
                     {!! __('of') !!}
-                    <span class="fw-semibold">{{ $paginator->total() }}</span>
+                    <span class="fs-5 fw-semibold">{{ $paginator->total() }}</span>
                     {!! __('results') !!}
                 </p>
             </div>
+            {{-- --}}
             <div>
-                <ul class="pagination shadow-sm" style="
-                                        --bs-border-color: var(--bs-{{ $color_pagination ?? "primary" }});
-                                        --bs-pagination-active-bg: var(--bs-{{ $color_pagination ?? "primary" }}); 
-                                        --bs-pagination-active-border-color: var(--bs-{{ $color_pagination ?? "primary" }});
-                                        --bs-pagination-hover-color: var(--bs-white);
-                                        --bs-pagination-color: var(--bs-{{ $color_pagination ?? "primary" }});
-                                        --bs-pagination-bg: var(--bs-body-bg);
-                                        --bs-pagination-border-width: var(--bs-border-width);
-                                        --bs-pagination-border-color: var(--bs-border-color);
-                                        --bs-pagination-hover-bg: var(--bs-{{ $color_pagination ?? "primary" }});
-                                        --bs-pagination-hover-border-color: var(--bs-border-color);
-                                        --bs-pagination-focus-color: var(--bs-dark);
-                                        --bs-pagination-focus-bg: var(--bs-{{ $color_pagination ?? "primary" }}-bg);
-                                        --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-                                        --bs-pagination-disabled-color: var(--bs-white);
-                                        --bs-pagination-disabled-bg: var(--bs-{{ $color_pagination ?? "primary" }});
-                                        --bs-pagination-disabled-border-color: var(--bs-border-color);
-                                        ">
+                <ul class="pagination shadow-sm"
+                    style="--bs-border-color: var(--bs-{{ $color_pagination ?? "primary" }});--bs-pagination-active-bg: var(--bs-{{ $color_pagination ?? "primary" }});--bs-pagination-active-border-color: var(--bs-{{ $color_pagination ?? "primary" }});--bs-pagination-hover-color: var(--bs-white);--bs-pagination-color: var(--bs-{{ $color_pagination ?? "primary" }});--bs-pagination-bg: var(--bs-body-bg);--bs-pagination-border-width: var(--bs-border-width);--bs-pagination-border-color: var(--bs-border-color);--bs-pagination-hover-bg: var(--bs-{{ $color_pagination ?? "primary" }});--bs-pagination-hover-border-color: var(--bs-border-color);--bs-pagination-focus-color: var(--bs-dark);--bs-pagination-focus-bg: var(--bs-{{ $color_pagination ?? "primary" }}-bg);--bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);--bs-pagination-disabled-color: var(--bs-white);--bs-pagination-disabled-bg: var(--bs-{{ $color_pagination ?? "primary" }});--bs-pagination-disabled-border-color: var(--bs-border-color);">
                     {{-- Previous Page Link --}}
                     @if ($paginator->onFirstPage())
                         <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
@@ -75,7 +67,7 @@
                         </li>
                     @endif
                     {{-- End of Previous Page Link --}}
-
+                    {{-- --}}
                     {{-- Pagination Elements --}}
                     {{-- Page 1 --}}
                     @if ($paginator->currentPage() > 2)
@@ -89,7 +81,7 @@
                         @endif
                     @endif
                     {{-- End of Page 1 --}}
-
+                    {{-- --}}
                     {{-- One page before --}}
                     @if ($currentPage > 1)
                         <li class="page-item">
@@ -97,13 +89,13 @@
                         </li>
                     @endif
                     {{-- End of One page before --}}
-
+                    {{-- --}}
                     {{-- Current page --}}
                     <li class="page-item">
                         <span class="font-bold page-link active">{{ $currentPage }}</span>
                     </li>
                     {{-- End of Current page --}}
-
+                    {{-- --}}
                     {{-- One page after --}}
                     @if ($currentPage < $lastPage)
                         <li class="page-item">
@@ -111,8 +103,7 @@
                         </li>
                     @endif
                     {{-- End of One page after --}}
-
-
+                    {{-- --}}
                     {{-- Last page --}}
                     @if ($currentPage < $lastPage - 1)
                         @if ($currentPage < $lastPage - 2)
@@ -125,8 +116,9 @@
                         </li>
                     @endif
                     {{-- End of Last page --}}
+                    {{-- --}}
                     {{-- End of Pagination Elements --}}
-
+                    {{-- --}}
                     {{-- Next Page Link --}}
                     @if ($paginator->hasMorePages())
                         <li class="page-item">
@@ -142,5 +134,6 @@
                 </ul>
             </div>
         </div>
+        {{-- --}}
     </nav>
 @endif

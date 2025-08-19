@@ -19,36 +19,23 @@ class SiprUserHasPhoneNumber extends Model
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
-        'user_id',
-        'phone_number_id',
+        SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME,
+        SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME,
         "created_at",
         "updated_at",
         "deleted_at",
     ];
 
-    public function getIdUser()
-    {
-        if ($this->user_id != null) {
-            return $this->user_id;
-        } else {
-            return null;
-        }
-    }
-
     public function getUserId()
     {
-        return $this->getIdUser();
+        return $this->user_id;
     }
 
-    public function getIdPhoneNumber()
+    public function getPhoneNumberId()
     {
-        if ($this->phone_number_id != null) {
-            return $this->phone_number_id;
-        } else {
-            return null;
-        }
+        return $this->phone_number_id;
     }
 }

@@ -8,29 +8,40 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Auth\Authenticatable as TraitAuthenticatable;
+
+use Illuminate\Foundation\Auth\Access\Authorizable;
 
 class SiprUser extends Model implements Authenticatable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory,
+        TraitAuthenticatable,
+        Authorizable,
+        SoftDeletes;
 
     public const TABLE_NAME = "sipr_users";
-    public const COLUMN_ID_ITS_NAME = "id";
-    public const COLUMN_USERNAME_ITS_NAME = "username";
-    public const COLUMN_NAME_ITS_NAME = "name";
-    public const COLUMN_PASSWORD_ITS_NAME = "password";
+    public const ID = "id";
+    public const USERNAME = "username";
+    public const OLD_USERNAME = "old_username";
+    public const NAME = "name";
+    public const OLD_NAME = "old_name";
+    public const PASSWORD = "password";
+    public const REMEMBER_TOKEN = "remember_token";
+    public const CREATED_AT = "created_at";
+    public const UPDATED_AT = "updated_at";
 
     protected $table = SiprUser::TABLE_NAME;
-    protected $primaryKey = "id";
+    protected $primaryKey = SiprUser::ID;
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
-    private $limit_pagination = 2;
 
     protected $fillable = [
-        SiprUser::COLUMN_ID_ITS_NAME,
-        SiprUser::COLUMN_USERNAME_ITS_NAME,
-        SiprUser::COLUMN_NAME_ITS_NAME,
-        SiprUser::COLUMN_PASSWORD_ITS_NAME,
+        SiprUser::ID,
+        SiprUser::USERNAME,
+        SiprUser::NAME,
+        SiprUser::PASSWORD,
+        SiprUser::REMEMBER_TOKEN,
         SiprUser::CREATED_AT,
         SiprUser::UPDATED_AT,
         "deleted_at",
@@ -63,7 +74,7 @@ class SiprUser extends Model implements Authenticatable
      */
     public function getAuthPasswordName()
     {
-        return SiprUser::COLUMN_PASSWORD_ITS_NAME;
+        return SiprUser::PASSWORD;
     }
 
     /**
@@ -83,7 +94,7 @@ class SiprUser extends Model implements Authenticatable
      */
     public function getRememberToken()
     {
-        return $this->getRememberToken();
+        return $this->remember_token;
     }
 
     /**
@@ -94,7 +105,7 @@ class SiprUser extends Model implements Authenticatable
      */
     public function setRememberToken($value)
     {
-        return;
+        $this->remember_token = $value;
     }
 
     /**
@@ -107,6 +118,9 @@ class SiprUser extends Model implements Authenticatable
         return 'remember_token';
     }
 
+    /*
+    |   some fields getter.
+    */
     public function getId()
     {
         if ($this->id != null) {
@@ -146,6 +160,9 @@ class SiprUser extends Model implements Authenticatable
             return null;
         }
     }
+    /*
+    |   end of some fields getter.
+    */
 
     public function hasRoles(): BelongsToMany
     {

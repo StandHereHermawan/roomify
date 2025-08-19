@@ -1,24 +1,31 @@
 <?php
 
-namespace App\Domains\Schedule\Controller;
+namespace App\Http\Controllers\Reservation;
+
+use App\Http\Controllers\Controller;
 
 use App\Domains\Room\Model\SiprRoom;
 use App\Domains\Room\Model\SiprRoomSession;
 use App\Domains\Schedule\Model\SiprRoomReservationRequest;
 use App\Domains\Schedule\Model\SiprRoomSessionReservationRequest;
 use App\Domains\User\Model\SiprSession;
-use App\Http\Controllers\Controller;
+use App\Http\Requests\Reservation\CreateRoomReservationRequest;
+use App\Traits\Logs\CustomLogger;
 use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class RoomReservationController extends Controller
 {
+    use CustomLogger;
+
     public function listOfAllRoomReservationRequest(Request $request)
     {
-        Log::debug("Controller: RoomReservationController | method: listOfAllRoomReservationRequest | called.");
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
 
         $input = $request->only(["room_paginate_size"]);
         $room_paginate_size = $input["room_paginate_size"] ?? 10;
@@ -27,7 +34,6 @@ class RoomReservationController extends Controller
             ->with('userRequest')
             ->with('roomReserved')
             ->with('sessionBorrowed')
-            
             ->where(SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME, '=', "PENDING")
             ->paginate($room_paginate_size, ['*'], 'reservation_pending_page')
             ->withQueryString();
@@ -48,15 +54,18 @@ class RoomReservationController extends Controller
             ->paginate($room_paginate_size, ['*'], 'reservation_rejected_page')
             ->withQueryString();
 
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('room.reservation.request.all.list')
             ->with('list_of_room_reservation_request_pending', $room_reservation_pending_pagination)
             ->with('list_of_room_reservation_request_accepted', $room_reservation_accepted_pagination)
-            ->with('list_of_room_reservation_request_rejected', $room_reservation_rejected_pagination)
-            ;
+            ->with('list_of_room_reservation_request_rejected', $room_reservation_rejected_pagination);
     }
 
-    public function listOfMyRoomReservationRequest(Request $request)
+    public function listOfCurrentUserRoomReservationRequest(Request $request)
     {
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
+
         $input = $request->only(["room_paginate_size"]);
         $room_paginate_size = $input["room_paginate_size"] ?? 10;
 
@@ -83,12 +92,16 @@ class RoomReservationController extends Controller
             ->paginate($room_paginate_size)
             ->withQueryString();
 
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('room.reservation.request.list.myself')
             ->with('list_of_room_reservation_request', $room_reservation_model);
     }
 
     public function manageByAdminListOfRoomReservationRequest(Request $request)
     {
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
+
         $room_reservation_model_pending = SiprRoomReservationRequest::select()
             ->with('userRequest')
             ->with('roomReserved')
@@ -116,6 +129,7 @@ class RoomReservationController extends Controller
             ->appends($request->query())
             ->withQueryString();
 
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('room.reservation.request.option.manage')
             ->with('list_of_room_reservation_request_pending', $room_reservation_model_pending)
             ->with('list_of_room_reservation_request_accepted', $room_reservation_model_accepted)
@@ -125,6 +139,9 @@ class RoomReservationController extends Controller
 
     public function acceptRoomReservationRequest(Request $request)
     {
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
+
         $input = $request->only(["room_reservation_id"]);
 
         $room_reservation_id = $input["room_reservation_id"];
@@ -144,11 +161,15 @@ class RoomReservationController extends Controller
 
         DB::commit();
 
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return redirect(route('manage-list-of-room-reservation-request'));
     }
 
     public function rejectRoomReservationRequest(Request $request)
     {
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
+
         $input = $request->only(["room_reservation_id"]);
 
         $room_reservation_id = $input["room_reservation_id"];
@@ -168,25 +189,15 @@ class RoomReservationController extends Controller
 
         DB::commit();
 
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return redirect(route('manage-list-of-room-reservation-request'));
-    }
-
-    public function softDeleteRoomReservationRequest(Request $request)
-    {
-        $input = $request->only(["room_reservation_id"]);
-        var_dump($input);
-        var_dump($request->url());
-    }
-
-    public function deleteFromDatabaseRoomReservationRequest(Request $request)
-    {
-        $input = $request->only(["room_reservation_id"]);
-        var_dump($input);
-        var_dump($request->url());
     }
 
     public function addRoomReservationForm(Request $request)
     {
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
+
         $input = $request->only([
             "search-kode-ruangan"
         ]);
@@ -217,10 +228,11 @@ class RoomReservationController extends Controller
             $room_not_found_message = "Ruangan dengan kode $room_code belum tersedia";
         }
 
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('room.reservation.request.add')
             ->with('room_pagination', $paginated_rooms)
             ->with('list_of_room_session', $paginated_room_sessions)
-            ->with('search_kode_ruangan', $input["search-kode-ruangan"] ?? null)
+            ->with('search_kode_ruangan', $room_code)
             ->with('error_room_search_input', $room_not_found_message ?? null)
             ->with('room_model', $room_model);
     }
@@ -232,8 +244,11 @@ class RoomReservationController extends Controller
     | untuk menyimpan informasi reservasi ruangan pada tanggal dan sesi tertentu.
     |
     */
-    public function submitAddRoomReservationForm(Request $request)
+    public function submitAddRoomReservationForm1(Request $request)
     {
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
+
         $column_room_reservation_table_user_id_name = SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME;
         $column_room_reservation_table_room_id_name = SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME;
         $column_room_reservation_table_reservation_date_name = SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
@@ -241,8 +256,7 @@ class RoomReservationController extends Controller
         $column_room_session_reservation_table_user_id_name = SiprRoomSessionReservationRequest::COLUMN_USER_ID_ITS_NAME;
         $column_room_session_reservation_table_room_reservation_id_name = SiprRoomSessionReservationRequest::COLUMN_ROOM_RESERVATION_ID_ITS_NAME;
         $column_room_session_reservation_table_room_session_id_name = SiprRoomSessionReservationRequest::COLUMN_ROOM_SESSION_ID_ITS_NAME;
-        $column_room_session_reservation_table_reservation_date_name = SiprRoomSessionReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
-
+        
         $session_id = $request->session()->getId();
         $input = $request->only([
             "room_id",
@@ -323,7 +337,7 @@ class RoomReservationController extends Controller
 
             $room_reservation_id = $room_reservation_model->getId();
             $room_session_reservation_collection_from_database = SiprRoomSessionReservationRequest::select()
-                ->where(SiprRoomSessionReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME, '=', $room_reservation_date)
+                // ->where(SiprRoomSessionReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME, '=', $room_reservation_date)
                 ->where(SiprRoomSessionReservationRequest::COLUMN_ROOM_RESERVATION_ID_ITS_NAME, '=', $room_reservation_id)
                 ->where(SiprRoomSessionReservationRequest::COLUMN_USER_ID_ITS_NAME, '=', $user_id)
                 ->with('userRequest')
@@ -367,11 +381,39 @@ class RoomReservationController extends Controller
                 "{$column_room_session_reservation_table_room_reservation_id_name}" => $room_reservation_request_model->id,
                 "{$column_room_session_reservation_table_room_session_id_name}" => $room_session_id_from_input,
                 "{$column_room_session_reservation_table_user_id_name}" => $user_id,
-                "{$column_room_session_reservation_table_reservation_date_name}" => $room_reservation_date,
             ]);
         }
         DB::commit();
 
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
+        return redirect(route('room-reservation-request'));
+    }
+
+    public function submitAddRoomReservationForm(CreateRoomReservationRequest $request)
+    {
+        $this->logDebugStart(__FUNCTION__);
+        $millis_start = microtime(true);
+
+        $validated = $request->validated();
+        $user_id = Auth::user()->getId();
+
+        DB::transaction(function ()use ($validated, $user_id) {
+            $room_reservation_request_model = SiprRoomReservationRequest::create([
+                SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME => $user_id,
+                SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME => $validated['room_id'],
+                SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME => $validated['date_room_reservation'],
+            ]);
+    
+            foreach ($validated['session'] as $room_session_id_from_input) {
+                SiprRoomSessionReservationRequest::create([
+                    SiprRoomSessionReservationRequest::COLUMN_ROOM_RESERVATION_ID_ITS_NAME => $room_reservation_request_model->id,
+                    SiprRoomSessionReservationRequest::COLUMN_ROOM_SESSION_ID_ITS_NAME => $room_session_id_from_input,
+                    SiprRoomSessionReservationRequest::COLUMN_USER_ID_ITS_NAME => $user_id,
+                ]);
+            }
+        });
+
+        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return redirect(route('room-reservation-request'));
     }
 }

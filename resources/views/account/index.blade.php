@@ -25,8 +25,9 @@
                         <ul class="list-group mb-2">
                             <li class="list-group-item list-group-item-action shadow-sm">
                                 <div class="d-flex justify-content-between">
-                                    <div class="fw-light fs-5">{{ "@".$user_model->getUsername() ??
-                                        "@username_not_set" }}</div>
+                                    <div class="fw-light fs-5">
+                                        {{ "@".$user_model->getUsername() ?? "@username_not_set" }}
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -67,7 +68,8 @@
                                 <ul class="list-group mb-2">
                                     @foreach ($email_model as $email_record)
                                         <li class="list-group-item list-group-item-action shadow-sm">
-                                            <a href="{{ route('edit-email') . "?id=" . $email_record->id }}"
+                                            {{-- <!-- <a href="{{ route('edit-email') . "?id=" . $email_record->id }}" --> --}}
+                                            <a href="{{ route('edit-email', $email_record->getId()) }}"
                                                 class="d-flex justify-content-between text-decoration-none">
                                                 <div>
                                                     {{ $email_record->email }}
@@ -95,23 +97,30 @@
                         @endif
                     </div>
                     {{-- end of informasi email --}}
+                    {{-- --}}
                     {{-- informasi nomor telepon --}}
                     <div class="list-group-item">
+                        {{-- --}}
                         <div class="d-flex w-100 justify-content-between mb-1">
                             <h5 class="mb-1">Nomor Telpon ter-registrasi</h5>
                             <a href="{{ route('add-phone-number') }}" class="btn btn-outline-primary py-0 px-2">
                                 <i class="bi bi-telephone-plus fs-3"></i>
                             </a>
                         </div>
+                        {{-- --}}
                         @if (isset($phone_number_model) && is_iterable($phone_number_model))
                             @if ($phone_number_model->count() >= 1)
+                                {{-- --}}
                                 <div>
                                     {{ $phone_number_model->links($default_pagination_view) }}
                                 </div>
+                                {{-- --}}
+                                {{-- --}}
                                 <ul class="list-group mb-2">
                                     @foreach ($phone_number_model as $phone_number_record)
                                         <li class="list-group-item list-group-item-action shadow-sm">
-                                            <a href="{{ route('edit-phone-number') . "?id=" . $phone_number_record->getId() }}"
+                                            <!-- <a href="{{ route('edit-phone-number', $phone_number_record->getId())  . "?id=" . $phone_number_record->getId() }}" -->
+                                            <a href="{{ route('edit-phone-number', $phone_number_record->getId()) }}"
                                                 class="d-flex justify-content-between text-decoration-none">
                                                 <div>
                                                     {{ $phone_number_record->phone_number }}
@@ -123,6 +132,7 @@
                                         </li>
                                     @endforeach
                                 </ul>
+                                {{-- --}}
                             @else
                                 <ul class="list-group mb-2">
                                     <li class="list-group-item list-group-item-action shadow-sm">
@@ -143,7 +153,7 @@
                     <div class="list-group-item">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">Role dimiliki</h5>
-                            <small class="text-body-secondary">changed a long time ago.</small>
+                            {{--<small class="text-body-secondary">changed a long time ago.</small>--}}
                         </div>
                         @if (isset($role_model) && is_iterable($role_model))
                             @if ($role_model->count() >= 1)

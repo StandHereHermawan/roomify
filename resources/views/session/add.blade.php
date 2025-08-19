@@ -23,13 +23,18 @@
                                 type="time" step="1" placeholder="room-session-start" required />
                             <label for="room-session-start">Room Session Start</label>
                             {{-- room session start error message --}}
+                            @if ($errors->any())
+                                @error('room-session-start')
+                                    <div class="btn btn-outline-danger my-2 w-100"> {{ $errors->first('room-session-start') }} </div>
+                                @enderror
+                            @endif
                             @isset($error_updated_session_start)
-                                <div class="text-danger"> {{ $error_updated_session_start }} </div>
+                                <div class="btn btn-outline-danger mt-3 w-100"> {{ $error_updated_session_start }} </div>
                             @endisset
                             {{-- end room session start error message --}}
-                            <div class="form-text">Example: <b>07:00:00 AM</b> will be <b>07:00:00.</b> And <b>01:00:00
-                                    PM</b>
-                                will be <b>13:00:00.</b>
+                            <div class="form-text">
+                                Example: <b>07:00:00 AM</b> will be <b>07:00:00.</b> 
+                                And <b>01:00:00 PM</b> will be <b>13:00:00.</b>
                             </div>
                         </div>
                         {{-- end of new room session start input --}}
@@ -39,6 +44,11 @@
                                 type="time" step="1" placeholder="room-session-end" required />
                             <label for="room-session-end">Room Session end</label>
                             {{-- room session end error message --}}
+                            @if ($errors->any())
+                                @error('room-session-end')
+                                    <div class="btn btn-outline-danger my-2 w-100"> {{ $errors->first('room-session-end') }} </div>
+                                @enderror
+                            @endif
                             @isset($error_updated_session_end)
                                 <div class="text-danger"> {{ $error_updated_session_end }} </div>
                             @endisset

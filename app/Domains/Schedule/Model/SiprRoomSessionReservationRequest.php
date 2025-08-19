@@ -5,6 +5,7 @@ namespace App\Domains\Schedule\Model;
 use App\Domains\Room\Model\SiprRoomSession;
 use \App\Domains\User\Model\SiprUser;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,20 +18,17 @@ class SiprRoomSessionReservationRequest extends Model
     public const COLUMN_USER_ID_ITS_NAME = "user_id";
     public const COLUMN_ROOM_RESERVATION_ID_ITS_NAME = "room_reservation_id";
     public const COLUMN_ROOM_SESSION_ID_ITS_NAME = "room_session_id";
-    public const COLUMN_RESERVATION_DATE_ITS_NAME = "reservation_date";
 
     protected $table = SiprRoomSessionReservationRequest::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
-    private $paginate = 2;
 
     protected $fillable = [
         SiprRoomSessionReservationRequest::COLUMN_ID_ITS_NAME,
         SiprRoomSessionReservationRequest::COLUMN_USER_ID_ITS_NAME,
         SiprRoomSessionReservationRequest::COLUMN_ROOM_RESERVATION_ID_ITS_NAME,
-        SiprRoomSessionReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME,
         SiprRoomSessionReservationRequest::COLUMN_ROOM_SESSION_ID_ITS_NAME,
         SiprRoomSessionReservationRequest::CREATED_AT,
         SiprRoomSessionReservationRequest::UPDATED_AT,
@@ -42,21 +40,30 @@ class SiprRoomSessionReservationRequest extends Model
         return $this->id;
     }
 
-    public function userRequest(): HasOne
+    public function userRequest(): BelongsTo
     {
-        return $this->hasOne(
+        return $this->belongsTo(
             SiprUser::class,
-            "id",
             SiprRoomSessionReservationRequest::COLUMN_USER_ID_ITS_NAME,
+            SiprUser::ID,
         );
     }
 
-    public function roomSession(): HasOne
+    public function roomSession(): BelongsTo
     {
-        return $this->hasOne(
+        return $this->belongsTo(
             SiprRoomSession::class,
-            "id",
             SiprRoomSessionReservationRequest::COLUMN_ROOM_SESSION_ID_ITS_NAME,
+            SiprRoomSession::ID,
+        );
+    }
+
+    public function roomReservation(): BelongsTo
+    {
+        return $this->belongsTo(
+            SiprRoomReservationRequest::class,
+            SiprRoomSessionReservationRequest::COLUMN_ROOM_RESERVATION_ID_ITS_NAME,
+            SiprRoomReservationRequest::COLUMN_ID_ITS_NAME
         );
     }
 }

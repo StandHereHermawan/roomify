@@ -2,6 +2,7 @@
 
 namespace App\Handler;
 
+use App\Traits\Logs\CustomLogger;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Auth\Guard;
 
@@ -13,13 +14,17 @@ use Illuminate\Support\Facades\Log;
 
 class CustomSessionHandler extends DatabaseSessionHandler
 {
+    use CustomLogger;
+
     public function __construct(
         ConnectionInterface $connection,
         $table,
         $minutes,
         ?Container $container = null
     ) {
-        Log::debug("class: CustomSessionHandler | method: __construct | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         parent::__construct(
             $this->connection = $connection,
             $this->table = $table,
@@ -35,10 +40,12 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function userId()
     {
-        Log::debug("class: CustomSessionHandler | method: userId | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
         $user_id = $this->container->make(Guard::class)->id();
         // Log::debug("class: CustomSessionHandler | method: userId | user_id: {user_id}.", ["user_id" => $user_id]);
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $user_id;
     }
 
@@ -49,7 +56,9 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function gc($lifetime): int
     {
-        Log::debug("class: CustomSessionHandler | method: gc | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this->getQuery()->where('last_activity', '<=', $this->currentTime() - $lifetime)->delete();
     }
 
@@ -60,7 +69,9 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function userAgent()
     {
-        Log::debug("class: CustomSessionHandler | method: userAgent | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return substr((string) $this->container->make('request')->header('User-Agent'), 0, 500);
     }
 
@@ -72,17 +83,20 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function getDefaultPayload($data)
     {
-        Log::debug("class: CustomSessionHandler | method: getDefaultPayload | called.");
-
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
         $payload = [
             'payload' => base64_encode($data),
             'last_activity' => $this->currentTime(),
         ];
-
+        
         if (! $this->container) {
+            // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
             return $payload;
         }
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return tap($payload, function (&$payload) {
             $this->addUserInformation($payload)
                 ->addRequestInformation($payload);
@@ -96,23 +110,27 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function read($sessionId): string|false
     {
-        Log::debug("class: CustomSessionHandler | method: read | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
         //Log::debug("class: CustomSessionHandler | method: read | session_id: {sessionId}.",["sessionId" => $sessionId]);
-
+        
         $session = (object) $this->getQuery()->find($sessionId);
-
+        
         if ($this->expired($session)) {
             $this->exists = true;
 
+            // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
             return '';
         }
 
         if (isset($session->payload)) {
             $this->exists = true;
-
+            
+            // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
             return base64_decode($session->payload);
         }
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return '';
     }
 
@@ -124,8 +142,10 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function expired($session)
     {
-        Log::debug("class: CustomSessionHandler | method: expired | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
         
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return isset($session->last_activity) &&
             $session->last_activity < \Illuminate\Support\Carbon::now()->subMinutes($this->minutes)->getTimestamp();
     }
@@ -137,20 +157,22 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function write($sessionId, $data): bool
     {
-        Log::debug("class: CustomSessionHandler | method: write | called.");
-
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
         $payload = $this->getDefaultPayload($data);
-
+        
         if (! $this->exists) {
             $this->read($sessionId);
         }
-
+        
         if ($this->exists) {
             $this->performUpdate($sessionId, $payload);
         } else {
             $this->performInsert($sessionId, $payload);
         }
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this->exists = true;
     }
 
@@ -163,12 +185,15 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function performInsert($sessionId, $payload)
     {
-        Log::debug("class: CustomSessionHandler | method: performInsert | called.");
-
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
         try {
+            // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
             return $this->getQuery()->insert(\Illuminate\Support\Arr::set($payload, 'id', $sessionId));
         } catch (QueryException) {
             $this->performUpdate($sessionId, $payload);
+            // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         }
     }
 
@@ -181,7 +206,10 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function performUpdate($sessionId, $payload)
     {
-        Log::debug("class: CustomSessionHandler | method: performUpdate | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this->getQuery()->where('id', $sessionId)->update($payload);
     }
 
@@ -192,7 +220,10 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function getQuery()
     {
-        Log::debug("class: CustomSessionHandler | method: getQuery | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this->connection->table($this->table)->useWritePdo();
     }
 
@@ -203,7 +234,10 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function open($savePath, $sessionName): bool
     {
-        Log::debug("class: CustomSessionHandler | method: open | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return true;
     }
 
@@ -214,7 +248,10 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function close(): bool
     {
-        Log::debug("class: CustomSessionHandler | method: close | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return true;
     }
 
@@ -226,11 +263,14 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function addUserInformation(&$payload)
     {
-        Log::debug("class: CustomSessionHandler | method: addUserInformation | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
         if ($this->container->bound(Guard::class)) {
             $payload['user_id'] = $this->userId();
         }
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this;
     }
 
@@ -242,14 +282,17 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function addRequestInformation(&$payload)
     {
-        Log::debug("class: CustomSessionHandler | method: addRequestInformation | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
         if ($this->container->bound('request')) {
             $payload = array_merge($payload, [
                 'ip_address' => $this->ipAddress(),
                 'user_agent' => $this->userAgent(),
             ]);
         }
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this;
     }
 
@@ -260,7 +303,10 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     protected function ipAddress()
     {
-        Log::debug("class: CustomSessionHandler | method: ipAddress | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this->container->make('request')->ip();
     }
 
@@ -271,7 +317,10 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function destroy($sessionId): bool
     {
-        Log::debug("class: CustomSessionHandler | method: destroy | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         $this->getQuery()->where('id', $sessionId)->delete();
 
         return true;
@@ -285,9 +334,12 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function setContainer($container)
     {
-        Log::debug("class: CustomSessionHandler | method: setContainer | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
         $this->container = $container;
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this;
     }
 
@@ -299,9 +351,12 @@ class CustomSessionHandler extends DatabaseSessionHandler
      */
     public function setExists($value)
     {
-        Log::debug("class: CustomSessionHandler | method: setExists | called.");
+        // $this->logDebugStart(__FUNCTION__, []);
+        // $millis_start = microtime(true);
+        
         $this->exists = $value;
-
+        
+        // $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return $this;
     }
 }

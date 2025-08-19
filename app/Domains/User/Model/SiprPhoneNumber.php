@@ -4,6 +4,7 @@ namespace App\Domains\User\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SiprPhoneNumber extends Model
@@ -12,7 +13,7 @@ class SiprPhoneNumber extends Model
 
     public const TABLE_NAME = "sipr_phone_numbers";
     public const COLUMN_ID_ITS_NAME = "id";
-    public const COLUMN_PHONE_NUMBER_ITS_NAME = "phone_number";
+    public const PHONE_NUMBER = "phone_number";
 
     protected $table = SiprPhoneNumber::TABLE_NAME;
     protected $primaryKey = "id";
@@ -21,7 +22,8 @@ class SiprPhoneNumber extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'phone_number',
+        SiprPhoneNumber::COLUMN_ID_ITS_NAME,
+        SiprPhoneNumber::PHONE_NUMBER,
         "created_at",
         "updated_at",
         "deleted_at",
@@ -29,19 +31,21 @@ class SiprPhoneNumber extends Model
 
     public function getId()
     {
-        if ($this->id != null) {
-            return $this->id;
-        } else {
-            return null;
-        }
+        return $this->id;
     }
 
-    public function getphoneNumber()
+    public function getPhoneNumber()
     {
-        if ($this->phone_number != null) {
-            return $this->phone_number;
-        } else {
-            return null;
-        }
+        return $this->phone_number;
+    }
+
+    public function ownedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            SiprUser::class,
+            SiprUserHasPhoneNumber::TABLE_NAME,
+            SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME,
+            SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME
+        );
     }
 }
