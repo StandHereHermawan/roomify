@@ -1,65 +1,75 @@
 <?php
 
-use App\Domains\User\Model\SiprUser;
-use App\Domains\User\Model\SiprPhoneNumber;
-use App\Domains\User\Model\SiprUserHasPhoneNumber;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
+    private const TABLE_NAME = "sipr_user_has_phone_numbers";
+    private const TABLE_PHONE = "sipr_phone_numbers";
+    private const TABLE_USER = "sipr_users";
+    private const ID = "id";
+    private const TABLE_USER_COLUMN_ID = "id";
+    private const TABLE_PHONE_COLUMN_ID = "id";
+    private const USER_ID = "user_id";
+    private const PHONE_ID = "phone_number_id";
+    private const EMAIL_ID = "email_id";
+    private const CREATED_AT = "created_at";
+    private const UPDATED_AT = "updated_at";
+    private const DELETED_AT = "deleted_at";
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create(SiprUserHasPhoneNumber::TABLE_NAME, function (Blueprint $table) {
+        Schema::create(self::TABLE_NAME, function (Blueprint $table) {
             $table
-                ->id()
+                ->id(self::ID)
                 ->autoIncrement()
                 ->unsigned()
                 ->nullable(false);
 
             $table
-                ->bigInteger("user_id")
+                ->bigInteger(self::USER_ID)
                 ->unsigned();
 
             $table
-                ->bigInteger("phone_number_id")
+                ->bigInteger(self::PHONE_ID)
                 ->unsigned();
 
             $table
-                ->foreign("user_id")
-                ->references("id")
-                ->on(SiprUser::TABLE_NAME)
+                ->foreign(self::USER_ID)
+                ->references(self::TABLE_USER_COLUMN_ID)
+                ->on(self::TABLE_USER)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
             $table
-                ->foreign("phone_number_id")
-                ->references("id")
-                ->on(SiprPhoneNumber::TABLE_NAME)
+                ->foreign(self::PHONE_ID)
+                ->references(self::TABLE_PHONE_COLUMN_ID)
+                ->on(self::TABLE_PHONE)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-                
-            $table->unique(["user_id", "phone_number_id"]);
-            $table->softDeletesDatetime();
-            $table->datetimes();
+
+            $table->unique([self::USER_ID, self::PHONE_ID]);
+
+            $table
+                ->softDeletesDatetime(self::DELETED_AT)
+                ->nullable();
+
+            $table
+                ->dateTime(self::CREATED_AT)
+                ->nullable(true)
+                ->useCurrent();
+
+            $table
+                ->dateTime(self::UPDATED_AT)
+                ->nullable(true)
+                ->useCurrent()
+                ->useCurrentOnUpdate();
         });
-
-        // DB::table(SiprUserHasPhoneNumber::TABLE_NAME)->insert([
-            // "user_id" => '2',
-            // "phone_number_id" => '1',
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
-// 
-        // DB::table(SiprUserHasPhoneNumber::TABLE_NAME)->insert([
-            // "user_id" => '3',
-            // "phone_number_id" => '1',
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
     }
 
     /**
@@ -67,6 +77,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists(SiprUserHasPhoneNumber::TABLE_NAME);
+        Schema::dropIfExists(self::TABLE_NAME);
     }
 };

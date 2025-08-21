@@ -126,6 +126,20 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'custom' => [
+            'driver' => 'stack',
+            "tap" => [\App\Logs\Format\CustomLogFormatter::class],
+            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'processors' => [
+                [
+                    \Monolog\Processor\IntrospectionProcessor::class, /* == Log Processor from Monolog library == */
+                ], 
+            ],
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];

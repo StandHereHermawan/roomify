@@ -21,10 +21,10 @@ class CreateRoomRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            SiprRoom::COLUMN_ROOM_NAME_ITS_NAME => $this->input('nama-ruangan'),
-            SiprRoom::COLUMN_ROOM_CODE_ITS_NAME => $this->input('kode-ruangan'),
-            SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME => $this->input('luas-ruangan'),
-            SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME => $this->input('tinggi-ruangan'),
+            SiprRoom::NAME => $this->input('nama-ruangan'),
+            SiprRoom::CODE => $this->input('kode-ruangan'),
+            SiprRoom::FLOOR_WIDE => $this->input('luas-ruangan'),
+            SiprRoom::HEIGHT => $this->input('tinggi-ruangan'),
         ]);
     }
 
@@ -44,14 +44,14 @@ class CreateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            SiprRoom::COLUMN_ROOM_NAME_ITS_NAME => [
+            SiprRoom::NAME => [
                 'required'
             ],
-            SiprRoom::COLUMN_ROOM_CODE_ITS_NAME => [
+            SiprRoom::CODE => [
                 'required',
-                "unique:" . SiprRoom::TABLE_NAME . "," . SiprRoom::COLUMN_ROOM_CODE_ITS_NAME
+                "unique:" . SiprRoom::TABLE_NAME . "," . SiprRoom::CODE
             ],
-            SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME => [
+            SiprRoom::HEIGHT => [
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!preg_match('/^\d+(\.\d+)?$/', $value)) {
@@ -59,7 +59,7 @@ class CreateRoomRequest extends FormRequest
                     }
                 },
             ],
-            SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME => [
+            SiprRoom::FLOOR_WIDE => [
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!preg_match('/^\d+(\.\d+)?$/', $value)) {
@@ -72,13 +72,13 @@ class CreateRoomRequest extends FormRequest
 
     public function messages()
     {
-        $room_code = $this->input(SiprRoom::COLUMN_ROOM_CODE_ITS_NAME);
+        $room_code = $this->input(SiprRoom::CODE);
         return [
-            SiprRoom::COLUMN_ROOM_NAME_ITS_NAME . ".required" => "nama ruangan tidak boleh kosong.",
-            SiprRoom::COLUMN_ROOM_CODE_ITS_NAME . ".required" => "kode ruangan tidak boleh kosong.",
-            SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME . ".required" => "tinggi ruangan tidak boleh kosong.",
-            SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME . ".required" => "luas ruangan tidak boleh kosong.",
-            SiprRoom::COLUMN_ROOM_CODE_ITS_NAME . ".unique" => "kode ruangan $room_code sudah tersedia, silahkan input kode ruangan yang lain.",
+            SiprRoom::NAME . ".required" => "nama ruangan tidak boleh kosong.",
+            SiprRoom::CODE . ".required" => "kode ruangan tidak boleh kosong.",
+            SiprRoom::HEIGHT . ".required" => "tinggi ruangan tidak boleh kosong.",
+            SiprRoom::FLOOR_WIDE . ".required" => "luas ruangan tidak boleh kosong.",
+            SiprRoom::CODE . ".unique" => "kode ruangan $room_code sudah tersedia, silahkan input kode ruangan yang lain.",
         ];
     }
 
@@ -98,28 +98,28 @@ class CreateRoomRequest extends FormRequest
          * 
          */
         $validator->after(function ($validator) {
-            if ($validator->errors()->has(SiprRoom::COLUMN_ROOM_NAME_ITS_NAME)) {
-                $errorMessage = $validator->errors()->first(SiprRoom::COLUMN_ROOM_NAME_ITS_NAME);
+            if ($validator->errors()->has(SiprRoom::NAME)) {
+                $errorMessage = $validator->errors()->first(SiprRoom::NAME);
                 $validator->errors()->add('nama-ruangan', $errorMessage);
                 $validator->errors()->forget(SiprRoomSession::SESSION_START);
             }
 
-            if ($validator->errors()->has(SiprRoom::COLUMN_ROOM_CODE_ITS_NAME)) {
-                $errorMessage = $validator->errors()->first(SiprRoom::COLUMN_ROOM_CODE_ITS_NAME);
+            if ($validator->errors()->has(SiprRoom::CODE)) {
+                $errorMessage = $validator->errors()->first(SiprRoom::CODE);
                 $validator->errors()->add('kode-ruangan', $errorMessage);
-                $validator->errors()->forget(SiprRoom::COLUMN_ROOM_CODE_ITS_NAME);
+                $validator->errors()->forget(SiprRoom::CODE);
             }
 
-            if ($validator->errors()->has(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME)) {
-                $errorMessage = $validator->errors()->first(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME);
+            if ($validator->errors()->has(SiprRoom::FLOOR_WIDE)) {
+                $errorMessage = $validator->errors()->first(SiprRoom::FLOOR_WIDE);
                 $validator->errors()->add('luas-ruangan', $errorMessage);
-                $validator->errors()->forget(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME);
+                $validator->errors()->forget(SiprRoom::FLOOR_WIDE);
             }
 
-            if ($validator->errors()->has(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME)) {
-                $errorMessage = $validator->errors()->first(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME);
+            if ($validator->errors()->has(SiprRoom::HEIGHT)) {
+                $errorMessage = $validator->errors()->first(SiprRoom::HEIGHT);
                 $validator->errors()->add('tinggi-ruangan', $errorMessage);
-                $validator->errors()->forget(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME);
+                $validator->errors()->forget(SiprRoom::HEIGHT);
             }
         });
 

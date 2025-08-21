@@ -2,6 +2,10 @@
 
 namespace App\Domains\User\Model;
 
+use App\Traits\Attribute\HasIdentifier;
+use App\Traits\Audit\HasBasicAudit;
+use App\Traits\Relation\HasRelationWithUserModel;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,30 +13,35 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SiprSecondaryEmail extends Model
 {
-    use HasFactory, SoftDeletes;
+    /** 
+     * @use HasFactory<\Database\Factories\UserFactory> 
+     * @use HasBasicAudit<App\Traits\Audit\HasBasicAudit> 
+     * @use HasIdentifier<App\Traits\Attribute\HasIdentifier> 
+     */
+    use HasFactory,
+        HasIdentifier,
+        HasRelationWithUserModel,
+        HasBasicAudit,
+        SoftDeletes;
 
     public const TABLE_NAME = "sipr_secondary_emails";
-    public const COLUMN_ID_ITS_NAME = "id";
     public const EMAIL = "email";
+    public const EMAIL_VERIFIED_AT = "email_verified_at";
 
-    protected $table = SiprSecondaryEmail::TABLE_NAME;
+    protected $table = self::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
 
     protected $fillable = [
-        'email',
-        'email_verified_at',
-        "created_at",
-        "updated_at",
-        "deleted_at",
+        self::EMAIL,
+        self::EMAIL_VERIFIED_AT,
+        self::ID,
+        self::CREATED_AT,
+        self::UPDATED_AT,
+        self::DELETED_AT,
     ];
-
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function getEmail()
     {
@@ -44,8 +53,8 @@ class SiprSecondaryEmail extends Model
         return $this->belongsToMany(
             SiprUser::class,
             SiprUserHasSecondaryEmail::TABLE_NAME,
-            SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME,
-            SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME
+            SiprUserHasSecondaryEmail::EMAIL_ID,
+            SiprUserHasSecondaryEmail::USER_ID
         );
     }
 }

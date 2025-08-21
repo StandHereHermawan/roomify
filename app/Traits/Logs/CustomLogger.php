@@ -21,7 +21,7 @@ trait CustomLogger
             $method = "Method not defined.";
         }
 
-        Log::debug("[class: {$this->getClassName()}] | [method: {$method}] | $message.", $context);
+        Log::debug("$message.", $context);
     }
 
     protected function logDebugFinish(string $method, array $context = [], float $start_time = null): void
@@ -50,7 +50,7 @@ trait CustomLogger
         $message = "[class: {$this->getClassName()}] | [method: {$method}] Finished";
         if ($startTime !== null) {
             $duration = round((microtime(true) - $startTime) * 1000, 2);
-            $message .= " in {$duration} ms";
+            $message = "[class: {$this->getClassName()}] | [method: {$method}] Finished in {$duration} ms";
         }
 
         Log::info($message, $context);

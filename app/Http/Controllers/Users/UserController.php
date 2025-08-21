@@ -30,17 +30,12 @@ class UserController extends Controller
 
     public function registerForm()
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
 
         return View::make('account.auth.registration');
     }
 
     public function submitFormRegister(UserRegisterRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
 
         $register_input = $request->validated();
 
@@ -67,8 +62,8 @@ class UserController extends Controller
         ]);
 
         SiprUserHasRole::create([
-            SiprUserHasRole::COLUMN_USER_ID_ITS_NAME => $user_created_record_model->getId(),
-            SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME => $guest_role_record[SiprRole::ID],
+            SiprUserHasRole::USER_ID => $user_created_record_model->getId(),
+            SiprUserHasRole::ROLE_ID => $guest_role_record[SiprRole::ID],
         ]);
 
         $this->logInfoMessage(
@@ -78,19 +73,11 @@ class UserController extends Controller
 
         DB::commit();
 
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
-
         return redirect()->route('login');
     }
 
     public function accountDetail(Request $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
 
         $user_model = Auth::user();
 
@@ -158,7 +145,6 @@ class UserController extends Controller
             ]
         );
 
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('account.index')
             ->with('user_model', $user_model)
             ->with('email_model', $email_pagination)

@@ -20,23 +20,18 @@ class RoomController extends Controller
 
     public function dashboard(Request $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
 
         $paginatedRooms = SiprRoom::select()
             ->paginate(4, ['*'], 'room_page')
             ->withQueryString()
             ->appends($request->getQueryString());
 
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('home')
             ->with('paginated_rooms', $paginatedRooms);
     }
 
     public function roomSearchPaginate(Request $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
 
 
         $input = $request->only([
@@ -60,8 +55,8 @@ class RoomController extends Controller
             isset($luas_ruangan_terbesar)
         ) {
             $paginatedRooms = SiprRoom::select()
-                ->whereBetween(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME, [$tinggi_ruangan_terkecil, $tinggi_ruangan_terbesar])
-                ->whereBetween(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME, [$luas_ruangan_terkecil, $luas_ruangan_terbesar])
+                ->whereBetween(SiprRoom::HEIGHT, [$tinggi_ruangan_terkecil, $tinggi_ruangan_terbesar])
+                ->whereBetween(SiprRoom::FLOOR_WIDE, [$luas_ruangan_terkecil, $luas_ruangan_terbesar])
 
                 ->paginate(4, ['*'], 'room_page')
                 ->withQueryString()
@@ -74,7 +69,7 @@ class RoomController extends Controller
         ) {
             Log::debug("Query Parameter luas_ruangan terisi. terkecil: {lrk}, terbesar {lrb}", ["lrk" => $luas_ruangan_terkecil, "lrb" => $luas_ruangan_terbesar]);
             $paginatedRooms = SiprRoom::select()
-                ->whereBetween(SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME, [$luas_ruangan_terkecil, $luas_ruangan_terbesar])
+                ->whereBetween(SiprRoom::FLOOR_WIDE, [$luas_ruangan_terkecil, $luas_ruangan_terbesar])
                 ->paginate(4, ['*'], 'room_page')
                 ->withQueryString()
                 ->appends($request->getQueryString());
@@ -86,7 +81,7 @@ class RoomController extends Controller
         ) {
             Log::debug("Query Parameter tinggi_ruangan terisi. terkecil: {trk}, terbesar {trb}", ["trk" => $tinggi_ruangan_terkecil, "trb" => $tinggi_ruangan_terbesar]);
             $paginatedRooms = SiprRoom::select()
-                ->whereBetween(SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME, [$tinggi_ruangan_terkecil, $tinggi_ruangan_terbesar])
+                ->whereBetween(SiprRoom::HEIGHT, [$tinggi_ruangan_terkecil, $tinggi_ruangan_terbesar])
                 ->paginate(4, ['*'], 'room_page')
                 ->withQueryString()
                 ->appends($request->getQueryString());
@@ -104,7 +99,6 @@ class RoomController extends Controller
                 ->appends($request->getQueryString());
         }
 
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('room.index')
             ->with('paginatedRooms', $paginatedRooms)
             ->with('tinggi_ruangan_terkecil', $tinggi_ruangan_terkecil)
@@ -115,34 +109,25 @@ class RoomController extends Controller
 
     public function roomDetail(SiprRoom $model)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
 
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('room.detail')
             ->with('room', $model);
     }
 
     public function addRoomForm()
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
 
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return view('room.add');
     }
 
     public function submitAddRoomForm(CreateRoomRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
         $input = $request->validated();
 
         DB::beginTransaction();
         SiprRoom::create($input);
         DB::commit();
 
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
         return redirect(route('list-of-room'));
     }
 }

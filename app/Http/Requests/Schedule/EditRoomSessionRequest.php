@@ -84,27 +84,6 @@ class EditRoomSessionRequest extends FormRequest
     }
 
     /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
-    {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-
-        $exception = $validator->getException();
-
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
-        throw (new $exception($validator))
-            ->errorBag($this->errorBag)
-            ->redirectTo($this->getRedirectUrl());
-    }
-
-    /**
      * Konfigurasi instance validator.
      *
      * @param  \Illuminate\Validation\Validator  $validator
@@ -112,8 +91,6 @@ class EditRoomSessionRequest extends FormRequest
      */
     public function withValidator(\Illuminate\Validation\Validator $validator): void
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
 
         // === Method 'after' called AFTER validation finished. ===
         $validator->after(function ($validator) {
@@ -129,7 +106,6 @@ class EditRoomSessionRequest extends FormRequest
                 $validator->errors()->forget(SiprRoomSession::SESSION_END);
             }
         });
-
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
+        
     }
 }

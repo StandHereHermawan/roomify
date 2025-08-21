@@ -24,8 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // $this->logDebugStart(__FUNCTION__, []);
-        // $millis_start = microtime(true);
+        // $millis_start = $this->logDebugStart(__FUNCTION__, []);
         // $this->logDebugFinish(__FUNCTION__, [], $millis_start);
     }
 
@@ -35,8 +34,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // $this->logDebugStart(__FUNCTION__, []);
-        // $millis_start = microtime(true);
+        // $millis_start = $this->logDebugStart(__FUNCTION__, []);
 
         Paginator::useBootstrapFive();
         Paginator::defaultView('vendor.custom.bootstrap-5-custom');
@@ -48,16 +46,19 @@ class AppServiceProvider extends ServiceProvider
                 "millisecond" => $queryExecuted->time
             ];
 
-            $this->logDebugMessage(
-                "Closure",
-                "query listener called",
-                $sqlLogContext
-            );
+            if (env('DB_LISTENER')) {
+                # code...
+                $this->logDebugMessage(
+                    "Closure",
+                    "query listener called",
+                    $sqlLogContext
+                );
+            }
         });
 
         Session::extend('database', function ($app) {
-            // $this->logDebugStart("Closure");
-            // $millis_start = microtime(true);
+            // $millis_start = $this->logDebugStart("Closure");
+
             
             // $this->logDebugFinish("Closure", [], $millis_start);
             return new CustomSessionHandler(

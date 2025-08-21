@@ -1,49 +1,61 @@
 <?php
 
-use App\Domains\User\Model\SiprUser;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
+    private const TABLE_NAME = "sipr_users";
+    private const ID = "id";
+    private const USERNAME = "username";
+    private const NAME = "name";
+    private const PASSWORD = "password";
+    private const REMEMBER_TOKEN = "remember_token";
+    private const CREATED_AT = "created_at";
+    private const UPDATED_AT = "updated_at";
+    private const DELETED_AT = "deleted_at";
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create(SiprUser::TABLE_NAME, function (Blueprint $table) {
+        Schema::create(self::TABLE_NAME, function (Blueprint $table) {
             $table
-                ->id()
+                ->id(self::ID)
                 ->autoIncrement()
                 ->unsigned()
                 ->nullable(false);
 
             $table
-                ->string('username')
+                ->string(self::USERNAME)
                 ->unique()
                 ->nullable(false);
 
             $table
-                ->string('name')
+                ->string(self::NAME)
                 ->nullable();
 
             $table
-                ->string('password')
+                ->string(self::PASSWORD)
                 ->nullable(false);
 
             $table
-                ->dateTime('created_at')
+                ->dateTime(self::CREATED_AT)
                 ->nullable(true)
                 ->useCurrent();
 
             $table
-                ->dateTime('updated_at')
+                ->dateTime(self::UPDATED_AT)
                 ->nullable(true)
                 ->useCurrent()
                 ->useCurrentOnUpdate();
 
-            $table->softDeletesDatetime();
+            $table
+                ->softDeletesDatetime(self::DELETED_AT)
+                ->nullable();
+                
             $table->rememberToken();
 
         });
@@ -54,6 +66,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists(SiprUser::TABLE_NAME);
+        Schema::dropIfExists(self::TABLE_NAME);
     }
 };

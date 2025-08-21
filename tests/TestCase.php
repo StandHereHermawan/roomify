@@ -110,12 +110,12 @@ abstract class TestCase extends BaseTestCase
 
             $super_admin_role_super =
                 SiprUserHasRole::select()
-                    ->where(SiprUserHasRole::COLUMN_USER_ID_ITS_NAME, '=', $super_admin_record->getId())
-                    ->where(SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME, '=', $super_admin_role_record->getId())
+                    ->where(SiprUserHasRole::USER_ID, '=', $super_admin_record->getId())
+                    ->where(SiprUserHasRole::ROLE_ID, '=', $super_admin_role_record->getId())
                     ->first() ??
                 SiprUserHasRole::create([
-                    SiprUserHasRole::COLUMN_USER_ID_ITS_NAME => $super_admin_record->getId(),
-                    SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME => $super_admin_role_record->getId(),
+                    SiprUserHasRole::USER_ID => $super_admin_record->getId(),
+                    SiprUserHasRole::ROLE_ID => $super_admin_role_record->getId(),
                 ]);
 
             $this->user_model =
@@ -141,12 +141,12 @@ abstract class TestCase extends BaseTestCase
 
             $terry_has_guest_role =
                 SiprUserHasRole::select()
-                    ->where(SiprUserHasRole::COLUMN_USER_ID_ITS_NAME, '=', $this->user_model->getId())
-                    ->where(SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME, '=', $guest_role_record->getId())
+                    ->where(SiprUserHasRole::USER_ID, '=', $this->user_model->getId())
+                    ->where(SiprUserHasRole::ROLE_ID, '=', $guest_role_record->getId())
                     ->first() ??
                 SiprUserHasRole::create([
-                    SiprUserHasRole::COLUMN_USER_ID_ITS_NAME => $this->user_model->getId(),
-                    SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME => $guest_role_record->getId(),
+                    SiprUserHasRole::USER_ID => $this->user_model->getId(),
+                    SiprUserHasRole::ROLE_ID => $guest_role_record->getId(),
                 ]);
 
             assertNotNull($super_admin_role_super);

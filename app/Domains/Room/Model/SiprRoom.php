@@ -2,22 +2,33 @@
 
 namespace App\Domains\Room\Model;
 
+use App\Traits\Attribute\HasIdentifier;
+use App\Traits\Audit\HasBasicAudit;
+use App\Traits\Relation\HasRelationWithUserModel;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SiprRoom extends Model
 {
-    use SoftDeletes;
+    /**
+     * @use HasBasicAudit<App\Traits\Audit\HasBasicAudit> 
+     * @use HasIdentifier<App\Traits\Attribute\HasIdentifier> 
+     * @use HasRelationWithUserModel<App\Traits\Relation\HasRelationWithUserModel> 
+     */
+    use HasIdentifier,
+        HasRelationWithUserModel,
+        HasBasicAudit,
+        SoftDeletes;
 
     public const TABLE_NAME = 'sipr_rooms';
-    public const COLUMN_ID_ITS_NAME = 'id';
-    public const COLUMN_ROOM_NAME_ITS_NAME = 'name';
-    public const COLUMN_ROOM_CODE_ITS_NAME = 'room_code';
-    public const COLUMN_ROOM_HEIGHT_ITS_NAME = 'meter_room_height';
-    public const COLUMN_ROOM_FLOOR_WIDE_ITS_NAME = 'meter_squared_floor_wide';
+    public const NAME = 'name';
+    public const CODE = 'room_code';
+    public const HEIGHT = 'meter_room_height';
+    public const FLOOR_WIDE = 'meter_squared_floor_wide';
 
-    protected $table = SiprRoom::TABLE_NAME;
-    protected $primaryKey = "id";
+    protected $table = self::TABLE_NAME;
+    protected $primaryKey = self::ID;
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
@@ -25,18 +36,15 @@ class SiprRoom extends Model
     private $offset = 0;
 
     protected $fillable = [
-        'name',
-        'room_code',
-        'meter_room_height',
-        'meter_squared_floor_wide',
-        'created_at',
-        'updated_at'
+        self::NAME,
+        self::CODE,
+        self::HEIGHT,
+        self::FLOOR_WIDE,
+        self::ID,
+        self::CREATED_AT,
+        self::UPDATED_AT,
+        self::DELETED_AT,
     ];
-
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function getName()
     {

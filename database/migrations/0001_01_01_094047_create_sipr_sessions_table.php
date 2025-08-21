@@ -1,24 +1,31 @@
 <?php
 
-use App\Domains\User\Model\SiprSession;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
+    
+    private const TABLE_NAME = "sipr_sessions";
+    private const ID = "id";
+    private const USER_ID = "user_id";
+    private const IP_ADDRESS = "ip_address";
+    private const USER_AGENT = "user_agent";
+    private const PAYLOAD = "payload";
+    private const LAST_ACTIVITY = "last_activity";
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create(SiprSession::TABLE_NAME, function (Blueprint $table) {
-            $table->string(SiprSession::COLUMN_ID_ITS_NAME)->primary();
-            $table->foreignId(SiprSession::COLUMN_USER_ID_ITS_NAME)->nullable()->index();
-            $table->string(SiprSession::COLUMN_IP_ADDRESS_ITS_NAME, 45)->nullable();
-            $table->text(SiprSession::COLUMN_USER_AGENT_ITS_NAME)->nullable();
-            $table->longText(SiprSession::COLUMN_PAYLOAD_ITS_NAME);
-            $table->unsignedBigInteger(SiprSession::COLUMN_LAST_ACTIVITY_ITS_NAME)->index();
+        Schema::create(self::TABLE_NAME, function (Blueprint $table) {
+            $table->string(self::ID)->primary();
+            $table->foreignId(self::USER_ID)->nullable()->index();
+            $table->string(self::IP_ADDRESS, 45)->nullable();
+            $table->text(self::USER_AGENT)->nullable();
+            $table->longText(self::PAYLOAD);
+            $table->unsignedBigInteger(self::LAST_ACTIVITY)->index();
         });
     }
 
@@ -27,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists(SiprSession::TABLE_NAME);
+        Schema::dropIfExists(self::TABLE_NAME);
     }
 };

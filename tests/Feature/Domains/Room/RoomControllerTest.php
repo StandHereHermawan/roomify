@@ -91,13 +91,13 @@ class RoomControllerTest extends TestCase
         $response->assertRedirect();
 
         $record = SiprRoom::select()
-            ->where(SiprRoom::COLUMN_ROOM_CODE_ITS_NAME, '=', $data["kode-ruangan"])
+            ->where(SiprRoom::CODE, '=', $data["kode-ruangan"])
             ->first();
 
         assertNotNull($record);
-        assertEquals($data["nama-ruangan"], $record[SiprRoom::COLUMN_ROOM_NAME_ITS_NAME]);
-        assertEquals($data["kode-ruangan"], $record[SiprRoom::COLUMN_ROOM_CODE_ITS_NAME]);
-        assertEquals($data["luas-ruangan"], $record[SiprRoom::COLUMN_ROOM_FLOOR_WIDE_ITS_NAME]);
-        assertEquals($data["tinggi-ruangan"], $record[SiprRoom::COLUMN_ROOM_HEIGHT_ITS_NAME]);
+        assertEquals($data["nama-ruangan"], $record[SiprRoom::NAME]);
+        assertEquals($data["kode-ruangan"], $record[SiprRoom::CODE]);
+        assertEquals($data["luas-ruangan"], $record[SiprRoom::FLOOR_WIDE]);
+        assertEquals($data["tinggi-ruangan"], $record[SiprRoom::HEIGHT]);
     }
 }

@@ -1,52 +1,49 @@
 <?php
 
-use App\Domains\User\Model\SiprPhoneNumber;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
+    private const TABLE_NAME = "sipr_phone_numbers";
+    private const PHONE_NUMBER = "phone_number";
+    private const ID = "id";
+    private const CREATED_AT = "created_at";
+    private const UPDATED_AT = "updated_at";
+    private const DELETED_AT = "deleted_at";
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create(SiprPhoneNumber::TABLE_NAME, function (Blueprint $table) {
+        Schema::create(self::TABLE_NAME, function (Blueprint $table) {
             $table
-                ->id()
+                ->id(self::ID)
                 ->autoIncrement()
                 ->unsigned()
                 ->nullable(false);
 
             $table
-                ->string("phone_number", 20)
+                ->string(self::PHONE_NUMBER, 20)
                 ->unique();
 
-            $table->softDeletesDatetime();
-            
             $table
-                ->dateTime('created_at')
+                ->softDeletesDatetime(self::DELETED_AT)
+                ->nullable();
+
+            $table
+                ->dateTime(self::CREATED_AT)
                 ->nullable(true)
                 ->useCurrent();
 
             $table
-                ->dateTime('updated_at')
+                ->dateTime(self::UPDATED_AT)
                 ->nullable(true)
                 ->useCurrent()
                 ->useCurrentOnUpdate();
         });
-
-        // DB::table(SiprPhoneNumber::TABLE_NAME)->insert([
-            // "phone_number" => "+62-812-3456-7890",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
-        // 
-        // DB::table(SiprPhoneNumber::TABLE_NAME)->insert([
-            // "phone_number" => "+62-852-7890-3456",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
     }
 
     /**
@@ -54,6 +51,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists(SiprPhoneNumber::TABLE_NAME);
+        Schema::dropIfExists(self::TABLE_NAME);
     }
 };

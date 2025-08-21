@@ -29,17 +29,12 @@ class AuthController extends Controller
 
     public function loginForm()
     {
-        $this->logDebugStart(__FUNCTION__, []);
-        $millis_start = microtime(true);
-
-        $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return view('account.auth.login');
     }
 
     public function submitFormLogin(LoginRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__, []);
-        $millis_start = microtime(true);
+     
 
         $login_input = $request->validated();
         $user_record = SiprUser::select()
@@ -95,11 +90,10 @@ class AuthController extends Controller
                 $logContext
             );
 
-            $this->logInfoFinish(__FUNCTION__, [], $millis_start);
+
             return redirect()->route('dashboard');
         }
 
-        $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         throw new HttpResponseException(response(
             view("account.auth.login")->with("errorPasswordInput", "Username or Password wrong."),
             401
@@ -108,9 +102,6 @@ class AuthController extends Controller
 
     public function submitLogout(Request $request)
     {
-        $this->logDebugStart(__FUNCTION__, []);
-        $millis_start = microtime(true);
-
         $user_model = Auth::user();
         $logContext = [
             SiprUser::ID => $user_model->getId(),
@@ -133,7 +124,6 @@ class AuthController extends Controller
             DB::commit();
         }
 
-        $this->logInfoFinish(__FUNCTION__, [], $millis_start);
         return redirect()->route('login');
     }
 }

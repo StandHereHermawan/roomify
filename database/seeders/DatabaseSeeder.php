@@ -2,10 +2,14 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 use App\Domains\Room\Model\SiprRoom;
 use App\Domains\Room\Model\SiprRoomSession;
-use App\Domains\Schedule\Model\SiprRoomReservationRequest;
-use App\Domains\Schedule\Model\SiprRoomSessionReservationRequest;
 use App\Domains\User\Model\SiprPhoneNumber;
 use App\Domains\User\Model\SiprSecondaryEmail;
 use App\Domains\User\Model\SiprUser;
@@ -13,12 +17,6 @@ use App\Domains\User\Model\SiprUserHasPhoneNumber;
 use App\Domains\User\Model\SiprRole;
 use App\Domains\User\Model\SiprUserHasSecondaryEmail;
 use App\Domains\User\Model\SiprUserHasRole;
-
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -128,8 +126,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $email_david_record_model;
 
                 $terry_has_email = SiprUserHasSecondaryEmail::select()
-                    ->where(SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME, '=', $record_model_terry_davis->getId())
-                    ->where(SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME, '=', $email_terry_record_model->getId())
+                    ->where(SiprUserHasSecondaryEmail::USER_ID, '=', $record_model_terry_davis->getId())
+                    ->where(SiprUserHasSecondaryEmail::EMAIL_ID, '=', $email_terry_record_model->getId())
                     ->first();
                 $terry_has_email = $terry_has_email === null ? SiprUserHasSecondaryEmail::create([
                     "user_id" => $record_model_terry_davis->getId(),
@@ -137,8 +135,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $terry_has_email;
 
                 $david_has_email = SiprUserHasSecondaryEmail::select()
-                    ->where(SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME, '=', $record_model_david_hansson->getId())
-                    ->where(SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME, '=', $email_david_record_model->getId())
+                    ->where(SiprUserHasSecondaryEmail::USER_ID, '=', $record_model_david_hansson->getId())
+                    ->where(SiprUserHasSecondaryEmail::EMAIL_ID, '=', $email_david_record_model->getId())
                     ->first();
                 $david_has_email = $david_has_email === null ? SiprUserHasSecondaryEmail::create([
                     "user_id" => $record_model_david_hansson->getId(),
@@ -146,8 +144,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $david_has_email;
 
                 $super_admin_has_email = SiprUserHasSecondaryEmail::select()
-                    ->where(SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME, '=', $record_model_david_hansson->getId())
-                    ->where(SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME, '=', $email_david_record_model->getId())
+                    ->where(SiprUserHasSecondaryEmail::USER_ID, '=', $record_model_david_hansson->getId())
+                    ->where(SiprUserHasSecondaryEmail::EMAIL_ID, '=', $email_david_record_model->getId())
                     ->first();
                 $super_admin_has_email = $super_admin_has_email === null ? SiprUserHasSecondaryEmail::create([
                     "user_id" => $record_model_david_hansson->getId(),
@@ -185,8 +183,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $david_phone_number_record;
 
                 $terry_has_phone = SiprUserHasPhoneNumber::select()
-                    ->where(SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME, '=', $record_model_terry_davis->getId())
-                    ->where(SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME, '=', $terry_phone_number_record->getId())
+                    ->where(SiprUserHasPhoneNumber::USER_ID, '=', $record_model_terry_davis->getId())
+                    ->where(SiprUserHasPhoneNumber::PHONE_NUMBER_ID, '=', $terry_phone_number_record->getId())
                     ->first();
                 $terry_has_phone = $terry_has_phone === null ? SiprUserHasPhoneNumber::create([
                     "user_id" => $record_model_terry_davis->getId(),
@@ -194,8 +192,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $terry_has_phone;
 
                 $david_hein_has_phone = SiprUserHasPhoneNumber::select()
-                    ->where(SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME, '=', $record_model_david_hansson->getId())
-                    ->where(SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME, '=', $david_phone_number_record->getId())
+                    ->where(SiprUserHasPhoneNumber::USER_ID, '=', $record_model_david_hansson->getId())
+                    ->where(SiprUserHasPhoneNumber::PHONE_NUMBER_ID, '=', $david_phone_number_record->getId())
                     ->first();
                 $david_hein_has_phone = $david_hein_has_phone === null ? SiprUserHasPhoneNumber::create([
                     "user_id" => $record_model_david_hansson->getId(),
@@ -203,8 +201,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $david_hein_has_phone;
 
                 $super_admin_has_phone = SiprUserHasPhoneNumber::select()
-                    ->where(SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME, '=', $record_model_super_admin->getId())
-                    ->where(SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME, '=', $super_admin_phone_number_record->getId())
+                    ->where(SiprUserHasPhoneNumber::USER_ID, '=', $record_model_super_admin->getId())
+                    ->where(SiprUserHasPhoneNumber::PHONE_NUMBER_ID, '=', $super_admin_phone_number_record->getId())
                     ->first();
                 $super_admin_has_phone = $super_admin_has_phone === null ? SiprUserHasPhoneNumber::create([
                     "user_id" => $record_model_super_admin->getId(),
@@ -243,8 +241,8 @@ class DatabaseSeeder extends Seeder
 
 
                 $super_admin_has_role = SiprUserHasRole::select()
-                    ->where(SiprUserHasRole::COLUMN_USER_ID_ITS_NAME, '=', $record_model_super_admin->getId())
-                    ->where(SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME, '=', $super_admin_role_record->getId())
+                    ->where(SiprUserHasRole::USER_ID, '=', $record_model_super_admin->getId())
+                    ->where(SiprUserHasRole::ROLE_ID, '=', $super_admin_role_record->getId())
                     ->first();
                 $super_admin_has_role = $super_admin_has_role === null ? SiprUserHasRole::create([
                     "user_id" => $record_model_super_admin->getId(),
@@ -254,8 +252,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $super_admin_has_role;
 
                 $terry_andrew_davis_has_role = SiprUserHasRole::select()
-                    ->where(SiprUserHasRole::COLUMN_USER_ID_ITS_NAME, '=', $record_model_terry_davis->getId())
-                    ->where(SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME, '=', $guest_role_record->getId())
+                    ->where(SiprUserHasRole::USER_ID, '=', $record_model_terry_davis->getId())
+                    ->where(SiprUserHasRole::ROLE_ID, '=', $guest_role_record->getId())
                     ->first();
                 $terry_andrew_davis_has_role = $terry_andrew_davis_has_role === null ? SiprUserHasRole::create([
                     "user_id" => $record_model_terry_davis->getId(),
@@ -265,8 +263,8 @@ class DatabaseSeeder extends Seeder
                 ]) : $terry_andrew_davis_has_role;
 
                 $david_hansson_has_role_model = SiprUserHasRole::select()
-                    ->where(SiprUserHasRole::COLUMN_USER_ID_ITS_NAME, '=', $record_model_terry_davis->getId())
-                    ->where(SiprUserHasRole::COLUMN_ROLE_ID_ITS_NAME, '=', $guest_role_record->getId())
+                    ->where(SiprUserHasRole::USER_ID, '=', $record_model_terry_davis->getId())
+                    ->where(SiprUserHasRole::ROLE_ID, '=', $guest_role_record->getId())
                     ->first();
                 $david_hansson_has_role_model = $david_hansson_has_role_model === null ? SiprUserHasRole::create([
                     "user_id" => $record_model_david_hansson->getId(),
@@ -299,7 +297,7 @@ class DatabaseSeeder extends Seeder
                         $number = "B-3{$roomNumber}";
                     }
 
-                    $room_model = SiprRoom::select()->where(SiprRoom::COLUMN_ROOM_CODE_ITS_NAME, '=', $number)->first();
+                    $room_model = SiprRoom::select()->where(SiprRoom::CODE, '=', $number)->first();
                     $room_model = $room_model === null ? SiprRoom::create([
                         "room_code" => $number,
                         "name" => fake()->randomElement(['Ruang-Biasa', 'Lab']),
@@ -534,7 +532,7 @@ class DatabaseSeeder extends Seeder
             // 
             // $sipr_room_reservation = SiprRoomReservationRequest::select()
             // ->where(SiprRoomReservationRequest::COLUMN_ID_ITS_NAME, '=', $id_room_reservation)
-            // ->where(SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME, '=', $user_id)
+            // ->where(SiprRoomReservationRequest::USER_ID, '=', $user_id)
             // ->where(SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME, '=', $room_id)
             // ->first();
             // $sipr_room_reservation = $sipr_room_reservation === null ? SiprRoomReservationRequest::create([

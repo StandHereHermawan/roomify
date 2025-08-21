@@ -29,9 +29,6 @@ class EmailController extends Controller
 
     public function addEmailForm()
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-
         $user_model = Auth::user();
 
         if ($user_model === null) {
@@ -45,11 +42,6 @@ class EmailController extends Controller
             ["user_id" => $user_model[SiprUser::ID]]
         );
 
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
 
         return view('account.management.email.add')
             ->with('username', $user_model->getUsername());
@@ -57,9 +49,6 @@ class EmailController extends Controller
 
     public function submitAddEmailForm(AddEmailRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-
         $user_model = Auth::user();
         $input = $request->validated();
         $new_email_data = $input['new-email'];
@@ -90,8 +79,8 @@ class EmailController extends Controller
         ]);
 
         SiprUserHasSecondaryEmail::create([
-            SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME => $email_model->getId(),
-            SiprUserHasSecondaryEmail::COLUMN_USER_ID_ITS_NAME => $user_model->getId(),
+            SiprUserHasSecondaryEmail::EMAIL_ID => $email_model->getId(),
+            SiprUserHasSecondaryEmail::USER_ID => $user_model->getId(),
         ]);
 
         DB::commit();
@@ -107,20 +96,12 @@ class EmailController extends Controller
             $log_context
         );
 
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
 
         return redirect(route('account'));
     }
 
     public function editEmailForm(Request $request, $id)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-
         $email_id = $request->only("id")["id"] ?? $id;
         $user_model = Auth::user();
 
@@ -153,7 +134,7 @@ class EmailController extends Controller
         );
 
         $email_model = SiprSecondaryEmail::select()
-            ->where(SiprSecondaryEmail::COLUMN_ID_ITS_NAME, '=', $email_id)
+            ->where(SiprSecondaryEmail::ID, '=', $email_id)
             ->first();
 
         if ($email_model === null) {
@@ -179,11 +160,6 @@ class EmailController extends Controller
 
         $old_email = $email_model->getEmail();
 
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
 
         return response()->view(
             'account.management.email.edit',
@@ -193,9 +169,6 @@ class EmailController extends Controller
 
     public function deleteEmail(DeleteEmailRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-
         $input = $request->validated();
         $user_model = Auth::user();
 
@@ -251,7 +224,7 @@ class EmailController extends Controller
 
         $email_id = $email_record->getId();
         $user_has_email = SiprUserHasSecondaryEmail::select()
-            ->where(SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME, '=', $email_id)
+            ->where(SiprUserHasSecondaryEmail::EMAIL_ID, '=', $email_id)
             ->first();
 
         $operation_success = false;
@@ -279,11 +252,7 @@ class EmailController extends Controller
                 ["username" => $username, "email" => $email]
             );
 
-            $this->logDebugFinish(
-                __FUNCTION__,
-                [],
-                $millis_start
-            );
+
 
             return redirect(route('account'));
         }

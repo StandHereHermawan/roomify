@@ -31,19 +31,12 @@ class PhoneNumberController extends Controller
 
     public function addPhoneNumberForm()
     {
-        $this->logDebugStart(
-            __FUNCTION__
-        );
         $millis_start = microtime(true);
 
         $user_model = Auth::user();
 
         if ($user_model === null) {
-            $this->logDebugFinish(
-                __FUNCTION__,
-                [],
-                $millis_start
-            );
+            
             throw new HttpResponseException(
                 response(redirect(route('login')), 401)
             );
@@ -51,19 +44,13 @@ class PhoneNumberController extends Controller
 
         $username = $user_model->getUsername();
 
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
-
         return view('account.management.phone.add')
             ->with('username', $username);
     }
 
     public function submitAddPhoneNumberForm(CreatePhoneNumberRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__);
+        
         $millis_start = microtime(true);
 
         $user_model = Auth::user();
@@ -82,48 +69,42 @@ class PhoneNumberController extends Controller
             "username" => $user_model->getUsername()
         ];
 
-        DB::beginTransaction();
+        DB::transaction(function () use ($log_context, $new_phone_number_data, $user_model){
 
-        $this->logDebugMessage(
-            __FUNCTION__,
-            "Attempt to save new phone number. the phone number: {phone}",
-            $log_context
-        );
+            $this->logDebugMessage(
+                __FUNCTION__,
+                "Attempt to save new phone number. the phone number: {phone}",
+                $log_context
+            );
 
-        $email_model = SiprPhoneNumber::create([
-            SiprPhoneNumber::PHONE_NUMBER => $new_phone_number_data
-        ]);
+            $email_model = SiprPhoneNumber::create([
+                SiprPhoneNumber::PHONE_NUMBER => $new_phone_number_data
+            ]);
 
-        $this->logDebugMessage(
-            __FUNCTION__,
-            "attempt to assign the phone number: {phone} to username: {username}",
-            $log_context
-        );
+            $this->logDebugMessage(
+                __FUNCTION__,
+                "attempt to assign the phone number: {phone} to username: {username}",
+                $log_context
+            );
 
-        SiprUserHasPhoneNumber::create([
-            SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME => $email_model->getId(),
-            SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME => $user_model->getId(),
-        ]);
+            SiprUserHasPhoneNumber::create([
+                SiprUserHasPhoneNumber::PHONE_NUMBER_ID => $email_model->getId(),
+                SiprUserHasPhoneNumber::USER_ID => $user_model->getId(),
+            ]);
 
-        $this->logInfoMessage(
-            "user: {username} added new phone number contacts. the phone: {phone}",
-            $log_context
-        );
+            $this->logInfoMessage(
+                "user: {username} added new phone number contacts. the phone: {phone}",
+                $log_context
+            );
 
-        DB::commit();
-
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
+        });
 
         return redirect(route('account'));
     }
 
     public function editPhoneNumberForm(Request $request, $id)
     {
-        $this->logDebugStart(__FUNCTION__);
+        
         $millis_start = microtime(true);
 
         $user_model = Auth::user();
@@ -165,7 +146,7 @@ class PhoneNumberController extends Controller
         }
 
         $old_phone_number_model = SiprPhoneNumber::select()
-            ->where(SiprPhoneNumber::COLUMN_ID_ITS_NAME, '=', $old_phone_number_id)
+            ->where(SiprPhoneNumber::ID, '=', $old_phone_number_id)
             ->first();
 
         if ($old_phone_number_model === null) {
@@ -182,12 +163,6 @@ class PhoneNumberController extends Controller
 
         Gate::authorize(PhoneNumberPolicy::UPDATE, $old_phone_number_model);
 
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
-
         return response(
             view("account.management.phone.edit")
                 ->with("username", $username)
@@ -197,7 +172,7 @@ class PhoneNumberController extends Controller
 
     public function deletePhoneNumber(DeletePhoneNumberRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__);
+        
         $millis_start = microtime(true);
 
         $input = $request->validated();
@@ -255,7 +230,7 @@ class PhoneNumberController extends Controller
         $email_id = $email_record->getId();
 
         $user_has_phone_number = SiprUserHasPhoneNumber::select()
-            ->where(SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME, '=', $email_id)
+            ->where(SiprUserHasPhoneNumber::PHONE_NUMBER_ID, '=', $email_id)
             ->first();
 
         DB::beginTransaction();
@@ -265,13 +240,6 @@ class PhoneNumberController extends Controller
 
         DB::commit();
 
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
-
         return redirect(route('account'));
-
     }
 }

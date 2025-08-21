@@ -32,7 +32,7 @@ class CreateRoomReservationRequest extends FormRequest
             "room_id" => [
                 'required',
                 'integer',
-                'exists:' . SiprRoom::TABLE_NAME . ',' . SiprRoom::COLUMN_ID_ITS_NAME
+                'exists:' . SiprRoom::TABLE_NAME . ',' . SiprRoom::ID
             ],
             "date_room_reservation" => [
                 'required', 'date',

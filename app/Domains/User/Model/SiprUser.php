@@ -2,49 +2,56 @@
 
 namespace App\Domains\User\Model;
 
+use App\Traits\Attribute\HasIdentifier;
+use App\Traits\Audit\HasBasicAudit;
+
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Auth\Authenticatable as TraitAuthenticatable;
+use Illuminate\Auth\Authenticatable as HasTraitAuthenticatable;
 
 use Illuminate\Foundation\Auth\Access\Authorizable;
 
 class SiprUser extends Model implements Authenticatable
 {
+    /** 
+     * @use HasFactory<\Database\Factories\UserFactory> 
+     * @use HasBasicAudit<App\Traits\Audit\HasBasicAudit> 
+     * @use HasIdentifier<App\Traits\Attribute\HasIdentifier> 
+     */
     use HasFactory,
-        TraitAuthenticatable,
+        HasIdentifier,
+        HasBasicAudit,
+        HasTraitAuthenticatable,
         Authorizable,
         SoftDeletes;
 
     public const TABLE_NAME = "sipr_users";
-    public const ID = "id";
     public const USERNAME = "username";
     public const OLD_USERNAME = "old_username";
     public const NAME = "name";
     public const OLD_NAME = "old_name";
     public const PASSWORD = "password";
     public const REMEMBER_TOKEN = "remember_token";
-    public const CREATED_AT = "created_at";
-    public const UPDATED_AT = "updated_at";
 
-    protected $table = SiprUser::TABLE_NAME;
-    protected $primaryKey = SiprUser::ID;
+    protected $table = self::TABLE_NAME;
+    protected $primaryKey = self::ID;
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
 
     protected $fillable = [
-        SiprUser::ID,
-        SiprUser::USERNAME,
-        SiprUser::NAME,
-        SiprUser::PASSWORD,
-        SiprUser::REMEMBER_TOKEN,
-        SiprUser::CREATED_AT,
-        SiprUser::UPDATED_AT,
-        "deleted_at",
+        self::ID,
+        self::USERNAME,
+        self::NAME,
+        self::PASSWORD,
+        self::REMEMBER_TOKEN,
+        self::CREATED_AT,
+        self::UPDATED_AT,
+        self::DELETED_AT,
     ];
 
     /**
@@ -121,16 +128,6 @@ class SiprUser extends Model implements Authenticatable
     /*
     |   some fields getter.
     */
-    public function getId()
-    {
-        if ($this->id != null) {
-            # code...
-            return $this->id;
-        } else {
-            return null;
-        }
-    }
-
     public function getUsername()
     {
         if ($this->username != null) {

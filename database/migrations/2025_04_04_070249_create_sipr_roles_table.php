@@ -6,6 +6,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
+    private const ID = "id";
+    private const ROLE = "role";
+    private const CREATED_AT = "created_at";
+    private const UPDATED_AT = "updated_at";
+    private const DELETED_AT = "deleted_at";
     /**
      * Run the migrations.
      */
@@ -13,47 +19,30 @@ return new class extends Migration {
     {
         Schema::create(SiprRole::TABLE_NAME, function (Blueprint $table) {
             $table
-                ->id()
+                ->id(self::ID)
                 ->autoIncrement()
                 ->unsigned()
                 ->nullable(false);
 
             $table
-                ->string("role", 30)
+                ->string(self::ROLE, 30)
                 ->unique();
 
             $table
-                ->softDeletesDatetime();
+                ->softDeletesDatetime(self::DELETED_AT)
+                ->nullable();
 
             $table
-                ->dateTime('created_at')
+                ->dateTime(self::CREATED_AT)
                 ->nullable(true)
                 ->useCurrent();
 
             $table
-                ->dateTime('updated_at')
+                ->dateTime(self::UPDATED_AT)
                 ->nullable(true)
                 ->useCurrent()
                 ->useCurrentOnUpdate();
         });
-
-        // DB::table(SiprRole::TABLE_NAME)->insert([
-            // "role" => "SUPER_ADMIN",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
-// 
-        // DB::table(SiprRole::TABLE_NAME)->insert([
-            // "role" => "GUEST",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
-// 
-        // DB::table(SiprRole::TABLE_NAME)->insert([
-            // "role" => "OPERATOR",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
     }
 
     /**

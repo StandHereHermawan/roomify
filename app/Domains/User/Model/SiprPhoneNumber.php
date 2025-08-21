@@ -2,6 +2,10 @@
 
 namespace App\Domains\User\Model;
 
+use App\Traits\Attribute\HasIdentifier;
+use App\Traits\Audit\HasBasicAudit;
+use App\Traits\Relation\HasRelationWithUserModel;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,10 +13,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SiprPhoneNumber extends Model
 {
-    use HasFactory, SoftDeletes;
+    /** 
+     * @use HasFactory<\Database\Factories\UserFactory> 
+     * @use HasBasicAudit<App\Traits\Audit\HasBasicAudit> 
+     * @use HasIdentifier<App\Traits\Attribute\HasIdentifier> 
+     */
+    use HasFactory,
+        HasIdentifier,
+        HasRelationWithUserModel,
+        HasBasicAudit,
+        SoftDeletes;
 
     public const TABLE_NAME = "sipr_phone_numbers";
-    public const COLUMN_ID_ITS_NAME = "id";
     public const PHONE_NUMBER = "phone_number";
 
     protected $table = SiprPhoneNumber::TABLE_NAME;
@@ -22,17 +34,12 @@ class SiprPhoneNumber extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        SiprPhoneNumber::COLUMN_ID_ITS_NAME,
-        SiprPhoneNumber::PHONE_NUMBER,
-        "created_at",
-        "updated_at",
-        "deleted_at",
+        self::PHONE_NUMBER,
+        self::ID,
+        self::CREATED_AT,
+        self::UPDATED_AT,
+        self::DELETED_AT,
     ];
-
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function getPhoneNumber()
     {
@@ -44,8 +51,8 @@ class SiprPhoneNumber extends Model
         return $this->belongsToMany(
             SiprUser::class,
             SiprUserHasPhoneNumber::TABLE_NAME,
-            SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME,
-            SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME
+            SiprUserHasPhoneNumber::PHONE_NUMBER_ID,
+            SiprUserHasPhoneNumber::USER_ID
         );
     }
 }

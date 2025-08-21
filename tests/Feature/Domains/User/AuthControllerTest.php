@@ -64,7 +64,7 @@ class AuthControllerTest extends TestCase
             ->getId();
 
         $session_model = SiprSession::select()
-            ->where(SiprSession::COLUMN_ID_ITS_NAME, '=', $session_id)
+            ->where(SiprSession::ID, '=', $session_id)
             ->with('ownedByUser')
             ->first();
 

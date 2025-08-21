@@ -1,120 +1,53 @@
 <?php
 
-use App\Domains\Room\Model\SiprRoomSession;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
+    private const ID = "id";
+    private const NAME = 'name';
+    private const CODE = 'room_code';
+    private const HEIGHT = 'meter_room_height';
+    private const FLOOR_WIDE = 'meter_squared_floor_wide';
+    private const CREATED_AT = "created_at";
+    private const UPDATED_AT = "updated_at";
+    private const DELETED_AT = "deleted_at";
+    private const TABLE_NAME = 'sipr_room_sessions';
+    private const SESSION_START = 'room_session_start';
+    private const SESSION_END = 'room_session_end';
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create(SiprRoomSession::TABLE_NAME, function (Blueprint $table) {
-            $table->id();
-            $table->time('room_session_start');
-            $table->time('room_session_end');
-            $table->softDeletesDatetime();
-            
+        Schema::create(self::TABLE_NAME, function (Blueprint $table) {
             $table
-                ->dateTime('created_at')
+                ->id(self::ID)
+                ->autoIncrement()
+                ->unsigned()
+                ->nullable(false);
+
+            $table->time(self::SESSION_START)->nullable(false);
+            $table->time(self::SESSION_END)->nullable(false);
+
+            $table
+                ->softDeletesDatetime(self::DELETED_AT)
+                ->nullable();
+
+            $table
+                ->dateTime(self::CREATED_AT)
                 ->nullable(true)
                 ->useCurrent();
 
             $table
-                ->dateTime('updated_at')
+                ->dateTime(self::UPDATED_AT)
                 ->nullable(true)
                 ->useCurrent()
                 ->useCurrentOnUpdate();
         });
-// 
-        // DB::transaction(function () {
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(7)->minute(0)->second(0),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(7)->minute(49)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(7)->minute(50)->second(0),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(8)->minute(39)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(8)->minute(40)->second(0),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(9)->minute(29)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(9)->minute(30)->second(00),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(10)->minute(19)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(10)->minute(20)->second(00),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(11)->minute(9)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(11)->minute(10)->second(00),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(12)->minute(0)->second(00),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(12)->minute(50)->second(0),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(13)->minute(39)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(13)->minute(40)->second(0),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(14)->minute(29)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(14)->minute(30)->second(00),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(15)->minute(19)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(15)->minute(20)->second(00),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(16)->minute(9)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(16)->minute(10)->second(00),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(16)->minute(59)->second(59),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-// 
-            // DB::table(SiprRoomSession::TABLE_NAME)->insert([
-                // "room_session_start" => \Illuminate\Support\Carbon::now()->hour(17)->minute(00)->second(00),
-                // "room_session_end" => \Illuminate\Support\Carbon::now()->hour(17)->minute(50)->second(00),
-                // "created_at" => \Illuminate\Support\Carbon::now(),
-                // "updated_at" => \Illuminate\Support\Carbon::now(),
-            // ]);
-        // });
     }
 
     /**
@@ -122,6 +55,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists(SiprRoomSession::TABLE_NAME);
+        Schema::dropIfExists(self::TABLE_NAME);
     }
 };

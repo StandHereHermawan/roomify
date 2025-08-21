@@ -44,7 +44,7 @@ class DeleteEmailRequest extends FormRequest
 
         
         $user_has_email_model = SiprUserHasSecondaryEmail::select()
-        ->where(SiprUserHasSecondaryEmail::COLUMN_EMAIL_ID_ITS_NAME, '=', $email_id)
+        ->where(SiprUserHasSecondaryEmail::EMAIL_ID, '=', $email_id)
         ->first();
         
         if ($user_has_email_model === null) {

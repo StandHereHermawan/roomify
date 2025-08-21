@@ -4,8 +4,7 @@ namespace Database\Seeders;
 
 use App\Domains\Schedule\Model\SiprRoomReservationRequest;
 use App\Domains\Schedule\Model\SiprRoomSessionReservationRequest;
-use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -18,20 +17,20 @@ class SiprRoomReservationAndRoomSessionReservationSeeder extends Seeder
      */
     public function run(): void
     {
-        $column_table_room_reservation_ID_its_name = SiprRoomReservationRequest::COLUMN_ID_ITS_NAME;
-        $column_table_room_reservation_USER_ID_its_name = SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME;
-        $column_table_room_reservation_ROOM_ID_its_name = SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME;
-        $column_table_room_reservation_RESERVATION_DATE_its_name = SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
-        $column_table_room_reservation_DETERMINED_AT_its_name = SiprRoomReservationRequest::COLUMN_DETERMINED_AT_ITS_NAME;
+        $column_table_room_reservation_ID_its_name = SiprRoomReservationRequest::USER_ID;
+        $column_table_room_reservation_USER_ID_its_name = SiprRoomReservationRequest::USER_ID;
+        $column_table_room_reservation_ROOM_ID_its_name = SiprRoomReservationRequest::ROOM_ID;
+        $column_table_room_reservation_RESERVATION_DATE_its_name = SiprRoomReservationRequest::RESERVATION_DATE;
+        $column_table_room_reservation_DETERMINED_AT_its_name = SiprRoomReservationRequest::DETERMINED_AT;
         $column_table_room_reservation_CREATED_AT_its_name = SiprRoomReservationRequest::CREATED_AT;
         $column_table_room_reservation_UPDATED_AT_its_name = SiprRoomReservationRequest::UPDATED_AT;
-        $column_table_room_reservation_STATUS_its_name = SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME;
+        $column_table_room_reservation_STATUS_its_name = SiprRoomReservationRequest::STATUS;
 
-    //  $column_table_room_session_reservation_ID_its_name = SiprRoomSessionReservationRequest::COLUMN_ID_ITS_NAME;
-        $column_table_room_session_reservation_USER_ID_its_name = SiprRoomSessionReservationRequest::COLUMN_USER_ID_ITS_NAME;
-        $column_table_room_session_reservation_ROOM_RESERVATION_ID_its_name = SiprRoomSessionReservationRequest::COLUMN_ROOM_RESERVATION_ID_ITS_NAME;
-        $column_table_room_session_reservation_ROOM_SESSION_ID_its_name = SiprRoomSessionReservationRequest::COLUMN_ROOM_SESSION_ID_ITS_NAME;
-        $column_table_room_session_reservation_RESERVATION_DATE_its_name = SiprRoomSessionReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
+    //  $column_table_room_session_reservation_ID_its_name = SiprRoomSessionReservationRequest::USER_ID;
+        $column_table_room_session_reservation_USER_ID_its_name = SiprRoomSessionReservationRequest::USER_ID;
+        $column_table_room_session_reservation_ROOM_RESERVATION_ID_its_name = SiprRoomSessionReservationRequest::ROOM_RESERVATION_ID;
+        $column_table_room_session_reservation_ROOM_SESSION_ID_its_name = SiprRoomSessionReservationRequest::ROOM_SESSION_ID;
+        $column_table_room_session_reservation_RESERVATION_DATE_its_name = SiprRoomSessionReservationRequest::RESERVATION_DATE;
         $column_table_room_session_reservation_CREATED_AT_its_name = SiprRoomSessionReservationRequest::CREATED_AT;
         $column_table_room_session_reservation_UPDATED_AT_its_name = SiprRoomSessionReservationRequest::UPDATED_AT;
 

@@ -2,37 +2,44 @@
 
 namespace App\Domains\User\Model;
 
+use App\Traits\Attribute\HasIdentifier;
+use App\Traits\Audit\HasBasicAudit;
+use App\Traits\Relation\HasRelationWithUserModel;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SiprUserHasPhoneNumber extends Model
 {
-    use HasFactory, SoftDeletes;
+    /**
+     * @use HasBasicAudit<App\Traits\Audit\HasBasicAudit> 
+     * @use HasIdentifier<App\Traits\Attribute\HasIdentifier> 
+     * @use HasRelationWithUserModel<App\Traits\Relation\HasRelationWithUserModel> 
+     */
+    use HasFactory,
+        HasIdentifier,
+        HasRelationWithUserModel,
+        HasBasicAudit,
+        SoftDeletes;
 
     public const TABLE_NAME = "sipr_user_has_phone_numbers";
-    public const COLUMN_PHONE_NUMBER_ID_ITS_NAME = "phone_number_id";
-    public const COLUMN_USER_ID_ITS_NAME = "user_id";
+    public const PHONE_NUMBER_ID = "phone_number_id";
 
-    protected $table = SiprUserHasPhoneNumber::TABLE_NAME;
+    protected $table = self::TABLE_NAME;
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
 
     protected $fillable = [
-        SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME,
-        SiprUserHasPhoneNumber::COLUMN_USER_ID_ITS_NAME,
-        "created_at",
-        "updated_at",
-        "deleted_at",
+        self::PHONE_NUMBER_ID,
+        self::USER_ID,
+        self::ID,
+        self::CREATED_AT,
+        self::UPDATED_AT,
+        self::DELETED_AT,
     ];
-
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
 
     public function getPhoneNumberId()
     {

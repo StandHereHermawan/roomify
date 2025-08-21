@@ -1,19 +1,29 @@
 <?php
 
-use App\Domains\User\Model\SiprUserHasRole;
-use App\Domains\User\Model\SiprUser;
-use App\Domains\User\Model\SiprRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
+    private const TABLE_NAME = "sipr_user_has_roles";
+    private const TABLE_USER = "sipr_users";
+    private const ID = "id";
+    private const TABLE_USER_COLUMN_ID = "id";
+    private const USER_ID = "user_id";
+    private const TABLE_ROLE = "sipr_roles";
+    private const TABLE_ROLE_COLUMN_ID = "id";
+    private const ROLE_ID = "role_id";
+    private const CREATED_AT = "created_at";
+    private const UPDATED_AT = "updated_at";
+    private const DELETED_AT = "deleted_at";
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create(SiprUserHasRole::TABLE_NAME, function (Blueprint $table) {
+        Schema::create(self::TABLE_NAME, function (Blueprint $table) {
             $table
                 ->id()
                 ->autoIncrement()
@@ -21,51 +31,42 @@ return new class extends Migration {
                 ->nullable(false);
 
             $table
-                ->bigInteger("user_id")
+                ->bigInteger(self::USER_ID)
                 ->unsigned();
 
             $table
-                ->bigInteger("role_id")
+                ->bigInteger(self::ROLE_ID)
                 ->unsigned();
 
-            $table
-                ->foreign("user_id")
-                ->references("id")
-                ->on(SiprUser::TABLE_NAME)
+                $table
+                ->foreign(self::USER_ID)
+                ->references(self::TABLE_USER_COLUMN_ID)
+                ->on(self::TABLE_USER)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
             $table
-                ->foreign("role_id")
-                ->references("id")
-                ->on(SiprRole::TABLE_NAME)
+                ->foreign(self::ROLE_ID)
+                ->references(self::TABLE_ROLE_COLUMN_ID)
+                ->on(self::TABLE_ROLE)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->softDeletesDatetime();
-            $table->datetimes();
+            $table
+                ->softDeletesDatetime(self::DELETED_AT)
+                ->nullable();
+
+            $table
+                ->dateTime(self::CREATED_AT)
+                ->nullable(true)
+                ->useCurrent();
+
+            $table
+                ->dateTime(self::UPDATED_AT)
+                ->nullable(true)
+                ->useCurrent()
+                ->useCurrentOnUpdate();
         });
-
-        // DB::table(SiprUserHasRole::TABLE_NAME)->insert([
-            // "user_id" => "1",
-            // "role_id" => "1",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
-// 
-        // DB::table(SiprUserHasRole::TABLE_NAME)->insert([
-            // "user_id" => "2",
-            // "role_id" => "2",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
-// 
-        // DB::table(SiprUserHasRole::TABLE_NAME)->insert([
-            // "user_id" => "3",
-            // "role_id" => "2",
-            // "created_at" => \Illuminate\Support\Carbon::now(),
-            // "updated_at" => \Illuminate\Support\Carbon::now(),
-        // ]);
     }
 
     /**
@@ -73,6 +74,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('sipr_user_has_roles');
+        Schema::dropIfExists(self::TABLE_NAME);
     }
 };

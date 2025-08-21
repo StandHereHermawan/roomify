@@ -21,19 +21,12 @@ class RoomSessionController extends Controller
 
     public function roomSessionPaginate(Request $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
+      
 
         $room_session_pagination = SiprRoomSession::select()
             ->paginate(5, ['*'], 'room_session_page')
             ->appends($request->query())
             ->withQueryString();
-
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
 
         return view('session.index')
             ->with('listOfSession', $room_session_pagination);
@@ -41,17 +34,14 @@ class RoomSessionController extends Controller
 
     public function addRoomSessionForm()
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
+      
+        
         return view('session.add');
     }
 
     public function submitAddRoomSessionForm(CreateRoomSessionRequest $request)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
+      
 
         $input = $request->validated();
 
@@ -72,17 +62,14 @@ class RoomSessionController extends Controller
             "Success create room session start at {room-session-start} ended at {room-session-end}",
             $input
         );
-
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
+        
         return redirect(url()->route('list-of-room-session'));
     }
 
     public function editRoomSessionForm(SiprRoomSession $model)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
-
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
+      
+        
         return view('session.edit')
             ->with('room_session_id', $model->getId())
             ->with('old_room_session_start', $model->getRoomSessionStart())
@@ -91,8 +78,7 @@ class RoomSessionController extends Controller
 
     public function submitEditRoomSessionForm(EditRoomSessionRequest $request, SiprRoomSession $model)
     {
-        $this->logDebugStart(__FUNCTION__);
-        $millis_start = microtime(true);
+      
 
         $this->logDebugMessage(
             __FUNCTION__,
@@ -123,17 +109,12 @@ class RoomSessionController extends Controller
             "room session end {room_session_end}",
             $model->toArray()
         );
-
-        $this->logDebugFinish(__FUNCTION__, [], $millis_start);
+        
         return redirect(url()->route('list-of-room-session'));
     }
 
     public function submitDeleteRoomSession(DeleteRoomSessionRequest $request, SiprRoomSession $model)
     {
-        $this->logDebugStart(
-            __FUNCTION__,
-            []
-        );
 
         $this->logDebugMessage(
             __FUNCTION__,
@@ -158,12 +139,6 @@ class RoomSessionController extends Controller
                 $model->toArray() + $request->toArray()
             );
         }
-
-        $this->logDebugFinish(
-            __FUNCTION__,
-            [],
-            $millis_start
-        );
 
         return redirect(url()->route('list-of-room-session'));
     }

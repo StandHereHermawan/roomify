@@ -50,7 +50,7 @@ class DeletePhoneNumberRequest extends FormRequest
             );
 
             $user_has_email = SiprUserHasPhoneNumber::select()
-                ->where(SiprUserHasPhoneNumber::COLUMN_PHONE_NUMBER_ID_ITS_NAME, '=', $email_id)
+                ->where(SiprUserHasPhoneNumber::PHONE_NUMBER_ID, '=', $email_id)
                 ->first();
 
             return $user_model->getId() === $user_has_email->getUserId();

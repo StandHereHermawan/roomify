@@ -2,55 +2,61 @@
 
 namespace App\Domains\Schedule\Model;
 
+use App\Traits\Attribute\HasIdentifier;
+use App\Traits\Audit\HasBasicAudit;
+use App\Traits\Relation\HasRelationWithUserModel;
+
 use App\Domains\Room\Model\SiprRoom;
 use App\Domains\Room\Model\SiprRoomSession;
+use App\Domains\User\Model\SiprUser;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Domains\User\Model\SiprUser;
 
 class SiprRoomReservationRequest extends Model
 {
-    use SoftDeletes;
+    /**
+     * @use HasBasicAudit<App\Traits\Audit\HasBasicAudit> 
+     * @use HasIdentifier<App\Traits\Attribute\HasIdentifier> 
+     * @use HasRelationWithUserModel<App\Traits\Relation\HasRelationWithUserModel> 
+     */
+    use HasIdentifier,
+        HasRelationWithUserModel,
+        HasBasicAudit,
+        SoftDeletes;
 
     public const TABLE_NAME = "sipr_room_reservation_requests";
-    public const COLUMN_ID_ITS_NAME = "id";
-    public const COLUMN_USER_ID_ITS_NAME = "user_id";
-    public const COLUMN_ROOM_ID_ITS_NAME = "room_id";
-    public const COLUMN_STATUS_ITS_NAME = "status";
-    public const COLUMN_DETERMINED_AT_ITS_NAME = "determined_at";
-    public const COLUMN_RESERVATION_DATE_ITS_NAME = "reservation_date";
+    public const ROOM_ID = "room_id";
+    public const STATUS = "status";
+    public const DETERMINED_AT = "determined_at";
+    public const RESERVATION_DATE = "reservation_date";
 
-    protected $table = SiprRoomReservationRequest::TABLE_NAME;
-    protected $primaryKey = "id";
+    protected $table = self::TABLE_NAME;
+    protected $primaryKey = self::ID;
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
 
     protected $fillable = [
-        SiprRoomReservationRequest::COLUMN_ID_ITS_NAME,
-        SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME,
-        SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME,
-        SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME,
-        SiprRoomReservationRequest::COLUMN_DETERMINED_AT_ITS_NAME,
-        SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME,
-        SiprRoomReservationRequest::CREATED_AT,
-        SiprRoomReservationRequest::UPDATED_AT,
-        "deleted_at",
+        self::ROOM_ID,
+        self::RESERVATION_DATE,
+        self::DETERMINED_AT,
+        self::STATUS,
+        self::ID,
+        self::USER_ID,
+        self::CREATED_AT,
+        self::UPDATED_AT,
+        self::DELETED_AT,
     ];
-
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function userRequest(): HasOne
     {
         return $this->hasOne(
             SiprUser::class,
-            "id",
-            SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME,
+            SiprUser::ID,
+            SiprRoomReservationRequest::USER_ID,
         );
     }
 
@@ -58,8 +64,8 @@ class SiprRoomReservationRequest extends Model
     {
         return $this->hasOne(
             SiprRoom::class,
-            "id",
-            SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME,
+            SiprRoom::ID,
+            SiprRoomReservationRequest::ROOM_ID,
         );
     }
 
@@ -68,8 +74,8 @@ class SiprRoomReservationRequest extends Model
         return $this->belongsToMany(
             SiprRoomSession::class,
             SiprRoomSessionReservationRequest::class,
-            "room_reservation_id",
-            "room_session_id"
+            SiprRoomSessionReservationRequest::ROOM_RESERVATION_ID,
+            SiprRoomSessionReservationRequest::ROOM_SESSION_ID
         );
     }
 }

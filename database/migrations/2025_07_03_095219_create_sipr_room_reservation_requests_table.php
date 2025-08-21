@@ -1,65 +1,80 @@
 <?php
 
-use App\Domains\Room\Model\SiprRoom;
-use App\Domains\User\Model\SiprUser;
 use App\Domains\Schedule\Model\SiprRoomReservationRequest;
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
+    private const ID = "id";
+    private const CREATED_AT = "created_at";
+    private const UPDATED_AT = "updated_at";
+    private const DELETED_AT = "deleted_at";
+    private const TABLE_NAME = "sipr_room_reservation_requests";
+    private const SESSION_START = 'room_session_start';
+    private const SESSION_END = 'room_session_end';
+    private const TABLE_ROOM = "sipr_rooms";
+    private const TABLE_ROOM_COLUMN_ID = "id";
+    private const ROOM_ID = "room_id";
+    private const STATUS = "status";
+    private const DETERMINED_AT = "determined_at";
+    private const RESERVATION_DATE = "reservation_date";
+    private const TABLE_USER_COLUMN_ID = "id";
+    private const TABLE_USER = "sipr_users";
+    private const USER_ID = "user_id";
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // $column_ID_its_name = SiprRoomReservationRequest::COLUMN_ID_ITS_NAME;
-        // $column_USER_ID_its_name = SiprRoomReservationRequest::COLUMN_USER_ID_ITS_NAME;
-        // $column_ROOM_ID_its_name = SiprRoomReservationRequest::COLUMN_ROOM_ID_ITS_NAME;
-        // $column_RESERVATION_DATE_its_name = SiprRoomReservationRequest::COLUMN_RESERVATION_DATE_ITS_NAME;
-        // $column_CREATED_AT_its_name = SiprRoomReservationRequest::CREATED_AT;
-        // $column_UPDATED_AT_its_name = SiprRoomReservationRequest::UPDATED_AT;
-        // $column_STATUS_its_name = SiprRoomReservationRequest::COLUMN_STATUS_ITS_NAME;
+        Schema::create(self::TABLE_NAME, function (Blueprint $table) {
+            $table
+                ->id(self::ID)
+                ->autoIncrement()
+                ->unsigned()
+                ->nullable(false);
 
-        Schema::create(SiprRoomReservationRequest::TABLE_NAME, function (Blueprint $table) {
-            $table->id()->primary(true);
-            $table->unsignedBigInteger('room_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger(self::ROOM_ID)->nullable();
+            $table->unsignedBigInteger(self::USER_ID)->nullable();
 
             $table
-                ->foreign("room_id")
-                ->references("id")
-                ->on(SiprRoom::TABLE_NAME)
+                ->foreign(self::ROOM_ID)
+                ->references(self::TABLE_ROOM_COLUMN_ID)
+                ->on(self::TABLE_ROOM)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
             $table
-                ->string('status', 255)
+                ->string(self::STATUS, 255)
                 ->nullable()
                 ->default('PENDING');
 
             $table
-                ->foreign("user_id")
-                ->references("id")
-                ->on(SiprUser::TABLE_NAME)
+                ->foreign(self::USER_ID)
+                ->references(self::TABLE_USER_COLUMN_ID)
+                ->on(self::TABLE_USER)
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->date('reservation_date');
-            $table->softDeletes();
+            $table->date(self::RESERVATION_DATE);
 
             $table
-            ->dateTime('determined_at')
-            ->nullable(true);
+                ->dateTime(self::DETERMINED_AT)
+                ->nullable(true);
 
             $table
-                ->dateTime('created_at')
+                ->softDeletesDatetime(self::DELETED_AT)
+                ->nullable();
+
+            $table
+                ->dateTime(self::CREATED_AT)
                 ->nullable(true)
                 ->useCurrent();
 
             $table
-                ->dateTime('updated_at')
+                ->dateTime(self::UPDATED_AT)
                 ->nullable(true)
                 ->useCurrent()
                 ->useCurrentOnUpdate();
@@ -71,6 +86,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists(SiprRoomReservationRequest::TABLE_NAME);
+        Schema::dropIfExists(self::TABLE_NAME);
     }
 };
